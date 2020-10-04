@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/jeancahu/js_app_experiment#readme",
   "dependencies": {
-    "@angular/cli": "^10.1.4",
     "express": "^4.17.1"
   }
 }
