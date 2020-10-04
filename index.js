@@ -1,8 +1,23 @@
-const http = require('http');
+const express = require('express');
+const app = express();
 
+// Este es el resultado a pedir la dirección /
+app.get('/', (request, response) => response.send("Hello World!"));
+
+app.get('/ejemplo', (request, response) => {
+
+    // http://localhost:9000/ejemplo?name=algo
+    const { name } = request.query;
+    response.send(`Hello ${name || 'Anon'}!`);
+})
+
+app.get('/ejemplo/:name', (request, response) => {
+
+    // http://localhost:9000/ejemplo?name=algo
+    const { name } = request.params;
+    response.send(`Hello ${name || 'Anon'}!`);
+})
+
+// Iniciamos el servidor
 console.log("Servidor en http://localhost:9000\n");
-http.createServer((request, response) => {
-    response.writeHead(200, { 'Content-Type': 'text/plain' });
-    response.write('Hello World');
-    response.end();
-}).listen(9000);
+app.listen(9000);

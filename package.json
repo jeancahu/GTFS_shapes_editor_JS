@@ -1,0 +1,26 @@
+{
+  "name": "javascript_example",
+  "version": "0.1.0",
+  "description": "A npm package example",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeancahu/js_app_experiment.git"
+  },
+  "keywords": [
+    "example"
+  ],
+  "author": "Jean Hidalgo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jeancahu/js_app_experiment/issues"
+  },
+  "homepage": "https://github.com/jeancahu/js_app_experiment#readme",
+  "dependencies": {
+    "@angular/cli": "^10.1.4",
+    "express": "^4.17.1"
+  }
+}
