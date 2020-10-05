@@ -1,9 +1,9 @@
 # Experiments with npm:
 
     $ npm install . # add package dependencies locally into node_modules directory
-	$ npm run serve # a small web-server using express form node.js
+    $ npm run serve # a small web-server using express form node.js
 
-
+TODO: npm-chech-updates to upgrade project dependencies
 
 [index](http://localhost/)<br>
 [A form](http://localhost/form)<br>

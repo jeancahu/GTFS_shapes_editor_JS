@@ -7,7 +7,38 @@ const port = 9000;
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 // Este es el resultado a pedir la dirección /
-app.get('/', (request, response) => response.send("Hello World!"));
+app.get('/', (request, response) => {
+    response.sendFile(__dirname + "/templates/index.html");
+});
+
+app.get('/editor', (request, response) => {
+    response.sendFile(__dirname + "/editor.html");
+});
+
+
+app.get('/images/:name', (request, response) => {
+    const { name } = request.params;
+    response.sendFile(__dirname + "/templates/images/" + name);
+});
+
+app.get('/js/:name', (request, response) => {
+    const { name } = request.params;
+    response.sendFile(__dirname + "/templates/js/" + name);
+});
+
+app.get('/css/:name', (request, response) => {
+    const { name } = request.params;
+    response.sendFile(__dirname + "/templates/css/" + name);
+});
+
+app.get('/fonts/:name', (request, response) => {
+    const { name } = request.params;
+    response.sendFile(__dirname + "/templates/fonts/" + name);
+});
+
+app.get('/hello_world', (request, response) => {
+    response.send("Hello World!")
+});
 
 app.get('/form', (request, response) => {
     response.sendFile( __dirname + "/templates/" + "form.html" );
@@ -55,7 +86,20 @@ app.post('/process_post', urlencodedParser, (request, response) => {
 
 
 // It serves static files
-app.use(express.static('static'));
+//app.use(express.static('/static'));
+app.get('/static/:name', (request, response) => {
+
+    // http://localhost:$port/ejemplo?name=algo
+    const { name } = request.params;
+    response.sendFile(__dirname + "/static/" + name);
+})
+
+app.get('/:name', (request, response) => {
+
+    // http://localhost:$port/ejemplo?name=algo
+    const { name } = request.params;
+    response.sendFile(__dirname + "/templates/" + name);
+})
 
 // Iniciamos el servidor
 console.log(`Servidor en http://localhost:${port}\n`);

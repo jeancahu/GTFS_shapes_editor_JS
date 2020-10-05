@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--
+	Interphase by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Generic - Interphase by TEMPLATED</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+    <script src="https://unpkg.com/elm-pep"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-layers.min.js"></script>
+		<script src="js/init.js"></script>
+
+		<link rel="stylesheet" href="css/skel.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/style-xlarge.css" />
+    <link rel="stylesheet" href="css/editor-style.css" />
+
+    <!-- importar los estilos de OpenLayers -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/css/ol.css" type="text/css">
+
+
+		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+	</head>
+	<body>
+
+      <div class="sidetools">
+          <!-- <a href="#">About</a>
+               <a href="#">Services</a>
+               <a href="#">Clients</a>
+               <a href="#">Contact</a> -->
+          <form>
+              <label>Projection </label>
+              <select id="projection">
+                  <option value="EPSG:4326">EPSG:4326</option>
+                  <option value="EPSG:3857">EPSG:3857</option>
+              </select>
+              <label>Precision </label>
+              <select id="precision">
+                  <option value="0">P: 0</option>
+                  <option value="1">P: 1</option>
+                  <option value="2">P: 2</option>
+                  <option value="3">P: 3</option>
+                  <option value="4">P: 4</option>
+                  <option value="5">P: 5</option>
+              </select>
+              <!-- <input id="precision" type="number" min="0" max="12" value="4"/> -->
+          </form>
+
+      </div>
+      <div class="body-container">
+
+          <div id="map_container" class="map_container">
+          </div>
+
+          <div class="data-bar">
+              <div id="mouse-position"></div>
+          </div>
+
+
+      </div>
+      <!-- importar la biblioteca de OpenLayers para generar el objeto mapa de interés -->
+      <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/build/ol.js"></script>
+
+      <!-- importar el script que contiene toda la configuración y puesta en ejecución del mapa -->
+      <script src="js/map_main.js"></script>
+	</body>
+</html>
