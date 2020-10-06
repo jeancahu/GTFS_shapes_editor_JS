@@ -1,3 +1,80 @@
+// GTFS streetElements
+
+class streetElement {
+    constructor (value) {
+        this.element = value; // The layer
+        this.element.parentID = -1; // The streetElement ID
+        this.id = -1; // The streetElement ID
+        this.connetions = []; // Nodes who are connected to this element
+    }
+
+    setID (value){
+        this.element.parentID = value;
+        this.id = value;
+    }
+}
+
+class streetElementGroup {
+    constructor () {
+        this.elements = []; // could it be private? // TODO
+    }
+
+    // Method to get the amount of elements
+    get length (){
+        return this.elements.length;
+    }
+
+    addElementBySource (vectorSource, radius=5, color=blue){
+        const vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: new ol.style.Style({
+	              image: new ol.style.Circle({
+	                  radius: radius, // 5 default
+	                  fill: new ol.style.Fill({color: color}) // blue default
+	              })
+            })
+        });
+        addElementByLayer (vectorLayer);
+    }
+
+    // set addElement (value){
+    addElementByLayer (value){
+        console.log("add layer as element"); // FIXME remove this
+        var new_element = new streetElement(
+            value, // The layer
+        );
+        this.addElement(new_element);
+    }
+
+    addElement (value){
+        console.log("add element"); // FIXME remove this
+        value.setID(this.elements.length);
+        this.elements.push(
+            value
+        );
+    }
+
+    // Return the streetElement object
+    getElementByID (value){
+        return this.elements[value];
+    }
+
+    // Return the streetElement last object got in Array
+    get getLastElement (){
+        return this.elements[this.elements.length-1];
+    }
+
+    deleteElementByID (value){
+        console.log("delete element");
+    }
+
+}
+
+
+
+
+///////////////////////////////////////////////////
+
 // Constrained map in the area of interst
 var view = new ol.View({
     center: ol.proj.fromLonLat([-84.1027104, 9.865107]),

@@ -2,7 +2,8 @@
 ///////////////////////////////////////////////////////////////////////
 // Aqui vamos haciendo la lista con puntos dependiendo de que clase sea
 // se crea una lista con los diferentes puntos a dibujar sobre el mapa
-var layers_vector = [];
+const obj_streetElementGroup = new streetElementGroup();
+
 function map_event_listener(event) {
     var action = document.getElementById('action').value;
 
@@ -15,13 +16,14 @@ function map_event_listener(event) {
     });
     } else if (action == "add")
     {
-    var color;
-    const features = [];
-    features.push(new ol.Feature({
-	      geometry: new ol.geom.Point(ol.proj.fromLonLat([
-	          coord2[0], coord2[1]
-	      ]))
-    }));
+
+        var color;
+        const features = [];
+        features.push(new ol.Feature({
+	          geometry: new ol.geom.Point(ol.proj.fromLonLat([
+	              coord2[0], coord2[1]
+	          ]))
+        }));
 
     if ( typo == "shape" ){
         color = 'blue';
@@ -41,19 +43,20 @@ function map_event_listener(event) {
 	              })
             })
         });
-        map.addLayer(vectorLayer);
-        layers_vector.push(vectorLayer);
+        obj_streetElementGroup.addElementByLayer(vectorLayer); //FIXME
+        map.addLayer(obj_streetElementGroup.getLastElement.element);
+
     } else if ( typo == 'endpoint' ) { // typo: end point
         color = 'green';
 
         // se crean los objetos vectores que serán al final de cuentas
         // lo que se dibuja sobre el objeto mapa
-        const stopVectorSource = new ol.source.Vector({
+        const vectorSource = new ol.source.Vector({
             features
         });
         // Add layer to the map
-        const stopVectorLayer = new ol.layer.Vector({
-            source: stopVectorSource,
+        const vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
             style: new ol.style.Style({
 	              image: new ol.style.Circle({
 	                  radius: 5,
@@ -61,8 +64,9 @@ function map_event_listener(event) {
 	              })
             })
         });
-        map.addLayer(stopVectorLayer);
-        layers_vector.push(stopVectorLayer);
+        obj_streetElementGroup.addElementByLayer(vectorLayer); //FIXME
+        map.addLayer(obj_streetElementGroup.getLastElement.element);
+
         // stopVectorLayer.addEventListener('mouseover', function (event) {
         //     console.log("mouseover");
         // }); // end
@@ -71,12 +75,12 @@ function map_event_listener(event) {
 
         // se crean los objetos vectores que serán al final de cuentas
         // lo que se dibuja sobre el objeto mapa
-        const stopVectorSource = new ol.source.Vector({
+        const vectorSource = new ol.source.Vector({
             features
         });
         // Add layer to the map
-        const stopVectorLayer = new ol.layer.Vector({
-            source: stopVectorSource,
+        const vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
             style: new ol.style.Style({
 	              image: new ol.style.Circle({
 	                  radius: 5,
@@ -84,8 +88,10 @@ function map_event_listener(event) {
 	              })
             })
         });
-        map.addLayer(stopVectorLayer);
-        layers_vector.push(stopVectorLayer);
+        obj_streetElementGroup.addElementByLayer(vectorLayer); //FIXME
+        map.addLayer(obj_streetElementGroup.getLastElement.element);
+
+
         // stopVectorLayer.addEventListener('mouseover', function (event) {
         //     console.log("mouseover");
         // }); // end
@@ -94,12 +100,12 @@ function map_event_listener(event) {
 
     // se crean los objetos vectores que serán al final de cuentas
     // lo que se dibuja sobre el objeto mapa
-    const stopVectorSource = new ol.source.Vector({
+    const vectorSource = new ol.source.Vector({
         features
     });
     // Add layer to the map
-    const stopVectorLayer = new ol.layer.Vector({
-        source: stopVectorSource,
+    const vectorLayer = new ol.layer.Vector({
+        source: vectorSource,
         style: new ol.style.Style({
 	          image: new ol.style.Circle({
 	              radius: 7,
@@ -107,11 +113,12 @@ function map_event_listener(event) {
 	          })
         })
     });
-    map.addLayer(stopVectorLayer);
-    layers_vector.push(stopVectorLayer);
-    // stopVectorLayer.addEventListener('mouseover', function (event) {
-    //     console.log("mouseover");
-    // }); // end
+        obj_streetElementGroup.addElementByLayer(vectorLayer); //FIXME
+        map.addLayer(obj_streetElementGroup.getLastElement.element);
+
+        // stopVectorLayer.addEventListener('mouseover', function (event) {
+        //     console.log("mouseover");
+        // }); // end
 
     }
     }
