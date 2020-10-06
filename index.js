@@ -1,3 +1,4 @@
+
 const express = require('express');
 var bodyParser = require('body-parser');
 const app = express();
@@ -34,10 +35,6 @@ app.get('/css/:name', (request, response) => {
 app.get('/fonts/:name', (request, response) => {
     const { name } = request.params;
     response.sendFile(__dirname + "/templates/fonts/" + name);
-});
-
-app.get('/hello_world', (request, response) => {
-    response.send("Hello World!")
 });
 
 app.get('/form', (request, response) => {
@@ -88,19 +85,17 @@ app.post('/process_post', urlencodedParser, (request, response) => {
 // It serves static files
 //app.use(express.static('/static'));
 app.get('/static/:name', (request, response) => {
-
     // http://localhost:$port/ejemplo?name=algo
     const { name } = request.params;
     response.sendFile(__dirname + "/static/" + name);
 })
 
 app.get('/:name', (request, response) => {
-
     // http://localhost:$port/ejemplo?name=algo
     const { name } = request.params;
     response.sendFile(__dirname + "/templates/" + name);
 })
 
 // Iniciamos el servidor
-console.log(`Servidor en http://localhost:${port}\n`);
+console.log(`Server is running at address:port http://localhost:${port}\n`);
 app.listen(port);

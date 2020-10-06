@@ -1,0 +1,29 @@
+{
+  "name": "gtfs_shape_editor",
+  "version": "0.0.0",
+  "description": "Webapp to edit shapes in a GTFS format table",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+      "test": "echo 'no tests yet' && exit 1",
+      "serve": "node -v && node index.js && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeancahu/gtfs_shape_editor.git"
+  },
+  "keywords": [
+    "GTFS",
+    "transitfeed"
+  ],
+  "author": "Jeancarlo Hidalgo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jeancahu/gtfs_shape_editor/issues"
+  },
+  "homepage": "https://github.com/jeancahu/gtfs_shape_editor#readme"
+}
