@@ -24,6 +24,7 @@ app.get('/images/:name', (request, response) => {
 
 app.get('/js/:name', (request, response) => {
     const { name } = request.params;
+    console.log(__dirname + "/templates/js/" + name + ": JS request");
     response.sendFile(__dirname + "/templates/js/" + name);
 });
 
