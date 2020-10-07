@@ -1,11 +1,9 @@
-# Experiments with npm:
+# It could be an editor
+for GTFS shapes, someday... I hope...
 
-    $ npm install . # add package dependencies locally into node_modules directory
-    $ npm run serve # a small web-server using express form node.js
+## how to "use":
 
-TODO: npm-chech-updates to upgrade project dependencies
+    $ npm install express
+    $ npm run serve # a small web-server using express from node.js
 
-[index](http://localhost/)<br>
-[A form](http://localhost/form)<br>
-http://localhost:9000/ejemplo?name=variable_content<br>
-http://localhost:9000/ejemplo/vArIaBlE_cOnTeNt<br>
+I'm coding this editor full-JS to put it on my webserver, then I need something light by now, but I would like to get better stuff at some point
