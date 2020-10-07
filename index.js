@@ -9,11 +9,11 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 // Este es el resultado a pedir la dirección /
 app.get('/', (request, response) => {
-    response.sendFile(__dirname + "/templates/index.html");
+    response.sendFile(__dirname + "/index.html");
 });
 
 app.get('/editor', (request, response) => {
-    response.sendFile(__dirname + "/editor.html");
+    response.sendFile(__dirname + "/index.html");
 });
 
 
