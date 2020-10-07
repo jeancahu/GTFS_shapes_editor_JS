@@ -10,3 +10,4 @@ I'm coding this editor full-JS to put it on my webserver, then I need something 
 
 preview:
 [raw editor](http://161.35.54.122:10066/GTFS_shapes_editor_JS/index.html)
+<img src="http://161.35.54.122:10066/gtfs_editor.png" >
