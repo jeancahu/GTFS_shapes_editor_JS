@@ -48,32 +48,11 @@ var map = new ol.Map({
     view: view,
 });
 
-// Selects the proyection type
-// var projectionSelect = document.getElementById('projection');
-// projectionSelect.addEventListener('change', function (event) {
-//     mousePositionControl.setProjection(event.target.value);
-
-// });
-
-// Amount of digits behind dot
-// var precisionInput = document.getElementById('precision');
-// precisionInput.addEventListener('change', function (event) {
-//     var newCustomFormat = function(dgts)
-//     {return (function(coord1) {
-//         coord2 = [coord1[0], coord1[1]];
-//         //console.log(coord2);
-//         return ol.coordinate.toStringXY(coord2,dgts);
-//     });
-//     }
-//     mousePositionControl.setCoordinateFormat(
-//         newCustomFormat(event.target.value));
-// });
-
-// FIXME: change the "typo" variable for something with sense
-var typo = document.getElementById('shape_typo').value;
-var typoSelect = document.getElementById('shape_typo');
-typoSelect.addEventListener('change', function (event) {
-    typo = event.target.value;
+// FIXME: change the "node_type" variable for something with sense
+var node_type = document.getElementById('node_type').value;
+var nodeTypeSelect = document.getElementById('node_type');
+nodeTypeSelect.addEventListener('change', function (event) {
+    node_type = event.target.value;
 });
 
 // TODO: Review needed
@@ -89,13 +68,11 @@ function map_event_listener(event) {
     if (action == "remove"){
     //// Borrar si se da un segundo click:
     feature_onHover = map.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
-
-        obj_streetElementGroup.deleteElementByID(feature.parentID);
-
+        obj_streetElementGroup.deleteElementByID(feature.parent.getID);
         return feature;
     });
     } else if (action == "add") {
-        obj_streetElementGroup.addElement(coord2, typo); //FIXME
+        obj_streetElementGroup.addElement(coord2, node_type); //FIXME
     } else if (action == "edit") {
         console.log("edit");
 
@@ -120,55 +97,42 @@ var feature_onHover;
 map.on('pointermove', function (event) {
     feature_onHover = map.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
         //console.log(feature.ol_uid);
-        console.log(feature.parentID); // streetElement.id
+        console.log(feature.parent.getID); // streetElement.id
         //console.log(layer.ol_uid);
         return feature;
     });
     if (feature_onHover) {
         // Cambiamos la geometría cuando estamos sobre el feature
         console.log(feature_onHover.getGeometry().getCoordinates());
-        //var content = document.getElementById('popup-content');
-    //    console.log(feature_onHover.getProperties().name);
-        //overlay.setPosition(evt.coordinate);
-        //content.innerHTML = 'HOVER ' + feature_onHover.getProperties().name;
-        //container.style.display = 'block';
     } //else {
       //  container.style.display = 'none';
     //}
 });
 
-//
-
-// var hide_map = document.getElementById("disable_map");
-// // Toggle map visibility
-// hide_map.addEventListener("click",
-//     function (event) {
-//         element = document.getElementById("map_container");
-//     if (element.style.display === "none") {
-//         element.style.display = "block";
-//     } else {
-//         element.style.display = "none";
-//     }
-// });
 
 // Undo function
 document.addEventListener('keydown', function(event) {
     if (event.ctrlKey && event.key === 'z') {
-        console.log('Undo!');
+        console.log('Remove last');
         obj_streetElementGroup.deleteLastElement();
     }
 });
 
+// Shortcuts
 document.addEventListener('keypress', function(event) {
     if (event.key === 's') {
         console.log('Stop!');
-        typo = 'stop'; // FIXME
+        node_type = 'stop';
+    } else if (event.key === 'e') {
+        console.log('Endpoint!');
+        node_type = 'endpoint';
     }
+
 });
 
 document.addEventListener('keyup', function(event) {
     // if (event.key === 's') {
     //     console.log('Stop!');
-        typo = document.getElementById('shape_typo').value;; // FIXME
+        node_type = document.getElementById('shape_type').value;; // FIXME
     // }
 });

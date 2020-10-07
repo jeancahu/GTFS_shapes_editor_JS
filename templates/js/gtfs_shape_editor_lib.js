@@ -14,7 +14,6 @@ class streetElementNode {
 
         this.connections = [];    // Links who connect this element to others nodes
 
-        this.feature.parentID = this.id; // Define ID // FIXME: remove, no longer needed
         this.feature.parent = this; // Pass parent reference
 
         this.layer = layer; // Define the layer ( and type )
@@ -23,7 +22,6 @@ class streetElementNode {
     }
 
     setID (value){
-        //this.feature.parentID = value;
         this.id = value;
     }
 
@@ -164,15 +162,16 @@ class streetElementGroup {
     constructor (map) {
         this.elements = []; // could it be private? // TODO
         this.links = []; // could it be private? // TODO
-        this.lastSelect = null; // last element
+        this.lastSelect = null; // last element // head pointer
         this.map = map; // add the map methods
         this.layers = {};
 
-        this.addLayer("link"); // links between nodes
-        this.addLayer("shape");
-        this.addLayer("stop");
-        this.addLayer("fork");
-        this.addLayer("endpoint");
+        this.addLayer("link", "blue"); // links between nodes
+        this.addLayer("shape", "blue");
+        this.addLayer("stop", "red");
+        this.addLayer("fork", "violet");
+        this.addLayer("endpoint", "green");
+        this.addLayer("select", "yellow");
     }
 
     // Method to get the amount of elements
@@ -201,7 +200,7 @@ class streetElementGroup {
         }
 
         // The new element is the lastSelect now
-        this.lastSelect = this.getLastElement;
+        this.selectElement(this.getLastElement);
     }
 
     addLink(nodeA, nodeB){
@@ -228,30 +227,31 @@ class streetElementGroup {
         return connection.getID;
     }
 
-    updateElementLayerByID(element_id){
-        if (this.elements[element_id].connections.length < 2){
-            // Endpoint
-            this.elements[element_id].setLayer(this.layers["endpoint"]);
-        } else if (this.elements[element_id].connections.length < 3){
-            // Shape or stop
-            if (this.elements[element_id].type == "stop") {
-                return;
-            } else {
-                this.elements[element_id].setLayer(this.layers["shape"]);
-            }
-        } else {
-            // Intersection
-            this.elements[element_id].setLayer(this.layers["fork"]);
-        }
+    updateElementLayerByID(element_id){ // TODO
+        // if (this.elements[element_id].connections.length < 2){
+        //     // Endpoint
+        //     this.elements[element_id].setLayer(this.layers["endpoint"]);
+        // } else if (this.elements[element_id].connections.length < 3){
+        //     // Shape or stop
+        //     if (this.elements[element_id].type == "stop") {
+        //         return;
+        //     } else {
+        //         this.elements[element_id].setLayer(this.layers["shape"]);
+        //     }
+        // } else {
+
+        // if (this.elements[element_id].connections.length > 2){
+        //     // Intersection
+        //     this.elements[element_id].setLayer(this.layers["fork"]);
+        // }
     }
 
-    addLayer (type){
-        var color, radius;
+    addLayer (type, color){
+        var radius;
         var style;
         switch (type) {
         case 'shape': // Shape element, blue
             radius = 5;
-            color = "blue";
             style =  new ol.style.Style({
 	              image: new ol.style.Circle({
 	                  radius: radius, // 5 default
@@ -261,7 +261,6 @@ class streetElementGroup {
             break;
         case 'stop': // Stop element, red
             radius = 7;
-            color = "red";
             style =  new ol.style.Style({
 	              image: new ol.style.Circle({
 	                  radius: radius, // 5 default
@@ -271,7 +270,6 @@ class streetElementGroup {
             break;
         case 'fork': // Intersec. violet
             radius = 5;
-            color = "violet";
             style =  new ol.style.Style({
 	              image: new ol.style.Circle({
 	                  radius: radius, // 5 default
@@ -281,7 +279,15 @@ class streetElementGroup {
             break;
         case 'endpoint': // Terminals, green
             radius = 5;
-            color = "green";
+            style =  new ol.style.Style({
+	              image: new ol.style.Circle({
+	                  radius: radius, // 5 default
+	                  fill: new ol.style.Fill({color: color}) // blue default
+	              })
+            });
+            break;
+        case 'select': // Terminals, green
+            radius = 3;
             style =  new ol.style.Style({
 	              image: new ol.style.Circle({
 	                  radius: radius, // 5 default
@@ -291,10 +297,9 @@ class streetElementGroup {
             break;
         case 'link': // link, blue
             radius = 2;
-            color = "blue";
             style =  new ol.style.Style({
                 stroke: new ol.style.Stroke({
-                    color: "blue",
+                    color: color,
                     // width: 10, // TODO
                     width: 3,
 	              })
@@ -313,6 +318,19 @@ class streetElementGroup {
         this.map.addLayer(this.layers[type]); // Add layer to map
     }
 
+    selectElement (element) {
+        if ( this.lastSelect ){
+            this.layers["select"].getSource().removeFeature(
+                this.lastSelect.feature
+            );
+        }
+        this.lastSelect = element;
+        if ( this.lastSelect ){
+            this.layers["select"].getSource().addFeature(
+                this.lastSelect.feature
+            );
+        }
+    }
 
     // Return the streetElement object
     getElementByID (value){
@@ -381,7 +399,7 @@ class streetElementGroup {
 
         // Head pointer
         // var element = this.elements.pop(); //
-        this.lastSelect = this.getLastElement;
+        this.selectElement(this.getLastElement);
     }
 }
 
