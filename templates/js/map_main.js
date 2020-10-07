@@ -59,62 +59,57 @@ nodeTypeSelect.addEventListener('change', function (event) {
 ///////////////////////////////////////////////////////////////////////
 // Aqui vamos haciendo la lista con puntos dependiendo de que clase sea
 // se crea una lista con los diferentes puntos a dibujar sobre el mapa
-const obj_streetElementGroup = new streetElementGroup(map);
+const o_se_group = new streetElementGroup(map);
 
-function map_event_listener(event) {
+map.on('click', (event)=> {
     var action = document.getElementById('action').value;
+    var feature_onHover = map.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
+        return feature;
+    });
 
     // TODO: change for a switch
     if (action == "remove"){
-    //// Borrar si se da un segundo click:
-    feature_onHover = map.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
-        obj_streetElementGroup.deleteElementByID(feature.parent.getID);
-        return feature;
-    });
+        // Click on element to remove
+        if ( feature_onHover ){
+            o_se_group.deleteElementByID(
+                feature_onHover.parent.getID);
+        }
     } else if (action == "add") {
-        obj_streetElementGroup.addElement(coord2, node_type); //FIXME
+        if (feature_onHover){
+            console.log("eso eso");
+            o_se_group.addLink(
+                feature_onHover.parent,
+                o_se_group.lastSelect
+            );
+            o_se_group.selectElement(feature_onHover.parent);
+        } else {
+            o_se_group.addElement(coord2, node_type); //FIXME
+        }
+
     } else if (action == "edit") {
         console.log("edit");
 
     } else if (action == "move") {
         console.log("move");
-        if (obj_streetElementGroup.lastSelect){
-            obj_streetElementGroup.lastSelect.setCoordinates(coord2);
+        if (o_se_group.lastSelect){
+            o_se_group.lastSelect.setCoordinates(coord2);
         }
-
     } else if (action == "select") {
-        console.log("edit");
-
+        if (feature_onHover){
+            o_se_group.selectElement(
+                feature_onHover.parent
+            );
+        }
     } else {
         console.log("select");
     }
-}
-
-//map.addEventListener('click', map_event_listener);
-map.on('click', map_event_listener);
-
-var feature_onHover;
-map.on('pointermove', function (event) {
-    feature_onHover = map.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
-        //console.log(feature.ol_uid);
-        console.log(feature.parent.getID); // streetElement.id
-        //console.log(layer.ol_uid);
-        return feature;
-    });
-    if (feature_onHover) {
-        // Cambiamos la geometría cuando estamos sobre el feature
-        console.log(feature_onHover.getGeometry().getCoordinates());
-    } //else {
-      //  container.style.display = 'none';
-    //}
 });
 
-
-// Undo function
+// ~~Undo~~ function ( not yet )
 document.addEventListener('keydown', function(event) {
     if (event.ctrlKey && event.key === 'z') {
         console.log('Remove last');
-        obj_streetElementGroup.deleteLastElement();
+        o_se_group.deleteLastElement();
     }
 });
 
@@ -131,8 +126,5 @@ document.addEventListener('keypress', function(event) {
 });
 
 document.addEventListener('keyup', function(event) {
-    // if (event.key === 's') {
-    //     console.log('Stop!');
-        node_type = document.getElementById('shape_type').value;; // FIXME
-    // }
+        node_type = document.getElementById('node_type').value;
 });

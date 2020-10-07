@@ -1,19 +1,12 @@
 <!DOCTYPE html>
-<!--
- Interphase by TEMPLATED
- templated.co @templatedco
- Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
--->
 <html lang="en">
  <head>
   <meta charset="UTF-8">
-  <title>Generic - Interphase by TEMPLATED</title>
+  <title>Shape Editor - Alpha</title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta name="description" content="" />
   <meta name="keywords" content="" />
-  <!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
   <script src="https://unpkg.com/elm-pep"></script>
-  <!-- <script src="js/elm-pep"></script> -->
   <script src="js/jquery.min.js"></script>
   <script src="js/skel.min.js"></script>
   <script src="js/skel-layers.min.js"></script>
@@ -22,13 +15,12 @@
   <link rel="stylesheet" href="css/skel.css" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/style-xlarge.css" />
-    <link rel="stylesheet" href="css/editor-style.css" />
+  <link rel="stylesheet" href="css/editor-style.css" />
 
-    <!-- importar los estilos de OpenLayers -->
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/css/ol.css" type="text/css"> -->
+    <!-- OpenLayers style lib -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/css/ol.css" type="text/css">
     <link rel="stylesheet" href="css/ol.css" type="text/css">
 
-  <!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
  </head>
  <body>
 
@@ -38,24 +30,25 @@
                <a href="#">Clients</a>
                <a href="#">Contact</a> -->
           <form>
-              <!-- <label>Proyección </label>
-                   <select id="projection">
-                   <option value="EPSG:4326">EPSG:4326</option>
-                   <option value="EPSG:3857">EPSG:3857</option>
-                   </select> -->
-              <!-- <label>Precisión </label>
-                   <select id="precision">
-                   <option value="4">P: 4</option>
-                   <option value="5">P: 5</option>
-                   <option value="6">P: 6</option>
-                   <option value="7">P: 7</option>
-                   <option value="8">P: 8</option>
-                   <option value="9">P: 9</option>
-                   <option value="10">P: 10</option>
-                   <option value="11">P: 11</option>
-                   <option value="12">P: 12</option>
-                   </select>
-              -->
+              <label>Proyección </label>
+              <select id="projection">
+                  <option value="EPSG:4326">EPSG:4326</option>
+                  <option value="EPSG:3857">EPSG:3857</option>
+              </select>
+
+              <label>Precisión </label>
+              <select id="precision">
+                  <option value="4">P: 4</option>
+                  <option value="5">P: 5</option>
+                  <option value="6">P: 6</option>
+                  <option value="7">P: 7</option>
+                  <option value="8">P: 8</option>
+                  <option value="9">P: 9</option>
+                  <option value="10">P: 10</option>
+                  <option value="11">P: 11</option>
+                  <option value="12">P: 12</option>
+              </select>
+
               <label>Tipo </label>
               <select id="node_type">
                   <option value="shape">shape</option>
@@ -67,22 +60,13 @@
 
               <label>Acción </label>
               <select id="action">
-
                   <option value="add">add</option>
                   <option value="select">select</option>
                   <option value="edit">edit</option>
                   <option value="move">move</option>
                   <option value="remove">remove</option>
-
               </select>
-
-              <!-- <label>Map </label>
-                   <a href="#" class="button small" id="disable_map">Ocultar</a>
-              -->
-
-              <!-- <input id="precision" type="number" min="0" max="12" value="4"/> -->
           </form>
-
       </div>
       <div class="body-container">
 
@@ -93,68 +77,21 @@
           <div id="map_container" class="map_container">
           </div>
 
-                <div class="table-wrapper">
-        <table>
-         <thead>
-          <tr>
-           <th>Name</th>
-           <th>Description</th>
-           <th>Price</th>
-                      <th>eso</th>
-          </tr>
-         </thead>
-         <tbody>
-          <tr>
-           <td>Item 1</td>
-           <td>Ante turpis integer aliquet porttitor.</td>
-           <td>29.99</td>
-                      <td>29.99</td>
-          </tr>
-          <tr>
-           <td>Item 2</td>
-           <td>Vis ac commodo adipiscing arcu aliquet.</td>
-           <td>19.99</td>
-                      <td>29.99</td>
-          </tr>
-          <tr>
-           <td>Item 3</td>
-           <td> Morbi faucibus arcu accumsan lorem.</td>
-           <td>29.99</td>
-                      <td>29.99</td>
-          </tr>
-          <tr>
-           <td>Item 4</td>
-           <td>Vitae integer tempus condimentum.</td>
-           <td>19.99</td>
-                      <td>29.99</td>
-          </tr>
-          <tr>
-           <td>Item 5</td>
-           <td>Ante turpis integer aliquet porttitor.</td>
-           <td>29.99</td>
-                      <td>29.99</td>
-          </tr>
-         </tbody>
-         <tfoot>
-          <tr>
-           <td colspan="2"></td>
-           <td>100.00</td>
-          </tr>
-         </tfoot>
-        </table>
-               </div>
+          <!-- ----------------- key command board ------------------------ -->
 
+          <!-- TODO -->
 
+          <!-- --------------  END key command board  --------------------- -->
 
-
-                      map: OpenStreetMap, elements design: TEMPLATED.co
+          map: OpenStreetMap
       </div>
-      <!-- importar la biblioteca de OpenLayers para generar el objeto mapa de interés -->
-      <!-- <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/build/ol.js"></script> -->
-      <script src="js/ol.js"></script>
+      <!-- OpenLayers library we use to show the map and draw on it -->
+      <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/build/ol.js"></script>
 
-      <!-- importar el script que contiene toda la configuración y puesta en ejecución del mapa -->
+      <!-- editor configuration -->
       <script src="js/gtfs_shape_editor_lib.js"></script>
+
+      <!-- variables and listeners -->
       <script src="js/map_main.js"></script>
  </body>
 </html>

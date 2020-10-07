@@ -44,6 +44,7 @@ class streetElementNode {
     }
 
 
+    // TODO push, rotation
     removeConnection (link) {
         // link: streetElementLink
         if (this.valid){
@@ -95,9 +96,7 @@ class streetElementNode {
         // Remove feature from map
         this.layer.getSource().removeFeature(this.feature);
 
-        delete(this); // experimental // TODO just disable
     }
-
 }
 
 class streetElementLink { // Link between two nodes
@@ -152,12 +151,10 @@ class streetElementLink { // Link between two nodes
         this.layer.getSource().removeFeature(this.feature);
         this.nodeA.removeConnection(this);
         this.nodeB.removeConnection(this);
-        delete(this); // experimental // TODO // just disable
     }
 }
 
 // TODO: add shape element (contains nodes and links)
-//obj_streetElementGroup.getLastElement.element.getSource().addFeature // FIXME // TODO
 class streetElementGroup {
     constructor (map) {
         this.elements = []; // could it be private? // TODO
@@ -210,6 +207,18 @@ class streetElementGroup {
         if (nodeA.valid & nodeB.valid) {} //OK
         else {return 2;} // ERROR
 
+        nodeA.getConnections().forEach((value, index)=>{
+            if ( value.getPartner(nodeA).getID == nodeB.getID ){
+                return; // duplicate link
+            }
+        });
+        nodeB.getConnections().forEach((value, index)=>{
+            if ( value.getPartner(nodeB).getID == nodeA.getID ){
+                console.log("Half link error at :", value);
+                return; // half-link error
+            }
+        });
+
         const connection = new streetElementLink(
             this.links.length, // ID number
             nodeA,
@@ -221,8 +230,9 @@ class streetElementGroup {
         );
         // Update link on nodes
         this.elements[nodeA.getID].addConnection(connection);
-        this.updateElementLayerByID(nodeA.getID);
         this.elements[nodeB.getID].addConnection(connection);
+
+        this.updateElementLayerByID(nodeA.getID);
         this.updateElementLayerByID(nodeB.getID);
         return connection.getID;
     }
@@ -240,10 +250,10 @@ class streetElementGroup {
         //     }
         // } else {
 
-        // if (this.elements[element_id].connections.length > 2){
-        //     // Intersection
-        //     this.elements[element_id].setLayer(this.layers["fork"]);
-        // }
+        if (this.elements[element_id].connections.length > 2){
+            // Intersection
+            this.elements[element_id].setLayer(this.layers["fork"]);
+        }
     }
 
     addLayer (type, color){
@@ -320,6 +330,8 @@ class streetElementGroup {
 
     selectElement (element) {
         if ( this.lastSelect ){
+            if (element)
+            {this.updateElementLayerByID(element.getID);}
             this.layers["select"].getSource().removeFeature(
                 this.lastSelect.feature
             );
@@ -373,12 +385,7 @@ class streetElementGroup {
             return;
         }
 
-        var partners_id = [];
-        element.getConnections().forEach((value,index)=>{
-            partners_id.push(
-                value.getPartner(element).getID
-            );
-        });
+        element.terminate(); // terminate element
 
         if( element.getConnections().length == 2 ){
             this.addLink(
@@ -386,13 +393,6 @@ class streetElementGroup {
                element.getConnections()[1].getPartner(element)
             );
         }
-
-        element.terminate(); // terminate element
-
-        partners_id.forEach((value,index)=>{
-            this.updateElementLayerByID(
-                value); // ex-partner id
-        });
 
         // this.map.removeLayer(element.layer);
         console.log("REMOVE"); // FIXME // remove
