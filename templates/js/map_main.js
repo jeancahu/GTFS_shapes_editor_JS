@@ -128,3 +128,15 @@ document.addEventListener('keypress', function(event) {
 document.addEventListener('keyup', function(event) {
         node_type = document.getElementById('node_type').value;
 });
+
+
+//////////////////// Vue experiments ////////////////////////////
+
+var app = new Vue({
+    el: '#app',
+    data: {
+        shapes: o_se_group.elements,
+        last: o_se_group
+    }
+});
+
