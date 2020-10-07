@@ -1,16 +1,25 @@
 // GTFS streetElements
 
 class streetElementNode {
-    constructor (id, feature, layer) {
-        this.layer = layer;
+    constructor (id, coordenate, layer) {
         this.valid = true;
-        this.feature = feature; // The layer
         this.id = id;            // The streetElementNode ID
-        this.connetions = [];    // Nodes who are connected to this element
 
-        this.feature.parentID = this.id; // Define ID // FIXME
+        this.feature = new ol.Feature({ // The feature
+	          geometry: new ol.geom.Point(ol.proj.fromLonLat([
+	              coordenate[0],
+                coordenate[1]
+	          ]))
+        });
 
-        this.layer.getSource().addFeature(this.feature);
+        this.connections = [];    // Links who connect this element to others nodes
+
+        this.feature.parentID = this.id; // Define ID // FIXME: remove, no longer needed
+        this.feature.parent = this; // Pass parent reference
+
+        this.layer = layer; // Define the layer ( and type )
+        this.layer.getSource().addFeature(this.feature); // Gettin visible on map
+
     }
 
     setID (value){
@@ -22,55 +31,91 @@ class streetElementNode {
         return this.id;
     }
 
+    get type (){ // Layer name is the element type
+        return this.layer.name;
+    }
+
     addConnection (value){
         // value: streetElementLink
-        //verify if there are more than X connetions
-        this.connetions.push(value.getID);
+        //verify if there are more than X connections
+        this.connections.push(value);
     }
 
     getConnections () {
-        return this.connetions;
+        return this.connections;
     }
 
 
-    removeConnection (id) {
-        // id: streetElementLink.id
-        console.log(this.connections);// FIXME
-        for (var i in this.connetions ){
-            if (this.connetions[i] == id){
-                delete(this.connetions[i]); // remove id
+    removeConnection (link) {
+        // link: streetElementLink
+        if (this.valid){
+        for (var i in this.connections ){
+            if (this.connections[i].getID == link.getID){
+                this.connections.splice(i, 1);
             }
-            console.log(this.connetions); // FIXME; remove
         }
-        console.log(this.connections); // FIXME
+        }
     }
 
-    // terminate
+    get coordinates (){
+        return this.feature.getGeometry().getCoordinates();
+    }
 
+
+    setCoordinates ( coordenate ){
+        this.feature.getGeometry().setCoordinates(
+            ol.proj.fromLonLat([
+	              coordenate[0],
+                coordenate[1]
+	          ]));
+        for( var i in this.connections ){
+            this.connections[i].update(); // Update link
+        }
+    }
+
+    setLayer (layer){
+        console.log("set layer"); // FIXME
+        this.layer.getSource().removeFeature(this.feature);
+        this.layer = layer;
+        this.layer.getSource().addFeature(this.feature);
+    }
+
+    // Terminate element
     terminate (){
         // delete feature // TODO
         // parent has to delete connections first
+
+        // Set it as invalid
         this.valid = false;
+
+        // Terminate links:
+        this.connections.forEach((value, index)=>{
+            console.log(value);
+            value.terminate(); // Terminate link
+        });
+
+        // Remove feature from map
         this.layer.getSource().removeFeature(this.feature);
+
+        delete(this); // experimental // TODO just disable
     }
 
 }
 
-class streetElementLink {
+class streetElementLink { // Link between two nodes
     constructor (id, nodeA, nodeB, layer) {
-        this.id = id;
-        this.layer = layer;
         this.valid = true;
+        this.id = id;
+
+        this.layer = layer;
+
         var coordinates = [
             nodeA.feature.getGeometry().flatCoordinates,
             nodeB.feature.getGeometry().flatCoordinates
         ];
 
-        this.nodes = {};
-        this.nodes[nodeA.getID] = nodeB.getID;
-        this.nodes[nodeB.getID] = nodeA.getID;
-
-        this.nodes_vec = [nodeA.getID, nodeB.getID];
+        this.nodeA = nodeA;
+        this.nodeB = nodeB;
 
         this.feature = new ol.Feature({
             geometry: new ol.geom.LineString(coordinates),
@@ -79,8 +124,26 @@ class streetElementLink {
         layer.getSource().addFeature(this.feature);
     }
 
+    update () { // Update figure on map
+        var coordinates = [
+            this.nodeA.feature.getGeometry().flatCoordinates,
+            this.nodeB.feature.getGeometry().flatCoordinates
+        ];
+        this.feature.getGeometry().setCoordinates(coordinates);
+    }
+
     get getID (){
         return this.id;
+    }
+
+    getPartner (node) {
+        if ( node.getID == this.nodeA.getID ){
+            return this.nodeB;
+        } else if ( node.getID == this.nodeB.getID ){
+            return this.nodeA;
+        } else {
+            return null;
+        }
     }
 
     terminate (){
@@ -89,11 +152,13 @@ class streetElementLink {
         // parent has to delete connections first
         this.valid = false;
         this.layer.getSource().removeFeature(this.feature);
-        return this.nodes_vec;
+        this.nodeA.removeConnection(this);
+        this.nodeB.removeConnection(this);
+        delete(this); // experimental // TODO // just disable
     }
-
 }
 
+// TODO: add shape element (contains nodes and links)
 //obj_streetElementGroup.getLastElement.element.getSource().addFeature // FIXME // TODO
 class streetElementGroup {
     constructor (map) {
@@ -116,25 +181,15 @@ class streetElementGroup {
     }
 
     addElement(coordenate, type){
-        console.log(coordenate); // TODO
-        const feature = new ol.Feature({
-	          geometry: new ol.geom.Point(ol.proj.fromLonLat([
-	              coordenate[0],
-                coordenate[1]
-	          ]))
-        });
-        this.addElementByFeature(feature, type);
-    }
-
-    addElementByFeature (feature, type){
-        // features: an Array of features
-        // type: the kind of element
+        console.log(coordenate); // FIXME
+        // coordenate: a single of coordenate, point
+        // type: the element layer name
         console.log("Add element by features");
         // Verify type TODO
         this.elements.push(
             new streetElementNode(
                 this.elements.length, // ID number
-                feature, // feature
+                coordenate, // coordinate
                 this.layers[type] // layer
             ));
 
@@ -150,7 +205,13 @@ class streetElementGroup {
     }
 
     addLink(nodeA, nodeB){
-        const connection =             new streetElementLink(
+        if (nodeA.getID == nodeB.getID){
+            return 1;} // Error
+
+        if (nodeA.valid & nodeB.valid) {} //OK
+        else {return 2;} // ERROR
+
+        const connection = new streetElementLink(
             this.links.length, // ID number
             nodeA,
             nodeB,
@@ -161,7 +222,27 @@ class streetElementGroup {
         );
         // Update link on nodes
         this.elements[nodeA.getID].addConnection(connection);
+        this.updateElementLayerByID(nodeA.getID);
         this.elements[nodeB.getID].addConnection(connection);
+        this.updateElementLayerByID(nodeB.getID);
+        return connection.getID;
+    }
+
+    updateElementLayerByID(element_id){
+        if (this.elements[element_id].connections.length < 2){
+            // Endpoint
+            this.elements[element_id].setLayer(this.layers["endpoint"]);
+        } else if (this.elements[element_id].connections.length < 3){
+            // Shape or stop
+            if (this.elements[element_id].type == "stop") {
+                return;
+            } else {
+                this.elements[element_id].setLayer(this.layers["shape"]);
+            }
+        } else {
+            // Intersection
+            this.elements[element_id].setLayer(this.layers["fork"]);
+        }
     }
 
     addLayer (type){
@@ -214,7 +295,8 @@ class streetElementGroup {
             style =  new ol.style.Style({
                 stroke: new ol.style.Stroke({
                     color: "blue",
-                    width: 1,
+                    // width: 10, // TODO
+                    width: 3,
 	              })
             });
             break;
@@ -226,6 +308,7 @@ class streetElementGroup {
             source: new ol.source.Vector(),
             style: style
         });
+        vectorLayer.name = type; // Name the layer
         this.layers[type] = vectorLayer; // Add layer to obj
         this.map.addLayer(this.layers[type]); // Add layer to map
     }
@@ -242,32 +325,57 @@ class streetElementGroup {
         // Change this while FIXME:
         while (this.elements[this.elements.length-decrem].valid != true) {
             decrem = decrem + 1;
+            if ( this.elements.length-decrem < 0 ){
+                return null;
+            }
         }
         return this.elements[this.elements.length-decrem];
     }
 
-    deleteLink (link_id){
-        var nodes = this.links[link_id].terminate();
-        this.elements[nodes[0]].removeConnection(link_id);
-        this.elements[nodes[1]].removeConnection(link_id);
+    deleteLinkByID (link_id){ // TODO: move to link.terminate
+        this.links[link_id].terminate();
     }
 
     deleteLastElement (){
+        if (this.getLastElement){
+            this.deleteElementByID (this.getLastElement.getID);
+        } else {
+            console.log("there are no valid elements in the vector");
+        }
+    }
+
+    deleteElementByID (value){
         // This one is easy because last in Array but
         // a point in middlen needs more logic
-        var element = this.getLastElement;
-        var connections = element.getConnections();
+        var element = this.elements[value];
+        if (element.valid){
+            console.log("valid element");
+        } else {
+            console.log("invalid element");
+            return;
+        }
 
-        console.log(connections); // FIXME;
+        var partners_id = [];
+        element.getConnections().forEach((value,index)=>{
+            partners_id.push(
+                value.getPartner(element).getID
+            );
+        });
 
-        for ( var i  in connections){
-            // the second node in the link:
-            //console.log(i); // FIXME
-            // Delete connections
-            this.deleteLink(connections[i]);
+        if( element.getConnections().length == 2 ){
+            this.addLink(
+               element.getConnections()[0].getPartner(element),
+               element.getConnections()[1].getPartner(element)
+            );
         }
 
         element.terminate(); // terminate element
+
+        partners_id.forEach((value,index)=>{
+            this.updateElementLayerByID(
+                value); // ex-partner id
+        });
+
         // this.map.removeLayer(element.layer);
         console.log("REMOVE"); // FIXME // remove
 
@@ -275,90 +383,5 @@ class streetElementGroup {
         // var element = this.elements.pop(); //
         this.lastSelect = this.getLastElement;
     }
-
-    deleteElementByID (value){
-        console.log("delete element"); // TODO
-    }
-
 }
 
-
-
-
-///////////////////////////////////////////////////
-
-// Constrained map in the area of interst
-var view = new ol.View({
-    center: ol.proj.fromLonLat([-84.1027104, 9.865107]),
-    zoom: 12,
-    // [minx,miny,max,may]
-    extent: [-9375050.54, 1092000.79, -9352512.37, 1113049.659],
-});
-
-
-var coord2; // coordenates vector
-var customFormat = function(dgts)
-{
-    return (function(coord1) {
-        coord2 = [coord1[0], coord1[1]];
-        return ol.coordinate.toStringXY(coord2,dgts);
-    });
-}
-
-//
-var mousePositionControl = new ol.control.MousePosition({
-    coordinateFormat: customFormat(
-        document.getElementById('precision').value),
-    projection: 'EPSG:4326',
-    // comment the following two lines to have the mouse position
-    // be placed within the map.
-    className: 'custom-mouse-position',
-    target: document.getElementById('mouse-position'),
-    undefinedHTML: '&nbsp;',
-});
-
-
-// Map need a layers group, we're
-// adding only base layer, streetElementNodes will be next
-// base layer mainly has routes and buildings.
-var map = new ol.Map({
-    controls: ol.control.defaults(
-        {attribution: false}).extend([mousePositionControl]),
-    layers: [
-	      new ol.layer.Tile({
-	          source: new ol.source.OSM(),
-	      }),
-	      //vectorLayer,
-    ],
-    keyboardEventTarget: document,
-    target: 'map_container', // It shows coordinates on page
-    view: view,
-});
-
-// Selects the proyection type
-var projectionSelect = document.getElementById('projection');
-projectionSelect.addEventListener('change', function (event) {
-    mousePositionControl.setProjection(event.target.value);
-
-});
-
-// Amount of digits behind dot
-var precisionInput = document.getElementById('precision');
-precisionInput.addEventListener('change', function (event) {
-    var newCustomFormat = function(dgts)
-    {return (function(coord1) {
-        coord2 = [coord1[0], coord1[1]];
-        //console.log(coord2);
-        return ol.coordinate.toStringXY(coord2,dgts);
-    });
-    }
-    mousePositionControl.setCoordinateFormat(
-        newCustomFormat(event.target.value));
-});
-
-// FIXME: change the "typo" variable for something with sense
-var typo = document.getElementById('shape_typo').value;
-var typoSelect = document.getElementById('shape_typo');
-typoSelect.addEventListener('change', function (event) {
-    typo = event.target.value;
-});
