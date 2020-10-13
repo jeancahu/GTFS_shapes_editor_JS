@@ -83,7 +83,18 @@
 
           <!-- TODO -->
 					<div id="app" class="table-wrapper">
-              <h1 v-if="last.lastSelect">Selected: {{ last.lastSelect.getID }} /--/ element type = {{ last.lastSelect.type }}</h1>
+              <!-- <h1 v-if="last.lastSelect">Selected: {{ last.lastSelect.getID }} /--/ element type = {{ last.lastSelect.type }}</h1> -->
+              <table> <!-- TODO: change buttons format and replace table by a proper class -->
+									<tr>
+                      <th><button>agency</button></th>
+											<th><button>shapes</button></th>
+											<th><button>stops</button></th>
+                      <th><button>stop_times</button></th>
+                      <th><button>routes</button></th>
+                      <th><button>trips</button></th>
+									</tr>
+              </table>
+
 							<table class="alt">
 									<thead>
 										  <tr>
@@ -95,13 +106,14 @@
 										  </tr>
 									</thead>
 									<tbody>
-										  <tr v-for="shape in shapes">
+										  <tr v-for="shape in reverse_shapes" track-by="shape.getID">
 											    <td>A_shp</td>
-                          <td>{{shape.coordinates[0]}}</td>
-											    <td>{{shape.coordinates[1]}}</td>
+                          <td><input type="text" v-bind:value="shape.coordinates[0]"></td>
+											    <td><input type="text" v-bind:value="shape.coordinates[1]"></td>
                           <td>{{shape.getID}}</td>
-											    <td>{{shape.feature.ol_uid}}</td>
-										</tr>
+											    <td><input type="text" v-bind:value="shape.feature.ol_uid"></td>
+                          <td><button>save</button></td>
+										  </tr>
 									</tbody>
 									<tfoot>
 										<tr>

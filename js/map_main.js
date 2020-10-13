@@ -134,9 +134,23 @@ document.addEventListener('keyup', function(event) {
 
 var app = new Vue({
     el: '#app',
-    data: {
-        shapes: o_se_group.elements,
-        last: o_se_group
+    data() {
+        return {
+            shapes: o_se_group.elements
+            //last: o_se_group.getLastElement // getSelected TODO
+        }
+    },
+    computed: {
+        reverse_shapes() {
+            return this.shapes.slice().reverse();
+        },
+        esoeso() {
+            return "puravidacompa";
+        }
+    },
+    filters: {
+        input_box(value) {
+            return "<input type=\"text\" value=\"" + value + "\">";
+        }
     }
 });
-
