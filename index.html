@@ -86,16 +86,17 @@
               <!-- <h1 v-if="last.lastSelect">Selected: {{ last.lastSelect.getID }} /--/ element type = {{ last.lastSelect.type }}</h1> -->
               <table> <!-- TODO: change buttons format and replace table by a proper class -->
 									<tr>
-                      <th><button>agency</button></th>
-											<th><button>shapes</button></th>
-											<th><button>stops</button></th>
-                      <th><button>stop_times</button></th>
-                      <th><button>routes</button></th>
-                      <th><button>trips</button></th>
+                      <th><button @click="showAgency">agency</button></th>
+											<th><button @click="showShape">shapes</button></th>
+											<th><button @click="showStop">stops</button></th>
+                      <th><button @click="showRoute">routes</button></th>
+                      <th><button @click="showTrip">trips</button></th>
+                      <th><button @click="showStopTime">stop_times</button></th>
 									</tr>
               </table>
 
-							<table class="alt">
+              <!-- SHAPES -->
+							<table v-if="show('shape')" class="alt">
 									<thead>
 										  <tr>
                           <th>shape_id</th>
@@ -103,27 +104,107 @@
 											    <th>shape_pt_lon</th>
                           <th>shape_pt_sequence</th>
                           <th>shape_dist_traveled</th>
+                          <th></th>
 										  </tr>
 									</thead>
 									<tbody>
-										  <tr v-for="shape in reverse_shapes" track-by="shape.getID">
-											    <td>A_shp</td>
-                          <td><input type="text" v-bind:value="shape.coordinates[0]"></td>
-											    <td><input type="text" v-bind:value="shape.coordinates[1]"></td>
+										  <tr v-for="shape in rev_shapes" :key="shape.getID">
+											    <td> - </td> <!-- shp_a : TODO, generate shapes -->
+                          <td><input type="text" :value="shape.coordinates[0]"></td>
+											    <td><input type="text" :value="shape.coordinates[1]"></td>
                           <td>{{shape.getID}}</td>
-											    <td><input type="text" v-bind:value="shape.feature.ol_uid"></td>
+											    <td><input type="text" :value="shape.feature.ol_uid"></td>
                           <td><button>save</button></td>
 										  </tr>
 									</tbody>
-									<tfoot>
-										<tr>
-											<td colspan="2"></td>
-											<td>{{shapes.length}}</td>
-										</tr>
-									</tfoot>
-								</table>
-						</div>
+									<!-- <tfoot>
+										   <tr>
+											 <td colspan="2"></td>
+											 <td>{{shapes.length}}</td>
+										   </tr>
+									     </tfoot> -->
+							</table>
+              <!-- END SHAPES -->
 
+              <!-- AGENCY -->
+              <table v-if="show('agency')" class="alt">
+									<thead>
+										  <tr>
+                          <th v-for="field in agencyFields">{{field}}</th>
+                          <th></th>
+										  </tr>
+									</thead>
+									<tbody>
+										  <tr>
+                          <th v-for="field in agencyFields"><input type="text" :id="field"></th>
+                          <td><button @click="saveAgency">add</button></td>
+										  </tr>
+                      <tr> <!-- TODO for agency in obj -->
+                          <th v-for="field in agencyFields"><input type="text" :id="field"></th>
+                          <td><button @click="saveAgency">add</button></td>
+										  </tr>
+
+									</tbody>
+									<!-- <tfoot>
+										   <tr>
+											 <td colspan="2"></td>
+											 <td>{{shapes.length}}</td>
+										   </tr>
+									     </tfoot> -->
+							</table>
+              <!-- END AGENCY -->
+
+              <!-- STOPS -->
+              <table v-if="show('stop')" class="alt">
+									<thead>
+										  <tr>
+                          <th v-for="field in stopFields">{{field}}</th>
+                          <th></th>
+										  </tr>
+									</thead>
+									<tbody>
+										  <tr v-for="stop in rev_stops">
+                          <td><input type="text" id="stop_id" :value="stop.getID"></td> <!-- TODO solve stop-id -->
+                          <td><input type="text" id="stop_name"></td>
+                          <td><input type="text" id="stop_desc"></td>
+                          <td>{{stop.coordinates[0]}}</td>
+											    <td>{{stop.coordinates[1]}}</td>
+                          <td><button @click="saveStop">save</button></td>
+										  </tr>
+									</tbody>
+									<!-- <tfoot>
+										   <tr>
+											 <td colspan="2"></td>
+											 <td>{{shapes.length}}</td>
+										   </tr>
+									     </tfoot> -->
+							</table>
+              <!-- END STOPS -->
+
+              <!-- ROUTES -->
+              <table v-if="show('route')" class="alt">
+									<thead>
+										  <tr>
+                          <th v-for="field in routeFields">{{field}}</th>
+                          <th></th>
+										  </tr>
+									</thead>
+									<tbody>
+										  <tr v-for="route in rev_routes">
+											    <td>FIXME</td>
+                          <td><button @click="saveRoute">save</button></td>
+										  </tr>
+									</tbody>
+									<!-- <tfoot>
+										   <tr>
+											 <td colspan="2"></td>
+											 <td>{{shapes.length}}</td>
+										   </tr>
+									     </tfoot> -->
+							</table>
+              <!-- END ROUTES -->
+
+					</div>
 
           <!-- --------------  END key command board  --------------------- -->
 

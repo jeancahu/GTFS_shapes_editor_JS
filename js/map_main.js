@@ -136,16 +136,127 @@ var app = new Vue({
     el: '#app',
     data() {
         return {
-            shapes: o_se_group.elements
+            showList: "shape", // It shows Shapes by default
+
+            shapes: o_se_group.nodes,
+            routes: o_se_group.routes,
+            agencies: o_se_group.agencies,
+            trips: o_se_group.trips,
+            stopTimes: o_se_group.stopTimes,
+
+            agencyFields: [
+                "agency_id",
+								"agency_name",
+								"agency_url",
+                "agency_timezone",
+                "agency_lang",
+                "agency_phone",
+                "agency_fare_url",
+                "agency_email"
+            ],
+            stopFields: [
+                "stop_id",
+                "stop_name",
+                "stop_desc",
+                "stop_lat", // Same than shape
+                "stop_lon"  // Same than shape
+            ],
+            stopTimesFields: [
+                "st_trip_id",
+                "st_arrival_time",
+                "st_departure_time",
+                "st_stop_id",
+                "st_stop_sequence"
+            ],
+            tripFields: [
+                "t_route_id",
+                "t_service_id",
+                "t_trip_id",
+                "t_direction_id",
+                "t_shape_id"
+            ],
+            routeFields: [
+                "r_route_id",
+                "r_agency_id",
+                "r_route_short_name",
+                "r_route_long_name",
+                "r_route_type" // TODO, autobus by default
+            ]
+
             //last: o_se_group.getLastElement // getSelected TODO
         }
     },
-    computed: {
-        reverse_shapes() {
-            return this.shapes.slice().reverse();
+    methods: {
+        show(value) {
+            return ( value == this.showList );
         },
-        esoeso() {
-            return "puravidacompa";
+        showAgency() {
+            this.showList = "agency";
+        },
+        showShape() {
+            this.showList = "shape";
+        },
+        showStop() {
+            this.showList = "stop";
+        },
+        showStopTime() {
+            this.showList = "stoptime";
+        },
+        showRoute() {
+            this.showList = "route";
+        },
+        showTrip() {
+            this.showList = "trip";
+        },
+        saveAgency(){
+            this.agencyFields.forEach( (value) => {
+                console.log(value);
+            }); // FIXME remove
+            o_se_group.addAgency(
+                document.getElementById("agency_id").value,
+						    document.getElementById("agency_name").value,
+						    document.getElementById("agency_url").value,
+                document.getElementById("agency_timezone").value,
+                document.getElementById("agency_lang").value,
+                document.getElementById("agency_phone").value,
+                document.getElementById("agency_fare_url").value,
+                document.getElementById("agency_email").value
+            );
+            console.log("saveAgency");
+        },
+        saveStop(){
+            // this.stopFields.forEach( (value) => {
+            //     console.log(value);
+            //     console.log(document.getElementById(value).value);
+            // });
+            console.log("saveStop");
+        },
+        saveRoute(){
+            // this.stopFields.forEach( (value) => {
+            //     console.log(value);
+            //     console.log(document.getElementById(value).value);
+            // });
+            console.log("saveRoute");
+        }
+    },
+    computed: {
+        rev_shapes() {
+            result = [];
+            this.shapes.slice().reverse().forEach( (value) => {
+                if (value.valid){
+                    result.push(value);
+                }
+            });
+            return result;
+        },
+        rev_stops() {
+            result = [];
+            this.shapes.slice().reverse().forEach( (value) => {
+                if (value.valid && value.type == 'stop'){
+                    result.push(value);
+                }
+            });
+            return result;
         }
     },
     filters: {

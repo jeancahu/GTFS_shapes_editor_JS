@@ -154,11 +154,90 @@ class streetElementLink { // Link between two nodes
     }
 }
 
+class streetElementAgency {
+    constructor (agency_id,
+                 agency_name,
+                 agency_url,
+                 agency_timezone,
+                 agency_lang,
+                 agency_phone,
+                 agency_fare_url,
+                 agency_email
+                ) {
+        this.agency_id = agency_id;
+        this.agency_name = agency_name;
+        this.agency_url = agency_url;
+        this.agency_timezone = agency_timezone;
+        this.agency_lang = agency_lang;
+        this.agency_phone = agency_phone;
+        this.agency_fare_url = agency_fare_url;
+        this.agency_email = agency_email;
+    }
+    // Create a function for every param to
+    // verify if it is a valid valor // TODO
+}
+
+class streetElementRoute {
+    constructor (route_id,
+                 agency_id,  // agency object
+                 route_short_name,
+                 route_long_name,
+                 route_type
+                ) {
+        this.route_id = route_id;
+        this.agency_id = agency_id;
+        this.route_short_name = route_short_name;
+        this.route_long_name = route_long_name;
+        this.route_type = route_type;
+    }
+    // Create a function for every param to
+    // verify if it is a valid valor // TODO
+}
+
+class streetElementTrip {
+    constructor (route_id, // Route object
+                 service_id,
+                 trip_id,
+                 direction_id,
+                 shape_id  // Shape object
+                ) {
+        this.route_id = route_id;
+        this.service_id = service_id;
+        this.trip_id = trip_id;
+        this.direction_id = direction_id;
+        this.shape_id = shape_id;
+    }
+    // Create a function for every param to
+    // verify if it is a valid valor // TODO
+}
+
+class streetElementStopTime {
+    constructor (trip_id,  // Trip object
+                 arrival_time,
+                 departure_time,
+                 stop_id,  // Stop object
+                 stop_sequence
+                ) {
+        this.trip_id = trip_id;
+        this.arrival_time = arrival_time;
+        this.departure_time = departure_time;
+        this.stop_id = stop_id;
+        this.stop_sequence = stop_sequence;
+    }
+    // Create a function for every param to
+    // verify if it is a valid valor // TODO
+}
+
 // TODO: add shape element (contains nodes and links)
 class streetElementGroup {
     constructor (map) {
-        this.elements = []; // could it be private? // TODO
-        this.links = []; // could it be private? // TODO
+        this.nodes = []; // could it to be private? // TODO
+        this.links = []; // could it to be private? // TODO
+        this.agencies = [];
+        this.routes = [];
+        this.trips = [];
+        this.stopTimes = [];
+
         this.lastSelect = null; // last element // head pointer
         this.map = map; // add the map methods
         this.layers = {};
@@ -171,9 +250,9 @@ class streetElementGroup {
         this.addLayer("select", "yellow");
     }
 
-    // Method to get the amount of elements
+    // Method to get the amount of nodes
     get length (){
-        return this.elements.length;
+        return this.nodes.length;
     }
 
     addElement(coordenate, type){
@@ -182,14 +261,14 @@ class streetElementGroup {
         // type: the element layer name
         console.log("Add element by features");
         // Verify type TODO
-        this.elements.push(
+        this.nodes.push(
             new streetElementNode(
-                this.elements.length, // ID number
+                this.nodes.length, // ID number
                 coordenate, // coordinate
                 this.layers[type] // layer
             ));
 
-        if (this.lastSelect){ // Connect elements
+        if (this.lastSelect){ // Connect nodes
             // TODO exceptions for endpoints
             this.addLink(this.lastSelect,
                     this.getLastElement
@@ -229,30 +308,41 @@ class streetElementGroup {
             connection
         );
         // Update link on nodes
-        this.elements[nodeA.getID].addConnection(connection);
-        this.elements[nodeB.getID].addConnection(connection);
+        this.nodes[nodeA.getID].addConnection(connection);
+        this.nodes[nodeB.getID].addConnection(connection);
 
         this.updateElementLayerByID(nodeA.getID);
         this.updateElementLayerByID(nodeB.getID);
         return connection.getID;
     }
 
+    addAgency(agency_id,
+              agency_name,
+              agency_url,
+              agency_timezone,
+              agency_lang,
+              agency_phone,
+              agency_fare_url,
+              agency_email
+             ) {
+        return true; // TODO
+    }
     updateElementLayerByID(element_id){ // TODO
-        // if (this.elements[element_id].connections.length < 2){
+        // if (this.nodes[element_id].connections.length < 2){
         //     // Endpoint
-        //     this.elements[element_id].setLayer(this.layers["endpoint"]);
-        // } else if (this.elements[element_id].connections.length < 3){
+        //     this.nodes[element_id].setLayer(this.layers["endpoint"]);
+        // } else if (this.nodes[element_id].connections.length < 3){
         //     // Shape or stop
-        //     if (this.elements[element_id].type == "stop") {
+        //     if (this.nodes[element_id].type == "stop") {
         //         return;
         //     } else {
-        //         this.elements[element_id].setLayer(this.layers["shape"]);
+        //         this.nodes[element_id].setLayer(this.layers["shape"]);
         //     }
         // } else {
 
-        if (this.elements[element_id].connections.length > 2){
+        if (this.nodes[element_id].connections.length > 2){
             // Intersection
-            this.elements[element_id].setLayer(this.layers["fork"]);
+            this.nodes[element_id].setLayer(this.layers["fork"]);
         }
     }
 
@@ -346,20 +436,20 @@ class streetElementGroup {
 
     // Return the streetElement object
     getElementByID (value){
-        return this.elements[value];
+        return this.nodes[value];
     }
 
     // Return the streetElementNode last object got in Array
     get getLastElement (){
         var decrem = 1;
         // Change this while FIXME:
-        while (this.elements[this.elements.length-decrem].valid != true) {
+        while (this.nodes[this.nodes.length-decrem].valid != true) {
             decrem = decrem + 1;
-            if ( this.elements.length-decrem < 0 ){
+            if ( this.nodes.length-decrem < 0 ){
                 return null;
             }
         }
-        return this.elements[this.elements.length-decrem];
+        return this.nodes[this.nodes.length-decrem];
     }
 
     deleteLinkByID (link_id){ // TODO: move to link.terminate
@@ -370,14 +460,14 @@ class streetElementGroup {
         if (this.getLastElement){
             this.deleteElementByID (this.getLastElement.getID);
         } else {
-            console.log("there are no valid elements in the vector");
+            console.log("there are no valid nodes in the vector");
         }
     }
 
     deleteElementByID (value){
         // This one is easy because last in Array but
         // a point in middlen needs more logic
-        var element = this.elements[value];
+        var element = this.nodes[value];
         if (element.valid){
             console.log("valid element");
         } else {
@@ -398,7 +488,7 @@ class streetElementGroup {
         console.log("REMOVE"); // FIXME // remove
 
         // Head pointer
-        // var element = this.elements.pop(); //
+        // var element = this.nodes.pop(); //
         this.selectElement(this.getLastElement);
     }
 }
