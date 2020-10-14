@@ -21,7 +21,6 @@ var customFormat = function(dgts)
 //
 var mousePositionControl = new ol.control.MousePosition({
     coordinateFormat: customFormat(4),
-        //document.getElementById('precision').value),
     projection: 'EPSG:4326',
     // comment the following two lines to have the mouse position
     // be placed within the map.
@@ -81,23 +80,25 @@ map.on('click', (event)=> {
                 feature_onHover.parent,
                 o_se_group.lastSelect
             );
-            o_se_group.selectNode(feature_onHover.parent);
+            o_se_group.selectNodeByID(
+                feature_onHover.parent.getID
+            );
         } else {
             o_se_group.addNode(coord2, node_type); //FIXME
         }
 
-    } else if (action == "edit") {
-        console.log("edit");
-
     } else if (action == "move") {
         console.log("move");
         if (o_se_group.lastSelect){
-            o_se_group.lastSelect.setCoordinates(coord2);
+            o_se_group.setNodeCoordinatesByID(
+                lastSelect.getID,
+                coord2
+            );
         }
     } else if (action == "select") {
         if (feature_onHover){
-            o_se_group.selectNode(
-                feature_onHover.parent
+            o_se_group.selectNodeByID(
+                feature_onHover.parent.getID
             );
         }
     } else {
@@ -262,7 +263,7 @@ var app = new Vue({
         },
         saveTrip(){
             o_se_group.addTrip(
-                document.getElementById("t_route_id").value, // TODO, try to get the value without getElementByID, using vue
+                document.getElementById("t_route_id").value, // TODO, try to get the value without getElementById, using vue
                 document.getElementById("t_service_id").value,
                 document.getElementById("t_trip_id").value,
                 document.getElementById("t_direction_id").value,

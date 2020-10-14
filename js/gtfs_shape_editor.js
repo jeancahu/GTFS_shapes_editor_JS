@@ -231,6 +231,8 @@ class streetElementStopTime {
 // TODO: add shape element (contains nodes and links)
 class streetElementGroup {
     constructor (map) {
+        this.history = []; // GTFS state
+
         this.nodes = []; // could it to be private? // TODO
         this.links = []; // could it to be private? // TODO
 
@@ -257,11 +259,29 @@ class streetElementGroup {
         return this.nodes.length;
     }
 
+    historyPush ( command ){
+        // command is a list with an external function and its arguments
+        console.log("Log to history");
+        this.history.push(command);
+    }
+
+    historyLoad ( history ){ // TODO
+        console.log("Load history");
+        history.forEach( (commad) => {
+            this[commad[0]](...commad.slice(1, commad.length));
+        });
+    }
+
+    historyPop () {
+        console.log("Pop from history");
+    }
+
     addNode(coordenate, type){
-        console.log(coordenate); // FIXME
         // coordenate: a single of coordenate, point
         // type: the element layer name
-        console.log("Add element by features");
+
+        this.historyPush(["addNode", coordenate, type]);
+
         // Verify type TODO
         this.nodes.push(
             new streetElementNode(
@@ -339,6 +359,18 @@ class streetElementGroup {
             agency_email
         );
 
+        this.historyPush([
+            "addAgency",
+            agency_id,
+            agency_name,
+            agency_url,
+            agency_timezone,
+            agency_lang,
+            agency_phone,
+            agency_fare_url,
+            agency_email
+        ]);
+
         console.log(agency);
 
         this.agencies.push(agency);
@@ -360,6 +392,15 @@ class streetElementGroup {
             route_long_name,
             route_type
         );
+
+        this.historyPush([
+            "addRoute",
+            route_id,
+            agency_id,
+            route_short_name,
+            route_long_name,
+            route_type
+        ]);
 
         console.log(route);
 
@@ -383,6 +424,15 @@ class streetElementGroup {
             shape_id  // Shape object
         );
 
+        this.historyPush([
+            "addTrip",
+            route_id, // Route object
+            service_id,
+            trip_id,
+            direction_id,
+            shape_id  // Shape object
+        ]);
+
         console.log(trip);
 
         this.trips.push(trip);
@@ -403,6 +453,15 @@ class streetElementGroup {
             stop_id,  // Stop object
             stop_sequence
         );
+
+        this.historyPush([
+            "addStopTime",
+            trip_id,  // Trip object
+            arrival_time,
+            departure_time,
+            stop_id,  // Stop object
+            stop_sequence
+        ]);
 
         console.log(stoptime);
 
@@ -502,7 +561,12 @@ class streetElementGroup {
         this.map.addLayer(this.layers[type]); // Add layer to map
     }
 
-    selectNode (element) {
+    selectNodeByID ( node_id ){ // External // TODO verify data
+        this.historyPush(["selectNodeByID", node_id]);
+        this.selectNode(this.nodes[node_id]);
+    }
+
+    selectNode (element) { // Internal
         if ( this.lastSelect ){
             if (element)
             {this.updateElementLayerByID(element.getID);}
@@ -518,9 +582,13 @@ class streetElementGroup {
         }
     }
 
-    // Return the streetElement object
-    getElementByID (value){
-        return this.nodes[value];
+    setNodeCoordinatesByID (node_id, coordinates){ // External
+        this.historyPush([
+            "selectNodeByID",
+            node_id,
+            coordinates
+        ]);
+        this.nodes[node_id].setCoordinates(coordinates);
     }
 
     // Return the streetElementNode last object got in Array
@@ -558,7 +626,7 @@ class streetElementGroup {
             console.log("invalid element");
             return;
         }
-
+        this.historyPush(["deleteNodeByID", value]);
         element.terminate(); // terminate element
 
         if( element.getConnections().length == 2 ){
