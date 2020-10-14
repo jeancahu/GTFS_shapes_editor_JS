@@ -95,21 +95,17 @@
 									</tr>
               </table>
 
-              <!-- SHAPES -->
-							<table v-if="show('shape')" class="alt">
+              <!-- NODES -->
+							<table v-if="isVisible('shape')" class="alt">
 									<thead>
 										  <tr>
-                          <th>shape_id</th>
-											    <th>shape_pt_lat</th>
-											    <th>shape_pt_lon</th>
-                          <th>shape_pt_sequence</th>
-                          <th>shape_dist_traveled</th>
+                          <th v-for="field in shapeFields">{{field}}</th>
                           <th></th>
 										  </tr>
 									</thead>
 									<tbody>
-										  <tr v-for="shape in rev_shapes" :key="shape.getID">
-											    <td> - </td> <!-- shp_a : TODO, generate shapes -->
+										  <tr v-for="shape in rev_nodes" :key="shape.getID">
+											    <td> - </td> <!-- shp_a : TODO, generate nodes -->
                           <td><input type="text" :value="shape.coordinates[0]"></td>
 											    <td><input type="text" :value="shape.coordinates[1]"></td>
                           <td>{{shape.getID}}</td>
@@ -117,17 +113,11 @@
                           <td><button>save</button></td>
 										  </tr>
 									</tbody>
-									<!-- <tfoot>
-										   <tr>
-											 <td colspan="2"></td>
-											 <td>{{shapes.length}}</td>
-										   </tr>
-									     </tfoot> -->
 							</table>
-              <!-- END SHAPES -->
+              <!-- END NODES -->
 
               <!-- AGENCY -->
-              <table v-if="show('agency')" class="alt">
+              <table v-if="isVisible('agency')" class="alt">
 									<thead>
 										  <tr>
                           <th v-for="field in agencyFields">{{field}}</th>
@@ -139,23 +129,17 @@
                           <th v-for="field in agencyFields"><input type="text" :id="field"></th>
                           <td><button @click="saveAgency">add</button></td>
 										  </tr>
-                      <tr>
-                          <th v-for="agency in rev_agencys"><input type="text" :id="field"></th>
-                          <td><button @click="saveAgency">add</button></td>
+                      <tr v-for="agency in rev_agencies">
+                          <th v-for="field in agency" >{{field}}</th> <!-- FIXME: need review -->
+                          <td><button @click="removeAgency(agency.agency_id)">remove</button></td>
 										  </tr>
 
 									</tbody>
-									<!-- <tfoot>
-										   <tr>
-											 <td colspan="2"></td>
-											 <td>{{shapes.length}}</td>
-										   </tr>
-									     </tfoot> -->
 							</table>
               <!-- END AGENCY -->
 
               <!-- STOPS -->
-              <table v-if="show('stop')" class="alt">
+              <table v-if="isVisible('stop')" class="alt">
 									<thead>
 										  <tr>
                           <th v-for="field in stopFields">{{field}}</th>
@@ -169,20 +153,15 @@
                           <td><input type="text" id="stop_desc"></td>
                           <td>{{stop.coordinates[0]}}</td>
 											    <td>{{stop.coordinates[1]}}</td>
+                          <td><input type="text" id="stop_url"></td>
                           <td><button @click="saveStop">save</button></td>
 										  </tr>
 									</tbody>
-									<!-- <tfoot>
-										   <tr>
-											 <td colspan="2"></td>
-											 <td>{{shapes.length}}</td>
-										   </tr>
-									     </tfoot> -->
 							</table>
               <!-- END STOPS -->
 
               <!-- ROUTES -->
-              <table v-if="show('route')" class="alt">
+              <table v-if="isVisible('route')" class="alt">
 									<thead>
 										  <tr>
                           <th v-for="field in routeFields">{{field}}</th>
@@ -190,22 +169,29 @@
 										  </tr>
 									</thead>
 									<tbody>
+                      <tr>
+                          <!-- <th v-for="field in routeFields"><input type="text" :id="field"></th> -->
+                          <th><input type="text" id="r_route_id"></th>
+                          <th><select id="r_agency_id">
+                              <option v-for="agency in rev_agencies" :value="agency.agency_id">{{agency.agency_id}}</option>
+                          </select></th>
+                          <th><input type="text" id="r_route_short_name"></th>
+                          <th><input type="text" id="r_route_long_name"></th>
+                          <th><select id="r_route_type">
+                              <option v-for="routeType in r_routeType" :value="routeType.value">{{routeType.name}}</option>
+                          </select></th>
+                          <th><button @click="saveRoute">add</button></th>
+										  </tr>
 										  <tr v-for="route in rev_routes">
-											    <td>FIXME</td>
-                          <td><button @click="saveRoute">save</button></td>
+                          <th v-for="field in route" >{{field}}</th> <!-- FIXME: need review -->
+                          <td><button @click="removeRoute(route.route_id)">remove</button></td>
 										  </tr>
 									</tbody>
-									<!-- <tfoot>
-										   <tr>
-											 <td colspan="2"></td>
-											 <td>{{shapes.length}}</td>
-										   </tr>
-									     </tfoot> -->
 							</table>
               <!-- END ROUTES -->
 
               <!-- TRIPS -->
-              <table v-if="show('trip')" class="alt">
+              <table v-if="isVisible('trip')" class="alt">
 									<thead>
 										  <tr>
                           <th v-for="field in tripFields">{{field}}</th>
@@ -213,31 +199,49 @@
 										  </tr>
 									</thead>
 									<tbody>
+                      <tr>
+                          <th><select id="t_route_id">
+                              <option v-for="route in rev_routes" :value="route.route_id">{{route.route_id}}</option>
+                          </select></th>
+                          <th><input type="text" id="t_service_id"></th>
+                          <th><input type="text" id="t_trip_id"></th>
+                          <th><select id="t_direction_id">
+                              <option value="0">outbound travel</option>
+                              <option value="1">inbound travel</option>
+                          </select></th>
+                          <th><select id="t_shape_id">
+                              <option v-for="shape in rev_shapes" :value="shape.name">{{shape.name}}</option>
+                          </select></th>
+                          <td><button @click="saveTrip">add</button></td>
+										  </tr>
 										  <tr v-for="trip in rev_trips">
-											    <td>FIXME</td>
-                          <td><button @click="saveTrip">save</button></td>
+                          <th v-for="field in trip" >{{field}}</th> <!-- FIXME: need review -->
+                          <td><button @click="removeTrip(trip.trip_id)">remove</button></td>
 										  </tr>
 									</tbody>
 							</table>
               <!-- END TRIPS -->
 
               <!-- STOPTIMES -->
-              <table v-if="show('stoptime')" class="alt">
+              <table v-if="isVisible('stoptime')" class="alt">
 									<thead>
 										  <tr>
-                          <th v-for="field in stopTimesFields">{{field}}</th>
+                          <th v-for="field in stopTimeFields">{{field}}</th>
                           <th></th>
 										  </tr>
 									</thead>
 									<tbody>
+                      <tr>
+                          <th v-for="field in stopTimeFields"><input type="text" :id="field"></th>
+                          <td><button @click="saveStopTime">add</button></td>
+										  </tr>
 										  <tr v-for="stoptime in rev_stoptimes">
-											    <td>FIXME</td>
-                          <td><button @click="saveStopTime">save</button></td>
+                          <th v-for="field in stoptime" >{{field}}</th> <!-- FIXME: need review -->
+                          <td><button @click="removeStopTime(stoptime.trip_id, stoptime.stop_id)">remove</button></td>
 										  </tr>
 									</tbody>
 							</table>
               <!-- END STOPTIMES -->
-
 
 					</div>
 

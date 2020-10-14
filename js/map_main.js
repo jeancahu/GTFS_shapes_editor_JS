@@ -71,7 +71,7 @@ map.on('click', (event)=> {
     if (action == "remove"){
         // Click on element to remove
         if ( feature_onHover ){
-            o_se_group.deleteElementByID(
+            o_se_group.deleteNodeByID(
                 feature_onHover.parent.getID);
         }
     } else if (action == "add") {
@@ -81,9 +81,9 @@ map.on('click', (event)=> {
                 feature_onHover.parent,
                 o_se_group.lastSelect
             );
-            o_se_group.selectElement(feature_onHover.parent);
+            o_se_group.selectNode(feature_onHover.parent);
         } else {
-            o_se_group.addElement(coord2, node_type); //FIXME
+            o_se_group.addNode(coord2, node_type); //FIXME
         }
 
     } else if (action == "edit") {
@@ -96,7 +96,7 @@ map.on('click', (event)=> {
         }
     } else if (action == "select") {
         if (feature_onHover){
-            o_se_group.selectElement(
+            o_se_group.selectNode(
                 feature_onHover.parent
             );
         }
@@ -136,9 +136,10 @@ var app = new Vue({
     el: '#app',
     data() {
         return {
-            showList: "shape", // It shows Shapes by default
+            showList: "shape", // it shows Shapes by default
 
-            shapes: o_se_group.nodes,
+            nodes: o_se_group.nodes, // contains stops too
+            shapes: o_se_group.shapes,
             routes: o_se_group.routes,
             agencies: o_se_group.agencies,
             trips: o_se_group.trips,
@@ -154,14 +155,22 @@ var app = new Vue({
                 "agency_fare_url",
                 "agency_email"
             ],
+            shapeFields: [
+                "shape_id",
+                "shape_pt_lat",
+                "shape_pt_lon",
+                "shape_pt_sequence",
+                "shape_dist_traveled"
+            ],
             stopFields: [
                 "stop_id",
                 "stop_name",
                 "stop_desc",
-                "stop_lat", // Same than shape
-                "stop_lon"  // Same than shape
+                "stop_lat", // same than shape
+                "stop_lon", // same than shape
+                "stop_url"  // page with a photo and info about
             ],
-            stopTimesFields: [
+            stopTimeFields: [
                 "st_trip_id",
                 "st_arrival_time",
                 "st_departure_time",
@@ -181,13 +190,17 @@ var app = new Vue({
                 "r_route_short_name",
                 "r_route_long_name",
                 "r_route_type" // TODO, autobus by default
-            ]
+            ],
 
-            //last: o_se_group.getLastElement // getSelected TODO
-        }
+            r_routeType: [
+                {value: 3, name: "autobus"},
+                {value: 2, name: "train"},
+                {value: 1, name: "metro"}
+            ]
+        };
     },
     methods: {
-        show(value) {
+        isVisible(value) { // Return a bool
             return ( value == this.showList );
         },
         showAgency() {
@@ -224,6 +237,9 @@ var app = new Vue({
             );
             console.log("saveAgency");
         },
+        removeAgency (agency_id){ // TODO
+            console.log("remove agency: " + agency_id);
+        },
         saveStop(){
             // this.stopFields.forEach( (value) => {
             //     console.log(value);
@@ -232,46 +248,71 @@ var app = new Vue({
             console.log("saveStop");
         },
         saveRoute(){
+            o_se_group.addRoute(
+                document.getElementById("r_route_id").value,
+                document.getElementById("r_agency_id").value,
+                document.getElementById("r_route_short_name").value,
+                document.getElementById("r_route_long_name").value,
+                document.getElementById("r_route_type").value
+            );
             console.log("saveRoute");
         },
+        removeRoute (route_id){ // TODO
+            console.log("remove route: " + route_id);
+        },
         saveTrip(){
+            o_se_group.addTrip(
+                document.getElementById("t_route_id").value, // TODO, try to get the value without getElementByID, using vue
+                document.getElementById("t_service_id").value,
+                document.getElementById("t_trip_id").value,
+                document.getElementById("t_direction_id").value,
+                document.getElementById("t_shape_id").value
+            );
             console.log("saveTrip");
+        },
+        removeTrip (trip_id){ // TODO
+            console.log("remove trip: " + trip_id);
+        },
+        saveStopTime(){
+            console.log("saveStopTime");
+        },
+        removeStopTime (trip_id, stop_id){ // TODO
+            console.log("remove stoptime: " + trip_id + ' ' + stop_id);
         }
     },
     computed: {
-        rev_shapes() {
+        rev_nodes() {
             result = [];
-            this.shapes.slice().reverse().forEach( (value) => {
+            this.nodes.slice().reverse().forEach( (value) => {
                 if (value.valid){
                     result.push(value);
                 }
             });
             return result;
         },
+        rev_shapes(){
+            return []; // TODO
+        },
         rev_stops() { // TODO
             result = [];
-            this.shapes.slice().reverse().forEach( (value) => {
+            this.nodes.slice().reverse().forEach( (value) => {
                 if (value.valid && value.type == 'stop'){
                     result.push(value);
                 }
             });
             return result;
         },
-        rev_agencys() { // TODO
-            result = [];
-            return result;
+        rev_agencies() {
+            return this.agencies.slice().reverse();
         },
-        rev_routes() { // TODO
-            result = [];
-            return result;
+        rev_routes() {
+            return this.routes.slice().reverse();
         },
-        rev_trips() { // TODO
-            result = [];
-            return result;
+        rev_trips() {
+            return this.trips.slice().reverse();
         },
         rev_stoptimes() { // TODO
-            result = [];
-            return result;
+            return this.stopTimes.slice().reverse();
         }
     },
     filters: {

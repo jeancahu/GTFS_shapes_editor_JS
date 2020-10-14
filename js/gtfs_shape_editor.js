@@ -233,6 +233,8 @@ class streetElementGroup {
     constructor (map) {
         this.nodes = []; // could it to be private? // TODO
         this.links = []; // could it to be private? // TODO
+
+        this.shapes = [];
         this.agencies = [];
         this.routes = [];
         this.trips = [];
@@ -255,7 +257,7 @@ class streetElementGroup {
         return this.nodes.length;
     }
 
-    addElement(coordenate, type){
+    addNode(coordenate, type){
         console.log(coordenate); // FIXME
         // coordenate: a single of coordenate, point
         // type: the element layer name
@@ -276,7 +278,7 @@ class streetElementGroup {
         }
 
         // The new element is the lastSelect now
-        this.selectElement(this.getLastElement);
+        this.selectNode(this.getLastElement);
     }
 
     addLink(nodeA, nodeB){
@@ -325,8 +327,90 @@ class streetElementGroup {
               agency_fare_url,
               agency_email
              ) {
+
+        var agency = new streetElementAgency (
+            agency_id,
+            agency_name,
+            agency_url,
+            agency_timezone,
+            agency_lang,
+            agency_phone,
+            agency_fare_url,
+            agency_email
+        );
+
+        console.log(agency);
+
+        this.agencies.push(agency);
+
         return true; // TODO
     }
+
+    addRoute(route_id,
+             agency_id,
+             route_short_name,
+             route_long_name,
+             route_type
+             ) {
+
+        var route = new streetElementRoute (
+            route_id,
+            agency_id,
+            route_short_name,
+            route_long_name,
+            route_type
+        );
+
+        console.log(route);
+
+        this.routes.push(route);
+
+        return true; // TODO
+    }
+
+    addTrip(route_id, // Route object
+            service_id,
+            trip_id,
+            direction_id,
+            shape_id  // Shape object
+           ) {
+
+        var trip = new streetElementTrip(
+            route_id, // Route object
+            service_id,
+            trip_id,
+            direction_id,
+            shape_id  // Shape object
+        );
+
+        console.log(trip);
+
+        this.trips.push(trip);
+
+        return true; // TODO
+    }
+
+    addStopTime (trip_id,  // Trip object
+                 arrival_time,
+                 departure_time,
+                 stop_id,  // Stop object
+                 stop_sequence
+                ) {
+        var stoptime = new streetElementStopTime(
+            trip_id,  // Trip object
+            arrival_time,
+            departure_time,
+            stop_id,  // Stop object
+            stop_sequence
+        );
+
+        console.log(stoptime);
+
+        this.stopTimes.push(stoptime);
+
+        return true; // TODO
+    }
+
     updateElementLayerByID(element_id){ // TODO
         // if (this.nodes[element_id].connections.length < 2){
         //     // Endpoint
@@ -418,7 +502,7 @@ class streetElementGroup {
         this.map.addLayer(this.layers[type]); // Add layer to map
     }
 
-    selectElement (element) {
+    selectNode (element) {
         if ( this.lastSelect ){
             if (element)
             {this.updateElementLayerByID(element.getID);}
@@ -458,13 +542,13 @@ class streetElementGroup {
 
     deleteLastElement (){
         if (this.getLastElement){
-            this.deleteElementByID (this.getLastElement.getID);
+            this.deleteNodeByID (this.getLastElement.getID);
         } else {
             console.log("there are no valid nodes in the vector");
         }
     }
 
-    deleteElementByID (value){
+    deleteNodeByID (value){
         // This one is easy because last in Array but
         // a point in middlen needs more logic
         var element = this.nodes[value];
@@ -489,7 +573,7 @@ class streetElementGroup {
 
         // Head pointer
         // var element = this.nodes.pop(); //
-        this.selectElement(this.getLastElement);
+        this.selectNode(this.getLastElement);
     }
 }
 
