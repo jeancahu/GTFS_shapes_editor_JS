@@ -25,7 +25,7 @@ var mousePositionControl = new ol.control.MousePosition({
     // comment the following two lines to have the mouse position
     // be placed within the map.
     className: 'custom-mouse-position',
-    target: document.getElementById('mouse-position'),
+    //target: document.getElementById('mouse-position'),
     undefinedHTML: '&nbsp;',
 });
 
@@ -60,6 +60,12 @@ nodeTypeSelect.addEventListener('change', function (event) {
 // se crea una lista con los diferentes puntos a dibujar sobre el mapa
 const o_se_group = new streetElementGroup(map);
 
+// try to load a history
+if ( typeof(_streetElementGroupHistory) !== 'undefined' ){
+    console.log("There is a history");
+    o_se_group.historyLoad(_streetElementGroupHistory);
+}
+
 map.on('click', (event)=> {
     var action = document.getElementById('action').value;
     var feature_onHover = map.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
@@ -75,10 +81,10 @@ map.on('click', (event)=> {
         }
     } else if (action == "add") {
         if (feature_onHover){
-            console.log("eso eso");
-            o_se_group.addLink(
-                feature_onHover.parent,
-                o_se_group.lastSelect
+            // Link a node with other by ID
+            o_se_group.linkNodesByID(
+                feature_onHover.parent.getID,
+                o_se_group.lastSelect.getID
             );
             o_se_group.selectNodeByID(
                 feature_onHover.parent.getID
@@ -91,7 +97,7 @@ map.on('click', (event)=> {
         console.log("move");
         if (o_se_group.lastSelect){
             o_se_group.setNodeCoordinatesByID(
-                lastSelect.getID,
+                o_se_group.lastSelect.getID,
                 coord2
             );
         }
@@ -130,6 +136,20 @@ document.addEventListener('keyup', function(event) {
         node_type = document.getElementById('node_type').value;
 });
 
+//////////////////// Download as text/plain /////////////////////
+
+function downloadString(text, fileName) {
+    var blob = new Blob([text], { type: 'text/plain' });
+    var a = document.createElement('a');
+    a.download = fileName;
+    a.href = URL.createObjectURL(blob);
+    a.dataset.downloadurl = ['text/plain', a.download, a.href].join(':');
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(a.href); }, 1500);
+}
 
 //////////////////// Vue experiments ////////////////////////////
 

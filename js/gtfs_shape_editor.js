@@ -272,8 +272,27 @@ class streetElementGroup {
         });
     }
 
+    historyString (){ // Saves history
+        console.log("String history");
+        var result = JSON.stringify(
+            this.history
+        ).replace(/\]\,\[/g,"],\n\t\t\t[");
+        result = result.replace(/\[\[/,"[\n\t\t\t[");
+        result = "const _streetElementGroupHistory = " + result;
+        result = result.replace(/\]$/,"\n];");
+        return result;
+    }
+
     historyPop () {
         console.log("Pop from history");
+    }
+
+    computeShapes () { // TODO
+        console.log("Compute shapes");
+        endpoints = [];
+        this.nodes.forEach((node) => {
+            console.log(node.type);
+        });
     }
 
     addNode(coordenate, type){
@@ -301,7 +320,15 @@ class streetElementGroup {
         this.selectNode(this.getLastElement);
     }
 
-    addLink(nodeA, nodeB){
+    linkNodesByID (nodeA_id, nodeB_id){ // External
+        this.historyPush(["linkNodesByID", nodeA_id, nodeB_id]);
+        this.addLink (
+            this.nodes[nodeA_id],
+            this.nodes[nodeB_id]
+        );
+    }
+
+    addLink(nodeA, nodeB){ // Internal
         if (nodeA.getID == nodeB.getID){
             return 1;} // Error
 
@@ -561,6 +588,11 @@ class streetElementGroup {
         this.map.addLayer(this.layers[type]); // Add layer to map
     }
 
+    unselectNode () {
+        this.historyPush(["unselectNode"]);
+        this.selectNode(null);
+    }
+
     selectNodeByID ( node_id ){ // External // TODO verify data
         this.historyPush(["selectNodeByID", node_id]);
         this.selectNode(this.nodes[node_id]);
@@ -584,7 +616,7 @@ class streetElementGroup {
 
     setNodeCoordinatesByID (node_id, coordinates){ // External
         this.historyPush([
-            "selectNodeByID",
+            "setNodeCoordinatesByID",
             node_id,
             coordinates
         ]);
