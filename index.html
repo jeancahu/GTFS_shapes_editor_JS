@@ -139,8 +139,8 @@
                           <th v-for="field in agencyFields"><input type="text" :id="field"></th>
                           <td><button @click="saveAgency">add</button></td>
 										  </tr>
-                      <tr> <!-- TODO for agency in obj -->
-                          <th v-for="field in agencyFields"><input type="text" :id="field"></th>
+                      <tr>
+                          <th v-for="agency in rev_agencys"><input type="text" :id="field"></th>
                           <td><button @click="saveAgency">add</button></td>
 										  </tr>
 
@@ -203,6 +203,41 @@
 									     </tfoot> -->
 							</table>
               <!-- END ROUTES -->
+
+              <!-- TRIPS -->
+              <table v-if="show('trip')" class="alt">
+									<thead>
+										  <tr>
+                          <th v-for="field in tripFields">{{field}}</th>
+                          <th></th>
+										  </tr>
+									</thead>
+									<tbody>
+										  <tr v-for="trip in rev_trips">
+											    <td>FIXME</td>
+                          <td><button @click="saveTrip">save</button></td>
+										  </tr>
+									</tbody>
+							</table>
+              <!-- END TRIPS -->
+
+              <!-- STOPTIMES -->
+              <table v-if="show('stoptime')" class="alt">
+									<thead>
+										  <tr>
+                          <th v-for="field in stopTimesFields">{{field}}</th>
+                          <th></th>
+										  </tr>
+									</thead>
+									<tbody>
+										  <tr v-for="stoptime in rev_stoptimes">
+											    <td>FIXME</td>
+                          <td><button @click="saveStopTime">save</button></td>
+										  </tr>
+									</tbody>
+							</table>
+              <!-- END STOPTIMES -->
+
 
 					</div>
 

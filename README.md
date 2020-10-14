@@ -14,6 +14,6 @@ preview:
 
 ## TODO
 
-*[] A photo for each stop in a shape
-*[] Buttons style
-*[] Select style
+\* [ ] A photo for each stop in a shape
+\* [ ] Buttons style
+\* [ ] Select style

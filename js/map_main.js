@@ -232,11 +232,10 @@ var app = new Vue({
             console.log("saveStop");
         },
         saveRoute(){
-            // this.stopFields.forEach( (value) => {
-            //     console.log(value);
-            //     console.log(document.getElementById(value).value);
-            // });
             console.log("saveRoute");
+        },
+        saveTrip(){
+            console.log("saveTrip");
         }
     },
     computed: {
@@ -249,13 +248,29 @@ var app = new Vue({
             });
             return result;
         },
-        rev_stops() {
+        rev_stops() { // TODO
             result = [];
             this.shapes.slice().reverse().forEach( (value) => {
                 if (value.valid && value.type == 'stop'){
                     result.push(value);
                 }
             });
+            return result;
+        },
+        rev_agencys() { // TODO
+            result = [];
+            return result;
+        },
+        rev_routes() { // TODO
+            result = [];
+            return result;
+        },
+        rev_trips() { // TODO
+            result = [];
+            return result;
+        },
+        rev_stoptimes() { // TODO
+            result = [];
             return result;
         }
     },
