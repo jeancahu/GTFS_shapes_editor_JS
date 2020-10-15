@@ -1,4 +1,11 @@
-// GTFS streetElements
+//////////////// GTFS streetElements ///////////////////
+////                                                ////
+////  This library tries to encapsulate some of the ////
+////  more necessary tables and elements required   ////
+////  by the General Transit Feed Specification,    ////
+////   format
+////
+////
 
 class streetElementNode {
     constructor (id, coordenate, layer) {
@@ -231,8 +238,246 @@ class streetElementStopTime {
 // TODO: add shape element (contains nodes and links)
 class streetElementGroup {
     constructor (map) {
-        this.history = []; // GTFS state
+        ////// Private data //////////////////
+        //// map //// Network map ////////////
+        var history = []; // GTFS state     //
+        var layers = {};  // Network layers //
+        //////////////////////////////////////
 
+        ////// Private methods //////
+        var addLink = (nodeA, nodeB) => { // Internal
+            if (nodeA.getID == nodeB.getID){
+                return 1;} // Error
+
+            if (nodeA.valid & nodeB.valid) {} //OK
+            else {return 2;} // ERROR
+
+            nodeA.getConnections().forEach((value, index)=>{
+                if ( value.getPartner(nodeA).getID == nodeB.getID ){
+                    return; // duplicate link
+                }
+            });
+            nodeB.getConnections().forEach((value, index)=>{
+                if ( value.getPartner(nodeB).getID == nodeA.getID ){
+                    console.log("Half link error at :", value);
+                    return; // half-link error
+                }
+            });
+
+            const connection = new streetElementLink(
+                this.links.length, // ID number
+                nodeA,
+                nodeB,
+                layers["link"] // always link layer
+            );
+            this.links.push(
+                connection
+            );
+            // Update link on nodes
+            this.nodes[nodeA.getID].addConnection(connection);
+            this.nodes[nodeB.getID].addConnection(connection);
+
+            this.updateElementLayerByID(nodeA.getID);
+            this.updateElementLayerByID(nodeB.getID);
+            return connection.getID;
+        }; // END addlink
+
+        var addLayer = (type, color) => {
+            var radius;
+            var style;
+            switch (type) {
+            case 'shape': // Shape element, blue
+                radius = 5;
+                style =  new ol.style.Style({
+	                  image: new ol.style.Circle({
+	                      radius: radius, // 5 default
+	                      fill: new ol.style.Fill({color: color})
+	                  })
+                });
+                break;
+            case 'stop': // Stop element, red
+                radius = 7;
+                style =  new ol.style.Style({
+	                  image: new ol.style.Circle({
+	                      radius: radius, // 5 default
+	                      fill: new ol.style.Fill({color: color})
+	                  })
+                });
+                break;
+            case 'fork': // Intersec. violet
+                radius = 5;
+                style =  new ol.style.Style({
+	                  image: new ol.style.Circle({
+	                      radius: radius, // 5 default
+	                      fill: new ol.style.Fill({color: color})
+	                  })
+                });
+                break;
+            case 'endpoint': // Terminals, green
+                radius = 5;
+                style =  new ol.style.Style({
+	                  image: new ol.style.Circle({
+	                      radius: radius, // 5 default
+	                      fill: new ol.style.Fill({color: color})
+	                  })
+                });
+                break;
+            case 'select': // Terminals, green
+                radius = 3;
+                style =  new ol.style.Style({
+	                  image: new ol.style.Circle({
+	                      radius: radius, // 5 default
+	                      fill: new ol.style.Fill({color: color})
+	                  })
+                });
+                break;
+            case 'link': // link, blue
+                radius = 2;
+                style =  new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: color,
+                        // width: 10, // TODO
+                        width: 3,
+	                  })
+                });
+                break;
+            default:
+                console.log('Type: '+ type +' not found');
+            }
+
+            const vectorLayer = new ol.layer.Vector({
+                source: new ol.source.Vector(),
+                style: style
+            });
+            vectorLayer.name = type; // Name the layer
+            layers[type] = vectorLayer; // Add layer to obj
+            map.addLayer(layers[type]); // Add layer to map
+        }; // END addLayer
+
+        ////// Privileged methods //////
+
+        this.historyPush = (command) => { // TODO private method
+            // command is a list with an external function and its arguments
+            console.log("Log to history");
+            history.push(command);
+        };
+
+        this.historyLoad = (in_history) => { // TODO
+            console.log("Load history");
+            in_history.forEach( (commad) => {
+                this[commad[0]](...commad.slice(1, commad.length));
+            });
+        };
+
+        this.historyString = () => { // Saves history
+            console.log("String history");
+            var result = JSON.stringify(
+                history
+            ).replace(/\]\,\[/g,"],\n\t\t\t[");
+            result = result.replace(/\[\[/,"[\n\t\t\t[");
+            result = "const _streetElementGroupHistory = " + result;
+            result = result.replace(/\]$/,"\n];");
+            return result;
+        };
+
+        this.historyPop = function () { // TODO
+            console.log("Pop from history");
+        };
+
+        this.addNode = (coordenate, type) => {
+            // coordenate: a single of coordenate, point
+            // type: the element layer name
+
+            this.historyPush(["addNode", coordenate, type]);
+
+            // Verify type TODO
+            this.nodes.push(
+                new streetElementNode(
+                    this.nodes.length, // ID number
+                    coordenate, // coordinate
+                    layers[type] // layer
+                ));
+
+            if (this.lastSelect){ // Connect nodes
+                // TODO exceptions for endpoints
+                addLink(this.lastSelect,
+                        this.getLastElement
+                       );
+            }
+
+            // The new element is the lastSelect now
+            this.selectNode(this.getLastElement);
+        };
+
+        this.linkNodesByID = (nodeA_id, nodeB_id) => { // External
+            this.historyPush(["linkNodesByID", nodeA_id, nodeB_id]);
+            addLink (
+                this.nodes[nodeA_id],
+                this.nodes[nodeB_id]
+            );
+        };
+
+        this.deleteNodeByID = (value) => {
+            // This one is easy because last in Array but
+            // a point in middlen needs more logic
+            var element = this.nodes[value];
+            if (element.valid){
+                console.log("valid element");
+            } else {
+                console.log("invalid element");
+                return;
+            }
+            this.historyPush(["deleteNodeByID", value]);
+            element.terminate(); // terminate element
+
+            if( element.getConnections().length == 2 ){
+                addLink(
+                    element.getConnections()[0].getPartner(element),
+                    element.getConnections()[1].getPartner(element)
+                );
+            }
+
+            // Head pointer
+            this.selectNode(this.getLastElement);
+        };
+
+        this.updateElementLayerByID = (element_id) => { // TODO
+            // if (this.nodes[element_id].connections.length < 2){
+            //     // Endpoint
+            //     this.nodes[element_id].setLayer(layers["endpoint"]);
+            // } else if (this.nodes[element_id].connections.length < 3){
+            //     // Shape or stop
+            //     if (this.nodes[element_id].type == "stop") {
+            //         return;
+            //     } else {
+            //         this.nodes[element_id].setLayer(layers["shape"]);
+            //     }
+            // } else {
+
+            if (this.nodes[element_id].connections.length > 2){
+                // Intersection
+                this.nodes[element_id].setLayer(layers["fork"]);
+            }
+        };
+
+        this.selectNode = (element) => {
+            if ( this.lastSelect ){
+                if (element)
+                {this.updateElementLayerByID(element.getID);}
+                layers["select"].getSource().removeFeature(
+                    this.lastSelect.feature
+                );
+            }
+            this.lastSelect = element;
+            if ( this.lastSelect ){
+                layers["select"].getSource().addFeature(
+                    this.lastSelect.feature
+                );
+            }
+        };
+        ////// END Privileged methods //////
+
+        ////// Public data //////
         this.nodes = []; // could it to be private? // TODO
         this.links = []; // could it to be private? // TODO
 
@@ -243,48 +488,22 @@ class streetElementGroup {
         this.stopTimes = [];
 
         this.lastSelect = null; // last element // head pointer
-        this.map = map; // add the map methods
-        this.layers = {};
+        ////// END Public data //////
 
-        this.addLayer("link", "blue"); // links between nodes
-        this.addLayer("shape", "blue");
-        this.addLayer("stop", "red");
-        this.addLayer("fork", "violet");
-        this.addLayer("endpoint", "green");
-        this.addLayer("select", "yellow");
-    }
+        // Add layers
+        addLayer("link", "blue"); // links between nodes
+        addLayer("shape", "blue");
+        addLayer("stop", "red");
+        addLayer("fork", "violet");
+        addLayer("endpoint", "green");
+        addLayer("select", "yellow");
+    } ////// END streetElementGroup constructor //////
+
+    ////// Public methods //////
 
     // Method to get the amount of nodes
     get length (){
         return this.nodes.length;
-    }
-
-    historyPush ( command ){
-        // command is a list with an external function and its arguments
-        console.log("Log to history");
-        this.history.push(command);
-    }
-
-    historyLoad ( history ){ // TODO
-        console.log("Load history");
-        history.forEach( (commad) => {
-            this[commad[0]](...commad.slice(1, commad.length));
-        });
-    }
-
-    historyString (){ // Saves history
-        console.log("String history");
-        var result = JSON.stringify(
-            this.history
-        ).replace(/\]\,\[/g,"],\n\t\t\t[");
-        result = result.replace(/\[\[/,"[\n\t\t\t[");
-        result = "const _streetElementGroupHistory = " + result;
-        result = result.replace(/\]$/,"\n];");
-        return result;
-    }
-
-    historyPop () {
-        console.log("Pop from history");
     }
 
     computeShapes () { // TODO
@@ -293,76 +512,6 @@ class streetElementGroup {
         this.nodes.forEach((node) => {
             console.log(node.type);
         });
-    }
-
-    addNode(coordenate, type){
-        // coordenate: a single of coordenate, point
-        // type: the element layer name
-
-        this.historyPush(["addNode", coordenate, type]);
-
-        // Verify type TODO
-        this.nodes.push(
-            new streetElementNode(
-                this.nodes.length, // ID number
-                coordenate, // coordinate
-                this.layers[type] // layer
-            ));
-
-        if (this.lastSelect){ // Connect nodes
-            // TODO exceptions for endpoints
-            this.addLink(this.lastSelect,
-                    this.getLastElement
-                   );
-        }
-
-        // The new element is the lastSelect now
-        this.selectNode(this.getLastElement);
-    }
-
-    linkNodesByID (nodeA_id, nodeB_id){ // External
-        this.historyPush(["linkNodesByID", nodeA_id, nodeB_id]);
-        this.addLink (
-            this.nodes[nodeA_id],
-            this.nodes[nodeB_id]
-        );
-    }
-
-    addLink(nodeA, nodeB){ // Internal
-        if (nodeA.getID == nodeB.getID){
-            return 1;} // Error
-
-        if (nodeA.valid & nodeB.valid) {} //OK
-        else {return 2;} // ERROR
-
-        nodeA.getConnections().forEach((value, index)=>{
-            if ( value.getPartner(nodeA).getID == nodeB.getID ){
-                return; // duplicate link
-            }
-        });
-        nodeB.getConnections().forEach((value, index)=>{
-            if ( value.getPartner(nodeB).getID == nodeA.getID ){
-                console.log("Half link error at :", value);
-                return; // half-link error
-            }
-        });
-
-        const connection = new streetElementLink(
-            this.links.length, // ID number
-            nodeA,
-            nodeB,
-            this.layers["link"] // always link layer
-        );
-        this.links.push(
-            connection
-        );
-        // Update link on nodes
-        this.nodes[nodeA.getID].addConnection(connection);
-        this.nodes[nodeB.getID].addConnection(connection);
-
-        this.updateElementLayerByID(nodeA.getID);
-        this.updateElementLayerByID(nodeB.getID);
-        return connection.getID;
     }
 
     addAgency(agency_id,
@@ -497,97 +646,6 @@ class streetElementGroup {
         return true; // TODO
     }
 
-    updateElementLayerByID(element_id){ // TODO
-        // if (this.nodes[element_id].connections.length < 2){
-        //     // Endpoint
-        //     this.nodes[element_id].setLayer(this.layers["endpoint"]);
-        // } else if (this.nodes[element_id].connections.length < 3){
-        //     // Shape or stop
-        //     if (this.nodes[element_id].type == "stop") {
-        //         return;
-        //     } else {
-        //         this.nodes[element_id].setLayer(this.layers["shape"]);
-        //     }
-        // } else {
-
-        if (this.nodes[element_id].connections.length > 2){
-            // Intersection
-            this.nodes[element_id].setLayer(this.layers["fork"]);
-        }
-    }
-
-    addLayer (type, color){
-        var radius;
-        var style;
-        switch (type) {
-        case 'shape': // Shape element, blue
-            radius = 5;
-            style =  new ol.style.Style({
-	              image: new ol.style.Circle({
-	                  radius: radius, // 5 default
-	                  fill: new ol.style.Fill({color: color}) // blue default
-	              })
-            });
-            break;
-        case 'stop': // Stop element, red
-            radius = 7;
-            style =  new ol.style.Style({
-	              image: new ol.style.Circle({
-	                  radius: radius, // 5 default
-	                  fill: new ol.style.Fill({color: color}) // blue default
-	              })
-            });
-            break;
-        case 'fork': // Intersec. violet
-            radius = 5;
-            style =  new ol.style.Style({
-	              image: new ol.style.Circle({
-	                  radius: radius, // 5 default
-	                  fill: new ol.style.Fill({color: color}) // blue default
-	              })
-            });
-            break;
-        case 'endpoint': // Terminals, green
-            radius = 5;
-            style =  new ol.style.Style({
-	              image: new ol.style.Circle({
-	                  radius: radius, // 5 default
-	                  fill: new ol.style.Fill({color: color}) // blue default
-	              })
-            });
-            break;
-        case 'select': // Terminals, green
-            radius = 3;
-            style =  new ol.style.Style({
-	              image: new ol.style.Circle({
-	                  radius: radius, // 5 default
-	                  fill: new ol.style.Fill({color: color}) // blue default
-	              })
-            });
-            break;
-        case 'link': // link, blue
-            radius = 2;
-            style =  new ol.style.Style({
-                stroke: new ol.style.Stroke({
-                    color: color,
-                    // width: 10, // TODO
-                    width: 3,
-	              })
-            });
-            break;
-        default:
-            console.log('Type: '+ type +' not found');
-        }
-
-        const vectorLayer = new ol.layer.Vector({
-            source: new ol.source.Vector(),
-            style: style
-        });
-        vectorLayer.name = type; // Name the layer
-        this.layers[type] = vectorLayer; // Add layer to obj
-        this.map.addLayer(this.layers[type]); // Add layer to map
-    }
-
     unselectNode () {
         this.historyPush(["unselectNode"]);
         this.selectNode(null);
@@ -596,22 +654,6 @@ class streetElementGroup {
     selectNodeByID ( node_id ){ // External // TODO verify data
         this.historyPush(["selectNodeByID", node_id]);
         this.selectNode(this.nodes[node_id]);
-    }
-
-    selectNode (element) { // Internal
-        if ( this.lastSelect ){
-            if (element)
-            {this.updateElementLayerByID(element.getID);}
-            this.layers["select"].getSource().removeFeature(
-                this.lastSelect.feature
-            );
-        }
-        this.lastSelect = element;
-        if ( this.lastSelect ){
-            this.layers["select"].getSource().addFeature(
-                this.lastSelect.feature
-            );
-        }
     }
 
     setNodeCoordinatesByID (node_id, coordinates){ // External
@@ -646,34 +688,6 @@ class streetElementGroup {
         } else {
             console.log("there are no valid nodes in the vector");
         }
-    }
-
-    deleteNodeByID (value){
-        // This one is easy because last in Array but
-        // a point in middlen needs more logic
-        var element = this.nodes[value];
-        if (element.valid){
-            console.log("valid element");
-        } else {
-            console.log("invalid element");
-            return;
-        }
-        this.historyPush(["deleteNodeByID", value]);
-        element.terminate(); // terminate element
-
-        if( element.getConnections().length == 2 ){
-            this.addLink(
-               element.getConnections()[0].getPartner(element),
-               element.getConnections()[1].getPartner(element)
-            );
-        }
-
-        // this.map.removeLayer(element.layer);
-        console.log("REMOVE"); // FIXME // remove
-
-        // Head pointer
-        // var element = this.nodes.pop(); //
-        this.selectNode(this.getLastElement);
     }
 }
 

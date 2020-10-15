@@ -76,8 +76,10 @@ map.on('click', (event)=> {
     if (action == "remove"){
         // Click on element to remove
         if ( feature_onHover ){
-            o_se_group.deleteNodeByID(
-                feature_onHover.parent.getID);
+            if ( typeof(feature_onHover.parent) != 'undefined' ){
+                o_se_group.deleteNodeByID(
+                    feature_onHover.parent.getID);
+            }
         }
     } else if (action == "add") {
         if (feature_onHover){
@@ -108,7 +110,7 @@ map.on('click', (event)=> {
             );
         }
     } else {
-        console.log("select");
+        console.log("undefined action");
     }
 });
 
