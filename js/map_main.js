@@ -170,6 +170,7 @@ var app = new Vue({
                     routes:       "Routes",
                     trips:        "Trips",
                     stop_times:   "Stop times"
+                    //agency_id:    "Agency ID",
                 },
                 es_CR: {
                     add:          "Agregar",
@@ -183,8 +184,8 @@ var app = new Vue({
                     stop_times:   "Horario de parada"
                 }
             },
-            language: "es_CR",
-            //language: "en_US",
+            //language: "es_CR",
+            language: "en_US",
 
             showList: "shape", // it shows Shapes by default
 
