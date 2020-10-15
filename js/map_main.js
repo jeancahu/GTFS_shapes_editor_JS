@@ -159,6 +159,33 @@ var app = new Vue({
     el: '#app',
     data() {
         return {
+            dictionary: {
+                en_US: {
+                    add:          "Add",
+                    remove:       "Remove",
+                    shape_id:     "Shape ID",
+                    agency:       "Agency",
+                    shapes:       "Shapes",
+                    stops:        "Stops",
+                    routes:       "Routes",
+                    trips:        "Trips",
+                    stop_times:   "Stop times"
+                },
+                es_CR: {
+                    add:          "Agregar",
+                    remove:       "Eliminar",
+                    // shape_id: "Punto ID"
+                    agency:       "Empresa",
+                    shapes:       "Recorridos",
+                    stops:        "Paradas",
+                    routes:       "Rutas",
+                    trips:        "Viajes",
+                    stop_times:   "Horario de parada"
+                }
+            },
+            language: "es_CR",
+            //language: "en_US",
+
             showList: "shape", // it shows Shapes by default
 
             nodes: o_se_group.nodes, // contains stops too
@@ -223,6 +250,13 @@ var app = new Vue({
         };
     },
     methods: {
+        translate(word) {
+            result = this.dictionary[this.language][word];
+            if ( result ){
+                return result;
+            }
+            return word;
+        },
         isVisible(value) { // Return a bool
             return ( value == this.showList );
         },

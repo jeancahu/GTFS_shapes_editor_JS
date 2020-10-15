@@ -66,12 +66,12 @@
               <!-- <h1 v-if="last.lastSelect">Selected: {{ last.lastSelect.getID }} /--/ element type = {{ last.lastSelect.type }}</h1> -->
               <table> <!-- TODO: change buttons format and replace table by a proper class -->
 									<tr>
-                      <th><button @click="showAgency">agency</button></th>
-											<th><button @click="showShape">shapes</button></th>
-											<th><button @click="showStop">stops</button></th>
-                      <th><button @click="showRoute">routes</button></th>
-                      <th><button @click="showTrip">trips</button></th>
-                      <th><button @click="showStopTime">stop_times</button></th>
+                      <th><button @click="showAgency">{{ translate("agency") }}</button></th>
+											<th><button @click="showShape">{{ translate("shapes") }}</button></th>
+											<th><button @click="showStop">{{ translate("stops") }}</button></th>
+                      <th><button @click="showRoute">{{ translate("routes") }}</button></th>
+                      <th><button @click="showTrip">{{ translate("trips") }}</button></th>
+                      <th><button @click="showStopTime">{{ translate("stop_times") }}</button></th>
 									</tr>
               </table>
 
@@ -196,7 +196,7 @@
 										  </tr>
 										  <tr v-for="trip in rev_trips">
                           <td v-for="field in trip" >{{field}}</td> <!-- FIXME: need review -->
-                          <td><button @click="removeTrip(trip.trip_id)">remove</button></td>
+                          <td><button @click="removeTrip(trip.trip_id)">{{ translate("remove") }}</button></td>
 										  </tr>
 									</tbody>
 							</table>
