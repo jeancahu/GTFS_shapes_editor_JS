@@ -80,7 +80,6 @@ class streetElementNode {
     }
 
     setLayer (layer){
-        console.log("set layer"); // FIXME
         this.layer.getSource().removeFeature(this.feature);
         this.layer = layer;
         this.layer.getSource().addFeature(this.feature);
@@ -358,7 +357,6 @@ class streetElementGroup {
 
         this.historyPush = (command) => { // TODO private method
             // command is a list with an external function and its arguments
-            console.log("Log to history");
             history.push(command);
         };
 

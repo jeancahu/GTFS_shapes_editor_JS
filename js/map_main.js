@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////
 
-// Constrained map in the area of interst
+//// Constrained map in the area of interst
 var view = new ol.View({
     center: ol.proj.fromLonLat([-84.1027104, 9.865107]),
     zoom: 12,
@@ -9,18 +9,23 @@ var view = new ol.View({
 });
 
 
-var coord2; // coordenates vector
-var customFormat = function(dgts)
-{
-    return (function(coord1) {
-        coord2 = [coord1[0], coord1[1]];
-        return ol.coordinate.toStringXY(coord2,dgts);
-    });
-}
+// var coord2; // coordenates vector
+// var customFormat = function(dgts)
+// {
+//     return (function(coord1) {
+//         coord2 = [coord1[0], coord1[1]];
+//         return ol.coordinate.toStringXY(coord2, dgts);
+//     });
+// }
 
-//
+////
 var mousePositionControl = new ol.control.MousePosition({
-    coordinateFormat: customFormat(4),
+    coordinateFormat: (coord1) => {
+        //return (coord1) => {
+            coord2 = [coord1[0], coord1[1]];
+            return ol.coordinate.toStringXY(coord2, 4);
+        //};
+    },
     projection: 'EPSG:4326',
     // comment the following two lines to have the mouse position
     // be placed within the map.
@@ -29,6 +34,22 @@ var mousePositionControl = new ol.control.MousePosition({
     undefinedHTML: '&nbsp;',
 });
 
+//// Popups or overlay
+var content = document.getElementById('popup-content');
+var closer = document.getElementById('popup-closer');
+var overlay_node_info = new ol.Overlay({
+    element: document.getElementById(
+        'popup_node_info'),
+    autoPan: true,
+    autoPanAnimation: {
+        duration: 250,
+    },
+});
+closer.onclick = function () {
+    overlay_node_info.setPosition(undefined);
+    closer.blur();
+    return false;
+};
 
 // Map need a layers group, we're
 // adding only base layer, streetElementNodes will be next
@@ -43,6 +64,7 @@ var map = new ol.Map({
 	      //vectorLayer,
     ],
     keyboardEventTarget: document,
+    overlays: [overlay_node_info],
     target: 'map_container', // It shows coordinates on page
     view: view,
 });
@@ -66,11 +88,19 @@ if ( typeof(_streetElementGroupHistory) !== 'undefined' ){
     o_se_group.historyLoad(_streetElementGroupHistory);
 }
 
+var coord2;
+
 map.on('click', (event)=> {
+    var coordinate = ol.proj.toLonLat(event.coordinate);
     var action = document.getElementById('action').value;
-    var feature_onHover = map.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
-        return feature;
-    });
+    var feature_onHover = map.forEachFeatureAtPixel(
+        event.pixel,
+        function(feature, layer)
+        {
+            return feature;
+        });
+
+    overlay_node_info.setPosition(ol.proj.fromLonLat(coordinate)); // FIXME remove
 
     // TODO: change for a switch
     if (action == "remove"){
@@ -92,7 +122,7 @@ map.on('click', (event)=> {
                 feature_onHover.parent.getID
             );
         } else {
-            o_se_group.addNode(coord2, node_type); //FIXME
+            o_se_group.addNode(coordinate, node_type); //FIXME
         }
 
     } else if (action == "move") {
@@ -100,7 +130,7 @@ map.on('click', (event)=> {
         if (o_se_group.lastSelect){
             o_se_group.setNodeCoordinatesByID(
                 o_se_group.lastSelect.getID,
-                coord2
+                coordinate
             );
         }
     } else if (action == "select") {
@@ -156,7 +186,7 @@ function downloadString(text, fileName) {
 //////////////////// Vue experiments ////////////////////////////
 
 var app = new Vue({
-    el: '#app',
+    el: '#editor_gtfs_tables',
     data() {
         return {
             dictionary: {
@@ -339,13 +369,13 @@ var app = new Vue({
         }
     },
     computed: {
-        rev_nodes() {
+        rev_nodes() { // TODO
             result = [];
-            this.nodes.slice().reverse().forEach( (value) => {
-                if (value.valid){
-                    result.push(value);
-                }
-            });
+            // this.nodes.slice().reverse().forEach( (value) => {
+            //     if (value.valid){
+            //         result.push(value);
+            //     }
+            // });
             return result;
         },
         rev_shapes(){

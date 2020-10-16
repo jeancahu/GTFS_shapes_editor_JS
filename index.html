@@ -6,7 +6,7 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta name="description" content="" />
   <meta name="keywords" content="" />
-  <script src="https://unpkg.com/elm-pep"></script>
+  <!-- <script src="https://unpkg.com/elm-pep"></script> -->
   <script src="https://unpkg.com/vue"></script>
 
   <!-- <script src="js/jquery.min.js"></script>
@@ -19,9 +19,10 @@
   <link rel="stylesheet" href="http://161.35.54.122:10066/css/style-xlarge.css" />
   <link rel="stylesheet" href="http://161.35.54.122:10066/css/editor-style.css" />
 
-    <!-- OpenLayers style lib -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/css/ol.css" type="text/css">
-    <link rel="stylesheet" href="css/ol.css" type="text/css">
+  <!-- OpenLayers style lib -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/css/ol.css" type="text/css">
+  <!-- <link rel="stylesheet" href="css/ol.css" type="text/css"> -->
+  <link rel="stylesheet" href="css/ol_popup.css" type="text/css">
 
  </head>
  <body>
@@ -52,17 +53,19 @@
       </div>
       <div class="body-container">
 
-          <!-- <div>
-               <h1 id="mouse-position"></h1>
-               </div>
-          -->
-          <div id="map_container" class="map_container">
+          <!-- Openstreet map -->
+          <div id="map_container" class="map_container"></div>
+
+          <!-- Openstreet overlay -->
+          <div id="popup_node_info" class="ol-popup">
+              <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+              <div id="popup-content"></div>
           </div>
 
           <!-- ----------------- key command board ------------------------ -->
 
           <!-- TODO -->
-					<div id="app" class="table-wrapper">
+					<div id="editor_gtfs_tables" class="table-wrapper">
               <!-- <h1 v-if="last.lastSelect">Selected: {{ last.lastSelect.getID }} /--/ element type = {{ last.lastSelect.type }}</h1> -->
               <table> <!-- TODO: change buttons format and replace table by a proper class -->
 									<tr>
@@ -106,8 +109,15 @@
 									</thead>
 									<tbody>
 										  <tr>
-                          <td v-for="field in agencyFields"><input type="text" :id="field"></td>
-                          <td><button @click="saveAgency">add</button></td>
+                              <td><input type="text" id="agency_id" placeholder="ID" required></td> <!-- required TODO -->
+                              <td><input type="text" id="agency_name" placeholder="Name" required></td>
+                              <td><input type="text" id="agency_url" placeholder="URL" required></td>
+                              <td><input type="text" id="agency_timezone" required></td>
+                              <td><input type="text" id="agency_lang"></td>
+                              <td><input type="text" id="agency_phone"></td>
+                              <td><input type="text" id="agency_fare_url"></td>
+                              <td><input type="text" id="agency_email"></td>
+                              <td><button @click="saveAgency">add</button></td>
 										  </tr>
                       <tr v-for="agency in rev_agencies">
                           <td v-for="field in agency" >{{field}}</td> <!-- FIXME: need review -->
