@@ -116,15 +116,17 @@ map.on('click', (event)=> {
             );
         }
     } else if (action == "select") {
-        if (feature_onHover.parent){
-            overlay_node_info.setPosition(
-                //ol.proj.fromLonLat(
+        if (feature_onHover){ // if element exists
+            if (feature_onHover.parent){ // if element is a node
+                overlay_node_info.setPosition(
+                    //ol.proj.fromLonLat(
                     feature_onHover.parent.coordinates
-                //)
-            ); // TODO
-            o_se_group.selectNodeByID(
-                feature_onHover.parent.getID
-            );
+                    //)
+                ); // TODO
+                o_se_group.selectNodeByID(
+                    feature_onHover.parent.getID
+                );
+            }
         }
     } else { // Could be unselect
         console.log("undefined action");
