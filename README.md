@@ -1,14 +1,14 @@
-# It could be an editor
-for GTFS shapes, someday... I hope...
+# Shape editor
+GTFS shapes editor made mainly in Javascript, using Openstreet map and TEMPLATE.co sheet styles. The editor allows to add nodes who could represent *stops*, generic shapes points, *intersections* or *endpoints*, the last one are the shape points at the end and begin.
+This software tries to become an easier tool to ingress GTFS required data to generate an basic zipped file, the same file we could create using a Calc Sheet but 
+throug a webapp instead.
 
-## how to "use":
+## how to use(develop):
 
     $ npm install express
-    $ npm run serve # a small web-server using express from node.js
+    $ npm run serve
 
-I'm coding this editor full-JS to put it on my webserver, then I need something light by now, but I would like to get better stuff at some point
-
-preview:
+Running preview:
 [raw editor](http://161.35.54.122:10066/GTFS_shapes_editor_JS/index.html)
 <img src="http://161.35.54.122:10066/gtfs_editor.png" >
 
@@ -18,3 +18,4 @@ preview:
 * [ ] Buttons style
 * [ ] Select style
 * [ ] Table columns href to manual definitions
+* [ ] Explain how to add the editor to a web server
