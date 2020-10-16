@@ -18,22 +18,6 @@ var view = new ol.View({
 //     });
 // }
 
-////
-var mousePositionControl = new ol.control.MousePosition({
-    coordinateFormat: (coord1) => {
-        //return (coord1) => {
-            coord2 = [coord1[0], coord1[1]];
-            return ol.coordinate.toStringXY(coord2, 4);
-        //};
-    },
-    projection: 'EPSG:4326',
-    // comment the following two lines to have the mouse position
-    // be placed within the map.
-    className: 'custom-mouse-position',
-    //target: document.getElementById('mouse-position'),
-    undefinedHTML: '&nbsp;',
-});
-
 //// Popups or overlay
 var content = document.getElementById('popup-content');
 var closer = document.getElementById('popup-closer');
@@ -56,7 +40,7 @@ closer.onclick = function () {
 // base layer mainly has routes and buildings.
 var map = new ol.Map({
     controls: ol.control.defaults(
-        {attribution: false}).extend([mousePositionControl]),
+        {attribution: false}),
     layers: [
 	      new ol.layer.Tile({
 	          source: new ol.source.OSM(),
