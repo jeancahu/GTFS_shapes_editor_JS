@@ -3,7 +3,7 @@
 ////  This library tries to encapsulate some of the ////
 ////  more necessary tables and elements required   ////
 ////  by the General Transit Feed Specification,    ////
-////   format
+////  format
 ////
 ////
 
