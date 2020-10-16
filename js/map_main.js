@@ -1,4 +1,51 @@
+///////////// utils functions ///////////////////
+
+// Checks if it isn't implemented yet.
+if (!String.prototype.format) {
+    String.prototype.format = function() {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function(match, number) {
+            return typeof args[number] != 'undefined'
+                ? args[number]
+                : match
+            ;
+        });
+    };
+}
+
 ///////////////////////////////////////////////////
+
+/////////////// components ///////////////////////
+
+Vue.config.ignoredElements = [
+    // nothing
+];
+
+Vue.component('popup', {
+    props: ["content"],
+    template: `
+<div :id="container" class="ol-popup">
+  <a href="#" :id="closer" class="ol-popup-closer"></a>
+  <div id="popup-content">{{ content }}<p>{{ info }}</p></div>
+</div>
+`,
+    data(){
+        return {
+            info: "eso pa"
+        };
+    },
+    computed:{
+        container() {
+            return "popup_node_info";
+        },
+        closer () {
+            return "popup-closer";
+        }
+    }
+});
+
+
+//////////////////////////////////////////////////
 
 //// Constrained map in the area of interst
 var view = new ol.View({
@@ -18,23 +65,6 @@ var view = new ol.View({
 //     });
 // }
 
-//// Popups or overlay
-var content = document.getElementById('popup-content');
-var closer = document.getElementById('popup-closer');
-var overlay_node_info = new ol.Overlay({
-    element: document.getElementById(
-        'popup_node_info'),
-    autoPan: true,
-    autoPanAnimation: {
-        duration: 250,
-    },
-});
-closer.onclick = function () {
-    overlay_node_info.setPosition(undefined);
-    closer.blur();
-    return false;
-};
-
 // Map need a layers group, we're
 // adding only base layer, streetElementNodes will be next
 // base layer mainly has routes and buildings.
@@ -48,7 +78,7 @@ var map = new ol.Map({
 	      //vectorLayer,
     ],
     keyboardEventTarget: document,
-    overlays: [overlay_node_info],
+    //overlays: [overlay_node_info],
     target: 'map_container', // It shows coordinates on page
     view: view,
 });
@@ -84,8 +114,8 @@ map.on('click', (event)=> {
             return feature;
         });
 
-    // TODO: change for a switch
-    if (action == "remove"){
+    switch(action) {
+    case "remove":
         // Click on element to remove
         if ( feature_onHover ){
             if ( typeof(feature_onHover.parent) != 'undefined' ){
@@ -93,21 +123,30 @@ map.on('click', (event)=> {
                     feature_onHover.parent.getID);
             }
         }
-    } else if (action == "add") {
+        break;
+
+    case "add":
         if (feature_onHover){
-            // Link a node with other by ID
-            o_se_group.linkNodesByID(
-                feature_onHover.parent.getID,
-                o_se_group.lastSelect.getID
-            );
-            o_se_group.selectNodeByID(
-                feature_onHover.parent.getID
-            );
+            if (feature_onHover.parent){ // if element is a node
+                // Link a node with other by ID
+                o_se_group.linkNodesByID(
+                    feature_onHover.parent.getID,
+                    o_se_group.lastSelect.getID
+                );
+                o_se_group.selectNodeByID(
+                    feature_onHover.parent.getID
+                );
+            }
         } else {
             o_se_group.addNode(coordinate, node_type); //FIXME
         }
+        break;
 
-    } else if (action == "move") {
+    case "split":
+        console.log("Split a line");
+        break;
+
+    case "move":
         console.log("move");
         if (o_se_group.lastSelect){
             o_se_group.setNodeCoordinatesByID(
@@ -115,7 +154,9 @@ map.on('click', (event)=> {
                 coordinate
             );
         }
-    } else if (action == "select") {
+        break;
+
+    case "select":
         if (feature_onHover){ // if element exists
             if (feature_onHover.parent){ // if element is a node
                 overlay_node_info.setPosition(
@@ -126,10 +167,17 @@ map.on('click', (event)=> {
                 o_se_group.selectNodeByID(
                     feature_onHover.parent.getID
                 );
+            } else {
+                overlay_node_info.setPosition(
+                    undefined
+                ); // TODO
             }
         }
-    } else { // Could be unselect
+        break;
+
+        defaul: // Could be unselect
         console.log("undefined action");
+
     }
 });
 
@@ -207,6 +255,8 @@ var app = new Vue({
             language: "en_US",
 
             showList: "shape", // it shows Shapes by default
+
+            // selectedNode: o_se_group.lastSelect, // FIXME doesn't work
 
             nodes: o_se_group.nodes, // contains stops too
             shapes: o_se_group.shapes,
@@ -358,7 +408,7 @@ var app = new Vue({
         }
     },
     computed: {
-        rev_nodes() { // TODO
+        rev_nodes () { // TODO
             result = [];
             // this.nodes.slice().reverse().forEach( (value) => {
             //     if (value.valid){
@@ -367,10 +417,10 @@ var app = new Vue({
             // });
             return result;
         },
-        rev_shapes(){
+        rev_shapes () {
             return []; // TODO
         },
-        rev_stops() { // TODO
+        rev_stops () { // TODO
             result = [];
             this.nodes.slice().reverse().forEach( (value) => {
                 if (value.valid && value.type == 'stop'){
@@ -379,17 +429,23 @@ var app = new Vue({
             });
             return result;
         },
-        rev_agencies() {
+        rev_agencies () {
             return this.agencies.slice().reverse();
         },
-        rev_routes() {
+        rev_routes () {
             return this.routes.slice().reverse();
         },
-        rev_trips() {
+        rev_trips () {
             return this.trips.slice().reverse();
         },
-        rev_stoptimes() { // TODO
+        rev_stoptimes () { // TODO
             return this.stopTimes.slice().reverse();
+        },
+        popup () {
+            return "TODO";
+        },
+        popup_info () { // TODO
+            return nodes.length;
         }
     },
     filters: {
@@ -398,3 +454,24 @@ var app = new Vue({
         }
     }
 });
+
+/////////////////// add overlay ///////////////
+
+//// Popups/overlay
+var content = document.getElementById('popup-content');
+var closer = document.getElementById('popup-closer');
+var overlay_node_info = new ol.Overlay({
+    element: document.getElementById(
+        'popup_node_info'),
+    autoPan: true,
+    autoPanAnimation: {
+        duration: 250,
+    },
+});
+closer.onclick = function () {
+    overlay_node_info.setPosition(undefined);
+    closer.blur();
+    return false;
+};
+map.addOverlay(overlay_node_info);
+

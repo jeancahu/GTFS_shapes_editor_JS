@@ -3,7 +3,7 @@ GTFS shapes editor made mainly in Javascript, using Openstreet map and TEMPLATE.
 This software tries to become an easier tool to ingress GTFS required data to generate an basic zipped file, the same file we could create using a Calc Sheet but 
 throug a webapp instead.
 
-## how to use(develop):
+## How to use(develop):
 
     $ npm install express
     $ npm run serve
