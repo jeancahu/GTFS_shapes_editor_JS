@@ -13,7 +13,15 @@ if (!String.prototype.format) {
     };
 }
 
-///////////////////////////////////////////////////
+//////////////// global vars /////////////////////
+
+var popup_content = {
+    id: '',
+    type: '',
+    geo_lon: 0,
+    geo_lat: 0,
+    stop_id: ''
+};
 
 /////////////// components ///////////////////////
 
@@ -131,7 +139,7 @@ map.on('click', (event)=> {
                 // Link a node with other by ID
                 o_se_group.linkNodesByID(
                     feature_onHover.parent.getID,
-                    o_se_group.lastSelect.getID
+                    o_se_group.getLastSelectedNode().getID
                 );
                 o_se_group.selectNodeByID(
                     feature_onHover.parent.getID
@@ -181,9 +189,9 @@ map.on('click', (event)=> {
 
     case "move":
         console.log("move");
-        if (o_se_group.lastSelect){
+        if (o_se_group.getLastSelectedNode()){
             o_se_group.setNodeCoordinatesByID(
-                o_se_group.lastSelect.getID,
+                o_se_group.getLastSelectedNode().getID,
                 coordinate
             );
         }
@@ -192,14 +200,19 @@ map.on('click', (event)=> {
     case "select":
         if (feature_onHover){ // if element exists
             if (feature_onHover.parent.isNode){ // if element is a node
+                o_se_group.selectNodeByID(
+                    feature_onHover.parent.getID
+                );
+                popup_content.id =
+                    feature_onHover.parent.getID;
+                popup_content.type =
+                    feature_onHover.parent.type;
+
                 overlay_node_info.setPosition(
                     //ol.proj.fromLonLat(
                     feature_onHover.parent.coordinates
                     //)
                 ); // TODO
-                o_se_group.selectNodeByID(
-                    feature_onHover.parent.getID
-                );
             } else {
                 overlay_node_info.setPosition(
                     undefined
@@ -254,11 +267,11 @@ function downloadString(text, fileName) {
 }
 
 //////////////////// Vue experiments ////////////////////////////
-
 var app = new Vue({
     el: '#editor_gtfs_tables',
     data() {
         return {
+            // data: {
             dictionary: {
                 en_US: {
                     add:          "Add",
@@ -289,7 +302,7 @@ var app = new Vue({
 
             showList: "shape", // it shows Shapes by default
 
-            // selectedNode: o_se_group.lastSelect, // FIXME doesn't work
+            popup_content: popup_content, // Gobal object
 
             nodes: o_se_group.nodes, // contains stops too
             shapes: o_se_group.shapes,
@@ -381,6 +394,9 @@ var app = new Vue({
         showTrip() {
             this.showList = "trip";
         },
+        // popupInfo(){ // FIXME
+        //     return o_se_group.getLastSelectedNode().getID;
+        // },
         saveAgency(){
             this.agencyFields.forEach( (value) => {
                 console.log(value);
@@ -474,12 +490,12 @@ var app = new Vue({
         rev_stoptimes () { // TODO
             return this.stopTimes.slice().reverse();
         },
-        popup () {
-            return "TODO";
-        },
-        popup_info () { // TODO
-            return this.nodes.length;
-        }
+        // popup () {
+        //     return "TODO";
+        // },
+        // popup_info () { // TODO
+        //     return this.selectedNode.getID;
+        // }
     },
     filters: {
         input_box(value) {

@@ -247,11 +247,12 @@ class streetElementStopTime {
 // TODO: add shape element (contains nodes and links)
 class streetElementGroup {
     constructor (map) {
-        ////// Private data //////////////////
-        //// map //// Network map ////////////
-        var history = []; // GTFS state     //
-        var layers = {};  // Network layers //
-        //////////////////////////////////////
+        ////// Private data ///////////////////////////
+        /////////////// map //// Network map //////////
+        var history = [];      // GTFS state         //
+        var layers = {};       // Network layers     //
+        var lastSelect = null; // last node selected //
+        ///////////////////////////////////////////////
 
         ////// Private methods //////
         var addLink = (nodeA, nodeB) => { // Internal
@@ -406,9 +407,9 @@ class streetElementGroup {
                     layers[type] // layer
                 ));
 
-            if (this.lastSelect){ // Connect nodes
+            if (lastSelect){ // Connect nodes
                 // TODO exceptions for endpoints
-                addLink(this.lastSelect,
+                addLink(lastSelect,
                         this.getLastElement
                        );
             }
@@ -469,20 +470,25 @@ class streetElementGroup {
         };
 
         this.selectNode = (element) => {
-            if ( this.lastSelect ){
+            if ( lastSelect ){
                 if (element)
                 {this.updateElementLayerByID(element.getID);}
                 layers["select"].getSource().removeFeature(
-                    this.lastSelect.feature
+                    lastSelect.feature
                 );
             }
-            this.lastSelect = element;
-            if ( this.lastSelect ){
+            lastSelect = element;
+            if ( lastSelect ){
                 layers["select"].getSource().addFeature(
-                    this.lastSelect.feature
+                    lastSelect.feature
                 );
             }
         };
+
+        this.getLastSelectedNode = () => {
+            return lastSelect; // FIXME
+        };
+
         ////// END Privileged methods //////
 
         ////// Public data //////
@@ -495,7 +501,6 @@ class streetElementGroup {
         this.trips = [];
         this.stopTimes = [];
 
-        this.lastSelect = null; // last element // head pointer
         ////// END Public data //////
 
         // Add layers

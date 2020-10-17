@@ -66,7 +66,10 @@
 
               <div id="popup_node_info" class="ol-popup">
                   <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-                  <div id="popup-content"><p>{{ popup_info }}</p></div>
+                  <div id="popup-content">
+                      <p>{{ popup_content.id }}</p>
+                      <p>{{ popup_content.type }}</p>
+                  </div>
               </div>
 
               <!-- <h1 v-if="last.lastSelect">Selected: {{ last.lastSelect.getID }} /--/ element type = {{ last.lastSelect.type }}</h1> -->
