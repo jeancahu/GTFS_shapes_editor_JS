@@ -9,6 +9,9 @@
 
 class streetElementNode {
     constructor (id, coordenate, layer) {
+        // Private
+
+        // Public elements
         this.valid = true;
         this.id = id;            // The streetElementNode ID
 
@@ -27,6 +30,9 @@ class streetElementNode {
         this.layer.getSource().addFeature(this.feature); // Gettin visible on map
 
     }
+
+    get isNode () { return true; };
+    get isLink () { return false; };
 
     setID (value){
         this.id = value;
@@ -124,8 +130,12 @@ class streetElementLink { // Link between two nodes
             geometry: new ol.geom.LineString(coordinates),
             name: 'Line'
         });
+        this.feature.parent = this;
         layer.getSource().addFeature(this.feature);
     }
+
+    get isNode () { return false; };
+    get isLink () { return true; };
 
     update () { // Update figure on map
         var coordinates = [
@@ -676,7 +686,19 @@ class streetElementGroup {
         return this.nodes[this.nodes.length-decrem];
     }
 
+    splitLinkByID (link_id){ // TODO
+        this.historyPush([
+            "splitLinkByID",
+            link_id
+        ]);
+        this.links[link_id].terminate();
+    }
+
     deleteLinkByID (link_id){ // TODO: move to link.terminate
+        this.historyPush([
+            "deleteLinkByID",
+            link_id
+        ]);
         this.links[link_id].terminate();
     }
 

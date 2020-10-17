@@ -31,7 +31,7 @@ Vue.component('popup', {
 `,
     data(){
         return {
-            info: "eso pa"
+            info: "TODO TEST FIXME"
         };
     },
     computed:{
@@ -118,7 +118,7 @@ map.on('click', (event)=> {
     case "remove":
         // Click on element to remove
         if ( feature_onHover ){
-            if ( typeof(feature_onHover.parent) != 'undefined' ){
+            if ( feature_onHover.parent.isNode ){
                 o_se_group.deleteNodeByID(
                     feature_onHover.parent.getID);
             }
@@ -127,7 +127,7 @@ map.on('click', (event)=> {
 
     case "add":
         if (feature_onHover){
-            if (feature_onHover.parent){ // if element is a node
+            if (feature_onHover.parent.isNode){ // if element is a node
                 // Link a node with other by ID
                 o_se_group.linkNodesByID(
                     feature_onHover.parent.getID,
@@ -144,6 +144,39 @@ map.on('click', (event)=> {
 
     case "split":
         console.log("Split a line");
+        if (feature_onHover){
+            if (feature_onHover.parent.isNode){
+                // It is a node
+                console.log("It's a node");
+            } else {
+                // It's a link
+                // TODO
+
+                // invalidate link
+                // unselect lastnode
+                // add a Node
+                // link node with node A
+                // link node with node B
+            }
+        } else {
+            // does nothing
+            console.log("Nothing to split");
+        }
+        break;
+
+    case "cut":
+        console.log("Remove a link");
+        if (feature_onHover){
+            if (feature_onHover.parent.isLink){
+                console.log(feature_onHover.parent.getID);
+                o_se_group.deleteLinkByID(
+                    feature_onHover.parent.getID
+                );
+            }
+        } else {
+            // does nothing
+            console.log("Nothing to split");
+        }
         break;
 
     case "move":
@@ -158,7 +191,7 @@ map.on('click', (event)=> {
 
     case "select":
         if (feature_onHover){ // if element exists
-            if (feature_onHover.parent){ // if element is a node
+            if (feature_onHover.parent.isNode){ // if element is a node
                 overlay_node_info.setPosition(
                     //ol.proj.fromLonLat(
                     feature_onHover.parent.coordinates
@@ -445,7 +478,7 @@ var app = new Vue({
             return "TODO";
         },
         popup_info () { // TODO
-            return nodes.length;
+            return this.nodes.length;
         }
     },
     filters: {
