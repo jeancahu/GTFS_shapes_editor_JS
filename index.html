@@ -1,272 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
-  <meta charset="UTF-8">
-  <title>Shape Editor - Alpha</title>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <meta name="description" content="" />
-  <meta name="keywords" content="" />
-  <!-- <script src="js/jquery.min.js"></script>
-       <script src="js/skel.min.js"></script>
-       <script src="js/skel-layers.min.js"></script>
-       <script src="js/init.js"></script>
-  -->
-  <link rel="stylesheet" href="http://161.35.54.122:10066/css/skel.css" />
-  <link rel="stylesheet" href="http://161.35.54.122:10066/css/style.css" />
-  <link rel="stylesheet" href="http://161.35.54.122:10066/css/style-xlarge.css" />
-  <link rel="stylesheet" href="http://161.35.54.122:10066/css/editor-style.css" />
+    <head>
+        <meta charset="UTF-8">
+        <title>Shape Editor - Alpha</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <!-- <script src="js/jquery.min.js"></script>
+             <script src="js/skel.min.js"></script>
+             <script src="js/skel-layers.min.js"></script>
+             <script src="js/init.js"></script>
+        -->
+        <link rel="stylesheet" href="http://161.35.54.122:10066/css/skel.css" />
+        <link rel="stylesheet" href="http://161.35.54.122:10066/css/style.css" />
+        <link rel="stylesheet" href="http://161.35.54.122:10066/css/style-xlarge.css" />
+        <link rel="stylesheet" href="http://161.35.54.122:10066/css/editor-style.css" />
 
-  <!-- OpenLayers style lib -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/css/ol.css" type="text/css">
-  <!-- <link rel="stylesheet" href="css/ol.css" type="text/css"> -->
-  <link rel="stylesheet" href="css/ol_popup.css" type="text/css">
+        <!-- OpenLayers style lib -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/css/ol.css" type="text/css">
+        <!-- <link rel="stylesheet" href="css/ol.css" type="text/css"> -->
+        <link rel="stylesheet" href="css/ol_popup.css" type="text/css">
 
- </head>
- <body>
-      <div class="sidetools">
-          <!-- <a href="#">About</a>
-               <a href="#">Services</a>
-               <a href="#">Clients</a>
-               <a href="#">Contact</a> -->
-          <form>
-              <button onclick="downloadString(o_se_group.historyString(), 'street_element_group_history.js')">Save</button> <!-- TODO change expr -->
-              <label>Type </label>
-              <select id="node_type">
-                  <option value="shape">shape</option>
-                  <option value="endpoint">endpoint</option>
-                  <option value="stop">stop</option>
-                  <option value="fork">intersec.</option>
-              </select>
+    </head>
+    <body>
+        <div class="sidetools">
+            <!-- <a href="#">About</a>
+                 <a href="#">Services</a>
+                 <a href="#">Clients</a>
+                 <a href="#">Contact</a> -->
+            <form>
+                <button onclick="downloadString(o_se_group.historyString(), 'street_element_group_history.js')">Save</button> <!-- TODO change expr -->
+                <label>Type </label>
+                <select id="node_type">
+                    <option value="shape">shape</option>
+                    <option value="endpoint">endpoint</option>
+                    <option value="stop">stop</option>
+                    <option value="fork">intersec.</option>
+                </select>
 
-              <label>Action </label>
-              <select id="action">
-                  <option value="add">add</option>
-                  <option value="select">select</option>
-                  <option value="split">split</option> <!-- RENAME TODO -->
-                  <option value="move">move</option>
-                  <option value="remove">remove</option> <!-- RENAME TODO -->
-                  <option value="cut">cut</option> <!-- RENAME TODO -->
-              </select>
-          </form>
-      </div>
-      <div class="body-container">
+                <label>Action </label>
+                <select id="action">
+                    <option value="add">add</option>
+                    <option value="select">select</option>
+                    <option value="split">split</option> <!-- RENAME TODO -->
+                    <option value="move">move</option>
+                    <option value="remove">remove</option> <!-- RENAME TODO -->
+                    <option value="cut">cut</option> <!-- RENAME TODO -->
+                </select>
+            </form>
+        </div>
+        <div class="body-container">
 
-          <!-- Openstreet map -->
-          <div id="map_container" class="map_container"></div>
+            <!-- Openstreet map -->
+            <div id="map_container" class="map_container"></div>
 
-          <!-- ----------------- key command board ------------------------ -->
+            <!-- ----------------- key command board ------------------------ -->
 
-          <!-- TODO -->
-					<div id="editor_gtfs_tables" class="table-wrapper">
+            <!-- TODO -->
+            <div id="editor_gtfs_tables" class="table-wrapper">
 
-              <!-- <popup :content="popup_info"></popup> <!-- TODO -->
+                <!-- <popup :content="popup_info"></popup> <!-- TODO -->
 
-              <div id="popup_node_info" class="ol-popup">
-                  <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-                  <div id="popup-content">
-                      <p>{{ popup_content.id }}</p>
-                      <p>{{ popup_content.type }}</p>
-                  </div>
-              </div>
+                <div id="popup_node_info" class="ol-popup">
+                    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                    <div id="popup-content">
+                        <p>{{ popup_content.id }}</p>
+                        <p>{{ popup_content.type }}</p>
+                    </div>
+                </div>
 
-              <!-- <h1 v-if="last.lastSelect">Selected: {{ last.lastSelect.getID }} /--/ element type = {{ last.lastSelect.type }}</h1> -->
-              <table> <!-- TODO: change buttons format and replace table by a proper class -->
-									<tr>
-                      <th><button @click="showAgency">agency</button></th>
-											<th><button @click="showShape">shapes</button></th>
-											<th><button @click="showStop">stops</button></th>
-                      <th><button @click="showRoute">routes</button></th>
-                      <th><button @click="showTrip">trips</button></th>
-                      <th><button @click="showStopTime">stop_times</button></th>
-									</tr>
-              </table>
+                <!-- <h1 v-if="last.lastSelect">Selected: {{ last.lastSelect.getID }} /--/ element type = {{ last.lastSelect.type }}</h1> -->
+                <table> <!-- TODO: change buttons format and replace table by a proper class -->
+                    <tr>
+                        <th><button @click="showAgency">agency</button></th>
+                        <th><button @click="showShape">shapes</button></th>
+                        <th><button @click="showStop">stops</button></th>
+                        <th><button @click="showRoute">routes</button></th>
+                        <th><button @click="showTrip">trips</button></th>
+                        <th><button @click="showStopTime">stop_times</button></th>
+                    </tr>
+                </table>
 
-              <!-- NODES -->
-							<table v-show="isVisible('shape')" class="alt">
-									<thead>
-										  <tr>
-                          <th v-for="field in shapeFields">{{field}}</th>
-                          <th></th>
-										  </tr>
-									</thead>
-									<tbody>
-										  <tr v-for="shape in rev_nodes" :key="shape.getID">
-											    <td> - </td> <!-- shp_a : TODO, generate nodes -->
-                          <td><input type="text" :value="shape.coordinates[0]"></td>
-											    <td><input type="text" :value="shape.coordinates[1]"></td>
-                          <td>{{shape.getID}}</td>
-											    <td><input type="text" :value="shape.feature.ol_uid"></td>
-                          <td><button>save</button></td>
-										  </tr>
-									</tbody>
-							</table>
-              <!-- END NODES -->
+                <!-- NODES -->
+                <table v-show="isVisible('shape')" class="alt">
+                    <thead>
+                        <tr>
+                            <th v-for="field in shapeFields">{{field}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="shape in rev_nodes" :key="shape.getID">
+                            <td> - </td> <!-- shp_a : TODO, generate nodes -->
+                            <td><input type="text" :value="shape.coordinates[0]"></td>
+                            <td><input type="text" :value="shape.coordinates[1]"></td>
+                            <td>{{shape.getID}}</td>
+                            <td><input type="text" :value="shape.feature.ol_uid"></td>
+                            <td><button>save</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- END NODES -->
 
-              <!-- AGENCY -->
-              <table v-show="isVisible('agency')" class="alt">
-									<thead>
-										  <tr>
-                          <th v-for="field in agencyFields">{{field}}</th>
-                          <th></th>
-										  </tr>
-									</thead>
-									<tbody>
-										  <tr>
-                              <td><input type="text" id="agency_id" placeholder="ID" required></td> <!-- required TODO -->
-                              <td><input type="text" id="agency_name" placeholder="Name" required></td>
-                              <td><input type="text" id="agency_url" placeholder="URL" required></td>
-                              <td><input type="text" id="agency_timezone" required></td>
-                              <td><input type="text" id="agency_lang"></td>
-                              <td><input type="text" id="agency_phone"></td>
-                              <td><input type="text" id="agency_fare_url"></td>
-                              <td><input type="text" id="agency_email"></td>
-                              <td><button @click="saveAgency">add</button></td>
-										  </tr>
-                      <tr v-for="agency in rev_agencies">
-                          <td v-for="field in agency" >{{field}}</td> <!-- FIXME: need review -->
-                          <td><button @click="removeAgency(agency.agency_id)">remove</button></td>
-										  </tr>
+                <!-- AGENCY -->
+                <table v-show="isVisible('agency')" class="alt">
+                    <thead>
+                        <tr>
+                            <th v-for="field in agencyFields">{{field}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" id="agency_id" placeholder="ID" required></td> <!-- required TODO -->
+                            <td><input type="text" id="agency_name" placeholder="Name" required></td>
+                            <td><input type="text" id="agency_url" placeholder="URL" required></td>
+                            <td><input type="text" id="agency_timezone" required></td>
+                            <td><input type="text" id="agency_lang"></td>
+                            <td><input type="text" id="agency_phone"></td>
+                            <td><input type="text" id="agency_fare_url"></td>
+                            <td><input type="text" id="agency_email"></td>
+                            <td><button @click="saveAgency">add</button></td>
+                        </tr>
+                        <tr v-for="agency in rev_agencies">
+                            <td v-for="field in agency" >{{field}}</td> <!-- FIXME: need review -->
+                            <td><button @click="removeAgency(agency.agency_id)">remove</button></td>
+                        </tr>
 
-									</tbody>
-							</table>
-              <!-- END AGENCY -->
+                    </tbody>
+                </table>
+                <!-- END AGENCY -->
 
-              <!-- STOPS -->
-              <table v-show="isVisible('stop')" class="alt">
-									<thead>
-										  <tr>
-                          <th v-for="field in stopFields">{{field}}</th>
-                          <th></th>
-										  </tr>
-									</thead>
-									<tbody>
-										  <tr v-for="stop in rev_stops">
-                          <td><input type="text" id="stop_id" :value="stop.getID"></td> <!-- TODO solve stop-id -->
-                          <td><input type="text" id="stop_name"></td>
-                          <td><input type="text" id="stop_desc"></td>
-                          <td>{{stop.coordinates[0]}}</td>
-											    <td>{{stop.coordinates[1]}}</td>
-                          <td><input type="text" id="stop_url"></td>
-                          <td><button @click="saveStop">save</button></td>
-										  </tr>
-									</tbody>
-							</table>
-              <!-- END STOPS -->
+                <!-- STOPS -->
+                <table v-show="isVisible('stop')" class="alt">
+                    <thead>
+                        <tr>
+                            <th v-for="field in stopFields">{{field}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="stop in rev_stops">
+                            <td><input type="text" id="stop_id" :value="stop.getID"></td> <!-- TODO solve stop-id -->
+                            <td><input type="text" id="stop_name"></td>
+                            <td><input type="text" id="stop_desc"></td>
+                            <td>{{stop.coordinates[0]}}</td>
+                            <td>{{stop.coordinates[1]}}</td>
+                            <td><input type="text" id="stop_url"></td>
+                            <td><button @click="saveStop">save</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- END STOPS -->
 
-              <!-- ROUTES -->
-              <table v-show="isVisible('route')" class="alt">
-									<thead>
-										  <tr>
-                          <th v-for="field in routeFields">{{field}}</th>
-                          <th></th>
-										  </tr>
-									</thead>
-									<tbody>
-                      <tr>
-                          <!-- <th v-for="field in routeFields"><input type="text" :id="field"></th> -->
-                          <td><input type="text" id="r_route_id"></td>
-                          <td><select id="r_agency_id">
-                              <option v-for="agency in rev_agencies" :value="agency.agency_id">{{agency.agency_id}}</option>
-                          </select></td>
-                          <td><input type="text" id="r_route_short_name"></td>
-                          <td><input type="text" id="r_route_long_name"></td>
-                          <td><select id="r_route_type">
-                              <option v-for="routeType in r_routeType" :value="routeType.value">{{routeType.name}}</option>
-                          </select></td>
-                          <td><button @click="saveRoute">add</button></td>
-										  </tr>
-										  <tr v-for="route in rev_routes">
-                          <td v-for="field in route" >{{field}}</td> <!-- FIXME: need review -->
-                          <td><button @click="removeRoute(route.route_id)">remove</button></td>
-										  </tr>
-									</tbody>
-							</table>
-              <!-- END ROUTES -->
+                <!-- ROUTES -->
+                <table v-show="isVisible('route')" class="alt">
+                    <thead>
+                        <tr>
+                            <th v-for="field in routeFields">{{field}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <!-- <th v-for="field in routeFields"><input type="text" :id="field"></th> -->
+                            <td><input type="text" id="r_route_id"></td>
+                            <td><select id="r_agency_id">
+                                <option v-for="agency in rev_agencies" :value="agency.agency_id">{{agency.agency_id}}</option>
+                            </select></td>
+                            <td><input type="text" id="r_route_short_name"></td>
+                            <td><input type="text" id="r_route_long_name"></td>
+                            <td><select id="r_route_type">
+                                <option v-for="routeType in r_routeType" :value="routeType.value">{{routeType.name}}</option>
+                            </select></td>
+                            <td><button @click="saveRoute">add</button></td>
+                        </tr>
+                        <tr v-for="route in rev_routes">
+                            <td v-for="field in route" >{{field}}</td> <!-- FIXME: need review -->
+                            <td><button @click="removeRoute(route.route_id)">remove</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- END ROUTES -->
 
-              <!-- TRIPS -->
-              <table v-show="isVisible('trip')" class="alt">
-									<thead>
-										  <tr>
-                          <th v-for="field in tripFields">{{field}}</th>
-                          <th></th>
-										  </tr>
-									</thead>
-									<tbody>
-                      <tr>
-                          <td><select id="t_route_id">
-                              <option v-for="route in rev_routes" :value="route.route_id">{{route.route_id}}</option>
-                          </select></td>
-                          <td><input type="text" id="t_service_id"></td>
-                          <td><input type="text" id="t_trip_id"></td>
-                          <td><select id="t_direction_id">
-                              <option value="0">outbound travel</option>
-                              <option value="1">inbound travel</option>
-                          </select></td>
-                          <td><select id="t_shape_id">
-                              <option v-for="shape in rev_shapes" :value="shape.name">{{shape.name}}</option>
-                          </select></td>
-                          <td><button @click="saveTrip">add</button></td>
-										  </tr>
-										  <tr v-for="trip in rev_trips">
-                          <td v-for="field in trip" >{{field}}</td> <!-- FIXME: need review -->
-                          <td><button @click="removeTrip(trip.trip_id)">{{ translate("remove") }}</button></td>
-										  </tr>
-									</tbody>
-							</table>
-              <!-- END TRIPS -->
+                <!-- TRIPS -->
+                <table v-show="isVisible('trip')" class="alt">
+                    <thead>
+                        <tr>
+                            <th v-for="field in tripFields">{{field}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><select id="t_route_id">
+                                <option v-for="route in rev_routes" :value="route.route_id">{{route.route_id}}</option>
+                            </select></td>
+                            <td><input type="text" id="t_service_id"></td>
+                            <td><input type="text" id="t_trip_id"></td>
+                            <td><select id="t_direction_id">
+                                <option value="0">outbound travel</option>
+                                <option value="1">inbound travel</option>
+                            </select></td>
+                            <td><select id="t_shape_id">
+                                <option v-for="shape in rev_shapes" :value="shape.name">{{shape.name}}</option>
+                            </select></td>
+                            <td><button @click="saveTrip">add</button></td>
+                        </tr>
+                        <tr v-for="trip in rev_trips">
+                            <td v-for="field in trip" >{{field}}</td> <!-- FIXME: need review -->
+                            <td><button @click="removeTrip(trip.trip_id)">{{ translate("remove") }}</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- END TRIPS -->
 
-              <!-- STOPTIMES -->
-              <table v-show="isVisible('stoptime')" class="alt">
-									<thead>
-										  <tr>
-                          <th v-for="field in stopTimeFields">{{field}}</th>
-                          <th></th>
-										  </tr>
-									</thead>
-									<tbody>
-                      <tr>
-                          <td v-for="field in stopTimeFields"><input type="text" :id="field"></td>
-                          <td><button @click="saveStopTime">add</button></td>
-										  </tr>
-										  <tr v-for="stoptime in rev_stoptimes">
-                          <td v-for="field in stoptime" >{{field}}</td> <!-- FIXME: need review -->
-                          <td><button @click="removeStopTime(stoptime.trip_id, stoptime.stop_id)">remove</button></td>
-										  </tr>
-									</tbody>
-							</table>
-              <!-- END STOPTIMES -->
+                <!-- STOPTIMES -->
+                <table v-show="isVisible('stoptime')" class="alt">
+                    <thead>
+                        <tr>
+                            <th v-for="field in stopTimeFields">{{field}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td v-for="field in stopTimeFields"><input type="text" :id="field"></td>
+                            <td><button @click="saveStopTime">add</button></td>
+                        </tr>
+                        <tr v-for="stoptime in rev_stoptimes">
+                            <td v-for="field in stoptime" >{{field}}</td> <!-- FIXME: need review -->
+                            <td><button @click="removeStopTime(stoptime.trip_id, stoptime.stop_id)">remove</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- END STOPTIMES -->
 
-					</div>
+            </div>
 
-          <!-- --------------  END key command board  --------------------- -->
+            <!-- --------------  END key command board  --------------------- -->
 
-          map: OpenStreetMap
-      </div>
+            map: OpenStreetMap
+        </div>
 
-      <!-- <script src="https://unpkg.com/elm-pep"></script> -->
-      <script src="https://unpkg.com/vue"></script>
+        <!-- <script src="https://unpkg.com/elm-pep"></script> -->
+        <script src="https://unpkg.com/vue"></script>
 
-      <!-- Vue 3 TODO -->
-      <!-- <script src="https://unpkg.com/vue@3.0.0-beta.12/dist/vue.global.js"></script> -->
+        <!-- Vue 3 TODO -->
+        <!-- <script src="https://unpkg.com/vue@3.0.0-beta.12/dist/vue.global.js"></script> -->
 
-      <!-- OpenLayers library we use to show the map and draw on it -->
-      <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/build/ol.js"></script>
+        <!-- OpenLayers library we use to show the map and draw on it -->
+        <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/build/ol.js"></script>
 
-      <!-- editor history / file loaded -->
-      <script src="js/street_element_group_history.js"></script>
+        <!-- editor history / file loaded -->
+        <script src="js/street_element_group_history.js"></script>
 
-      <!-- Map GTFS elements -->
-      <script src="js/streetElementNode.js"></script>        <!-- Node     class -->
-      <script src="js/streetElementLink.js"></script>        <!-- Link     class -->
-      <script src="js/streetElementAgency.js"></script>      <!-- Agency   class -->
-      <script src="js/streetElementRoute.js"></script>       <!-- Route    class -->
-      <script src="js/streetElementShape.js"></script>       <!-- Shape    class -->
-      <script src="js/streetElementTrip.js"></script>        <!-- Trip     class -->
-      <script src="js/streetElementStopTime.js"></script>    <!-- StopTime class -->
-      <script src="js/streetElementGroup.js"></script>       <!-- Group    class -->
+        <!-- Map GTFS elements -->
+        <script src="js/streetElementNode.js"></script>        <!-- Node     class -->
+        <script src="js/streetElementLink.js"></script>        <!-- Link     class -->
+        <script src="js/streetElementAgency.js"></script>      <!-- Agency   class -->
+        <script src="js/streetElementRoute.js"></script>       <!-- Route    class -->
+        <script src="js/streetElementShape.js"></script>       <!-- Shape    class -->
+        <script src="js/streetElementTrip.js"></script>        <!-- Trip     class -->
+        <script src="js/streetElementStopTime.js"></script>    <!-- StopTime class -->
+        <script src="js/streetElementGroup.js"></script>       <!-- Group    class -->
 
-      <!-- variables and listeners -->
-      <script src="js/map_main.js"></script>
+        <!-- variables and listeners -->
+        <script src="js/map_main.js"></script>
 
- </body>
+    </body>
 </html>
