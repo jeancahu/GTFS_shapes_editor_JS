@@ -7,19 +7,12 @@ const port = 9000;
 // Create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-// Este es el resultado a pedir la dirección /
 app.get('/', (request, response) => {
     response.sendFile(__dirname + "/index.html");
 });
 
 app.get('/editor', (request, response) => {
     response.sendFile(__dirname + "/index.html");
-});
-
-
-app.get('/images/:name', (request, response) => {
-    const { name } = request.params;
-    response.sendFile(__dirname + "/templates/images/" + name);
 });
 
 app.get('/js/:name', (request, response) => {
@@ -97,6 +90,6 @@ app.get('/:name', (request, response) => {
     response.sendFile(__dirname + "/templates/" + name);
 })
 
-// Iniciamos el servidor
+// Start the server at port number 9000
 console.log(`Server is running at address:port http://localhost:${port}\n`);
 app.listen(port);

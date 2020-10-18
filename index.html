@@ -6,9 +6,6 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta name="description" content="" />
   <meta name="keywords" content="" />
-  <!-- <script src="https://unpkg.com/elm-pep"></script> -->
-  <script src="https://unpkg.com/vue"></script>
-
   <!-- <script src="js/jquery.min.js"></script>
        <script src="js/skel.min.js"></script>
        <script src="js/skel-layers.min.js"></script>
@@ -85,7 +82,7 @@
               </table>
 
               <!-- NODES -->
-							<table v-if="isVisible('shape')" class="alt">
+							<table v-show="isVisible('shape')" class="alt">
 									<thead>
 										  <tr>
                           <th v-for="field in shapeFields">{{field}}</th>
@@ -106,7 +103,7 @@
               <!-- END NODES -->
 
               <!-- AGENCY -->
-              <table v-if="isVisible('agency')" class="alt">
+              <table v-show="isVisible('agency')" class="alt">
 									<thead>
 										  <tr>
                           <th v-for="field in agencyFields">{{field}}</th>
@@ -135,7 +132,7 @@
               <!-- END AGENCY -->
 
               <!-- STOPS -->
-              <table v-if="isVisible('stop')" class="alt">
+              <table v-show="isVisible('stop')" class="alt">
 									<thead>
 										  <tr>
                           <th v-for="field in stopFields">{{field}}</th>
@@ -157,7 +154,7 @@
               <!-- END STOPS -->
 
               <!-- ROUTES -->
-              <table v-if="isVisible('route')" class="alt">
+              <table v-show="isVisible('route')" class="alt">
 									<thead>
 										  <tr>
                           <th v-for="field in routeFields">{{field}}</th>
@@ -187,7 +184,7 @@
               <!-- END ROUTES -->
 
               <!-- TRIPS -->
-              <table v-if="isVisible('trip')" class="alt">
+              <table v-show="isVisible('trip')" class="alt">
 									<thead>
 										  <tr>
                           <th v-for="field in tripFields">{{field}}</th>
@@ -219,7 +216,7 @@
               <!-- END TRIPS -->
 
               <!-- STOPTIMES -->
-              <table v-if="isVisible('stoptime')" class="alt">
+              <table v-show="isVisible('stoptime')" class="alt">
 									<thead>
 										  <tr>
                           <th v-for="field in stopTimeFields">{{field}}</th>
@@ -246,14 +243,27 @@
           map: OpenStreetMap
       </div>
 
+      <!-- <script src="https://unpkg.com/elm-pep"></script> -->
+      <script src="https://unpkg.com/vue"></script>
+
+      <!-- Vue 3 TODO -->
+      <!-- <script src="https://unpkg.com/vue@3.0.0-beta.12/dist/vue.global.js"></script> -->
+
       <!-- OpenLayers library we use to show the map and draw on it -->
       <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/build/ol.js"></script>
 
       <!-- editor history / file loaded -->
       <script src="js/street_element_group_history.js"></script>
 
-      <!-- editor configuration -->
-      <script src="js/gtfs_shape_editor.js"></script>
+      <!-- Map GTFS elements -->
+      <script src="js/streetElementNode.js"></script>        <!-- Node     class -->
+      <script src="js/streetElementLink.js"></script>        <!-- Link     class -->
+      <script src="js/streetElementAgency.js"></script>      <!-- Agency   class -->
+      <script src="js/streetElementRoute.js"></script>       <!-- Route    class -->
+      <script src="js/streetElementShape.js"></script>       <!-- Shape    class -->
+      <script src="js/streetElementTrip.js"></script>        <!-- Trip     class -->
+      <script src="js/streetElementStopTime.js"></script>    <!-- StopTime class -->
+      <script src="js/streetElementGroup.js"></script>       <!-- Group    class -->
 
       <!-- variables and listeners -->
       <script src="js/map_main.js"></script>
