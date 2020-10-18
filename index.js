@@ -23,7 +23,12 @@ app.get('/js/:name', (request, response) => {
 
 app.get('/css/:name', (request, response) => {
     const { name } = request.params;
-    response.sendFile(__dirname + "/templates/css/" + name);
+    response.sendFile(__dirname + "/css/" + name);
+});
+
+app.get('/css/TEMPLATE-CSS/:name', (request, response) => {
+    const { name } = request.params;
+    response.sendFile(__dirname + "/css/TEMPLATE-CSS/" + name);
 });
 
 app.get('/fonts/:name', (request, response) => {
