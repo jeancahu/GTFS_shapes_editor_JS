@@ -1,0 +1,59 @@
+/* body, html { */
+/*     height: 100%; */
+/* } */
+
+.body-container {
+    /*background: e2efef;*/
+    margin-left: 160px; /* Same as the width of the sidebar */
+    padding: 0px 0px;
+}
+
+.map_container {
+    height: 70vh;
+    width: 100%;
+    background: #e2efef;
+}
+
+/* The sidebar menu */
+.sidetools {
+    height: 100%; /* Full-height: remove this if you want "auto" height */
+    width: 160px; /* Set the width of the sidebar */
+    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: #111; /* Black */
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 20px 10px;
+    color: white;
+    font-size: 17px;
+}
+
+/* The navigation menu links */
+.sidetools a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidetools a:hover {
+    color: #f1f1f1;
+}
+
+.sidetools form {
+    padding: 0px 10px;
+    margin: 10px;
+    font-size: 16px;
+    /* background-color: white; */
+}
+
+.sidetools form selection{
+    padding: 0px 10px;
+    margin: 10px;
+    font-size: 16px;
+    /* background-color: white; */
+}
+
