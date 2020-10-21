@@ -28,4 +28,14 @@ class streetElementAgency {
     }
     // Create a function for every param to
     // verify if it is a valid valor // TODO
+    static isInstance ( obj ){
+        if (typeof(obj) == "object"){
+            if (obj.constructor.name == streetElementAgency.name){
+                return true;
+            }
+        }
+        console.log("The variable is not a " + streetElementAgency.name + " instance");
+        return false;
+    }
+
 }

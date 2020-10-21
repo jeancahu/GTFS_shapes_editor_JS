@@ -30,6 +30,17 @@ class streetElementLink { // Link between two nodes
         layer.getSource().addFeature(this.feature);
     }
 
+    static isInstance (obj) {
+        if (typeof(obj) == "object"){
+            if (obj.constructor.name == streetElementLink.name){
+                return true;
+            }
+        }
+        console.log("The variable is not a " + streetElementLink.name + " instance");
+        return false;
+    }
+
+
     get isNode () { return false; };
     get isLink () { return true; };
 

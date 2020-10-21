@@ -91,7 +91,7 @@ var map = new ol.Map({
     view: view,
 });
 
-// FIXME: change the "node_type" variable for something with sense
+// FIXME: change the "node_type" variable for something what makesense
 var node_type = document.getElementById('node_type').value;
 var nodeTypeSelect = document.getElementById('node_type');
 nodeTypeSelect.addEventListener('change', function (event) {
@@ -358,6 +358,19 @@ var app = new Vue({
                 "r_route_type" // TODO, autobus by default
             ],
 
+            calendarFields: [
+                "c_service_id",
+                "c_monday",
+                "c_tuesday",
+                "c_wednesday",
+                "c_thursday",
+                "c_friday",
+                "c_saturday",
+                "c_sunday",
+                "c_start_day",
+                "c_end_day"
+            ],
+
             r_routeType: [
                 {value: 3, name: "autobus"},
                 {value: 2, name: "train"},
@@ -391,6 +404,9 @@ var app = new Vue({
         showRoute() {
             this.showList = "route";
         },
+        showCalendar() {
+            this.showList = "calendar";
+        },
         showTrip() {
             this.showList = "trip";
         },
@@ -401,7 +417,7 @@ var app = new Vue({
             this.agencyFields.forEach( (value) => {
                 console.log(value);
             }); // FIXME remove
-            o_se_group.addAgency(
+            o_se_group.addAgency( // TODO, for, create a list, then use it as arg
                 document.getElementById("agency_id").value,
 						    document.getElementById("agency_name").value,
 						    document.getElementById("agency_url").value,
@@ -435,6 +451,15 @@ var app = new Vue({
         },
         removeRoute (route_id){ // TODO
             console.log("remove route: " + route_id);
+        },
+        saveCalendar(){
+            // o_se_group.addCalendar(
+            //     document.getElementById("c_service_id").value
+            // );
+            console.log("saveCalendar");
+        },
+        removeCalendar (service_id){ // TODO
+            console.log("remove service: " + service_id);
         },
         saveTrip(){
             o_se_group.addTrip(
@@ -483,6 +508,9 @@ var app = new Vue({
         },
         rev_routes () {
             return this.routes.slice().reverse();
+        },
+        rev_services () {
+            return []; // TODO
         },
         rev_trips () {
             return this.trips.slice().reverse();

@@ -33,8 +33,31 @@ class streetElementNode {
 
     }
 
+    static isInstance (obj) {
+        if (typeof(obj) == "object"){
+            if (obj.constructor.name == streetElementNode.name){
+                return true;
+            }
+        }
+        console.log("The variable is not a " + streetElementNode.name + " instance");
+        return false;
+    }
+
     static distance (nodeA, nodeB) { // TODO distance between two nodes
         console.log("TODO distance between two nodes");
+    }
+
+    static get type () {
+        return { // The only possible node types
+            FORK: "fork",
+            SHAPE: "shape",
+            ENDPOINT: "endpoint",
+            STOP: "stop"
+        };
+    }
+
+    get type (){ // Layer name is the element type
+        return this.layer.name;
     }
 
     get isNode () { return true; };
@@ -46,10 +69,6 @@ class streetElementNode {
 
     get getID (){
         return this.id;
-    }
-
-    get type (){ // Layer name is the element type
-        return this.layer.name;
     }
 
     addConnection (value){

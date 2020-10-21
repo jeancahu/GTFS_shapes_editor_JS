@@ -58,7 +58,7 @@ class streetElementGroup {
             var radius;
             var style;
             switch (type) {
-            case 'shape': // Shape element, blue
+            case streetElementNode.type.SHAPE: // Shape element, blue
                 radius = 5;
                 style =  new ol.style.Style({
 	                  image: new ol.style.Circle({
@@ -67,7 +67,7 @@ class streetElementGroup {
 	                  })
                 });
                 break;
-            case 'stop': // Stop element, red
+            case streetElementNode.type.STOP: // Stop element, red
                 radius = 7;
                 style =  new ol.style.Style({
 	                  image: new ol.style.Circle({
@@ -76,7 +76,7 @@ class streetElementGroup {
 	                  })
                 });
                 break;
-            case 'fork': // Intersec. violet
+            case streetElementNode.type.FORK: // Intersec. violet
                 radius = 5;
                 style =  new ol.style.Style({
 	                  image: new ol.style.Circle({
@@ -85,7 +85,7 @@ class streetElementGroup {
 	                  })
                 });
                 break;
-            case 'endpoint': // Terminals, green
+            case streetElementNode.type.ENDPOINT: // Terminals, green
                 radius = 5;
                 style =  new ol.style.Style({
 	                  image: new ol.style.Circle({
@@ -254,27 +254,37 @@ class streetElementGroup {
         ////// END Privileged methods //////
 
         ////// Public data //////
-        this.nodes = []; // could it to be private? // TODO
-        this.links = []; // could it to be private? // TODO
+        this.nodes     = []; // could it to be private? // TODO
+        this.links     = []; // could it to be private? // TODO
 
-        this.shapes = [];
-        this.agencies = [];
-        this.routes = [];
-        this.trips = [];
+        this.shapes    = [];
+        this.agencies  = [];
+        this.routes    = [];
+        this.trips     = [];
         this.stopTimes = [];
 
         ////// END Public data //////
 
         // Add layers
         addLayer("link", "blue"); // links between nodes
-        addLayer("shape", "blue");
-        addLayer("stop", "red");
-        addLayer("fork", "violet");
-        addLayer("endpoint", "green");
+        addLayer(streetElementNode.type.SHAPE, "blue");
+        addLayer(streetElementNode.type.STOP, "red");
+        addLayer(streetElementNode.type.FORK, "violet");
+        addLayer(streetElementNode.type.ENDPOINT, "green");
         addLayer("select", "yellow");
     } ////// END streetElementGroup constructor //////
 
     ////// Public methods //////
+
+    static isInstance ( obj ){
+        if (typeof(obj) == "object"){
+            if (obj.constructor.name == streetElementGroup.name){
+                return true;
+            }
+        }
+        console.log("The variable is not a " + streetElementGroup.name + " instance");
+        return false;
+    }
 
     // Method to get the amount of nodes
     get length (){

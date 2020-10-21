@@ -21,10 +21,6 @@
     </head>
     <body>
         <div class="sidetools">
-            <!-- <a href="#">About</a>
-                 <a href="#">Services</a>
-                 <a href="#">Clients</a>
-                 <a href="#">Contact</a> -->
             <form>
                 <button onclick="downloadString(o_se_group.historyString(), 'street_element_group_history.js')">Save</button> <!-- TODO change expr -->
                 <label>Type </label>
@@ -73,6 +69,7 @@
                         <th><button @click="showShape">shapes</button></th>
                         <th><button @click="showStop">stops</button></th>
                         <th><button @click="showRoute">routes</button></th>
+                        <th><button @click="showCalendar">calendar</button></th>
                         <th><button @click="showTrip">trips</button></th>
                         <th><button @click="showStopTime">stop_times</button></th>
                     </tr>
@@ -179,6 +176,25 @@
                     </tbody>
                 </table>
                 <!-- END ROUTES -->
+
+                <!-- CALENDAR -->
+                <table v-show="isVisible('calendar')" class="alt">
+                    <thead>
+                        <tr>
+                            <th v-for="field in calendarFields">{{field}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td v-for="field in calendarFields"><input type="text" :id="field"></td>
+                            <td><button @click="saveCalendar">add</button></td>
+                        </tr>
+                        <tr v-for="service in rev_services">
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- END CALENDAR -->
 
                 <!-- TRIPS -->
                 <table v-show="isVisible('trip')" class="alt">

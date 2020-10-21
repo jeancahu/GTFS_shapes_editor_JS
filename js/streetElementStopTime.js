@@ -22,4 +22,14 @@ class streetElementStopTime {
     }
     // Create a function for every param to
     // verify if it is a valid valor // TODO
+    static isInstance (obj) {
+        if (typeof(obj) == "object"){
+            if (obj.constructor.name == streetElementStopTime.name){
+                return true;
+            }
+        }
+        console.log("The variable is not a " + streetElementStopTime.name + " instance");
+        return false;
+    }
+
 }

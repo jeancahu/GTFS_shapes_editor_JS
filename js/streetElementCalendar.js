@@ -7,28 +7,28 @@
 ////
 ////
 
-class streetElementTrip {
-    constructor (route_id, // Route object
-                 service_id,
-                 trip_id,
-                 direction_id,
-                 shape_id  // Shape object
+class streetElementCalendar {
+    constructor (service_id,
                 ) {
-        this.route_id = route_id;
-        this.service_id = service_id;
-        this.trip_id = trip_id;
-        this.direction_id = direction_id;
-        this.shape_id = shape_id;
+        this.agency_id = agency_id;
     }
+
+    static get type () {
+        return { // enum for service on day
+            AVAILABLE: 1,
+            UNAVAILABLE: 0
+        };
+    }
+
     // Create a function for every param to
     // verify if it is a valid valor // TODO
     static isInstance ( obj ){
         if (typeof(obj) == "object"){
-            if (obj.constructor.name == streetElementTrip.name){
+            if (obj.constructor.name == streetElementCalendar.name){
                 return true;
             }
         }
-        console.log("The variable is not a " + streetElementTrip.name + " instance");
+        console.log("The variable is not a " + streetElementCalendar.name + " instance");
         return false;
     }
 
