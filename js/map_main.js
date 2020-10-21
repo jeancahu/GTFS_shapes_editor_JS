@@ -91,12 +91,31 @@ var map = new ol.Map({
     view: view,
 });
 
-// FIXME: change the "node_type" variable for something what makesense
-var node_type = document.getElementById('node_type').value;
-var nodeTypeSelect = document.getElementById('node_type');
-nodeTypeSelect.addEventListener('change', function (event) {
-    node_type = event.target.value;
-});
+// Return node type from radio menu
+function get_node_type () {
+    const radio_buttons_node_type = document.getElementsByName("node_type"); // FIXME const??
+
+    var result;
+    radio_buttons_node_type.forEach( (radio_button) => {
+        if (radio_button.checked){
+            console.log(radio_button.value);
+            result = radio_button.value;
+        }
+    });
+    return result;
+}
+
+function set_node_type (type) {
+    const radio_buttons_node_type = document.getElementsByName("node_type"); // FIXME const??
+    radio_buttons_node_type.forEach( (radio_button) => {
+        if (radio_button.value == type){
+            radio_button.checked = true;
+        } else {
+            radio_button.checked = false;
+        }
+    });
+}
+
 
 // TODO: Review needed
 ///////////////////////////////////////////////////////////////////////
@@ -146,7 +165,7 @@ map.on('click', (event)=> {
                 );
             }
         } else {
-            o_se_group.addNode(coordinate, node_type); //FIXME
+            o_se_group.addNode(coordinate, get_node_type()); //FIXME
         }
         break;
 
@@ -238,18 +257,22 @@ document.addEventListener('keydown', function(event) {
 
 // Shortcuts
 document.addEventListener('keypress', function(event) {
-    if (event.key === 's') {
-        console.log('Stop!');
-        node_type = 'stop';
-    } else if (event.key === 'e') {
-        console.log('Endpoint!');
-        node_type = 'endpoint';
+    switch(event.key) {
+    case "q":
+        set_node_type('shape');
+        break;
+    case "s":
+        set_node_type('stop');
+        break;
+    case "e":
+        set_node_type('endpoint');
+        break;
+    case "f":
+        set_node_type('fork');
+        break;
+    default:
+        console.log("no action");
     }
-
-});
-
-document.addEventListener('keyup', function(event) {
-        node_type = document.getElementById('node_type').value;
 });
 
 //////////////////// Download as text/plain /////////////////////

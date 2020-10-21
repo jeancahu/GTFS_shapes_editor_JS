@@ -21,17 +21,19 @@
     </head>
     <body>
         <div class="sidetools">
-            <form>
-                <button onclick="downloadString(o_se_group.historyString(), 'street_element_group_history.js')">Save</button> <!-- TODO change expr -->
-                <label>Type </label>
-                <select id="node_type">
-                    <option value="shape">shape</option>
-                    <option value="endpoint">endpoint</option>
-                    <option value="stop">stop</option>
-                    <option value="fork">intersec.</option>
-                </select>
 
-                <label>Action </label>
+            <button onclick="downloadString(o_se_group.historyString(), 'street_element_group_history.js')">Save</button> <!-- TODO change expr -->
+            <label>Type </label>
+            <input type="radio" id="nt_shape" name="node_type" value="shape">
+            <label for="nt_shape">Shape</label><br>
+            <input type="radio" id="nt_endpoint" name="node_type" value="endpoint">
+            <label for="nt_endpoint">Endpoint</label><br>
+            <input type="radio" id="nt_stop" name="node_type" value="stop">
+            <label for="nt_stop">Stop</label>
+            <input type="radio" id="nt_fork" name="node_type" value="fork">
+            <label for="nt_fork">Intersection</label>
+
+            <label>Action </label>
                 <select id="action">
                     <option value="add">add</option>
                     <option value="select">select</option>
@@ -40,7 +42,6 @@
                     <option value="remove">remove</option> <!-- RENAME TODO -->
                     <option value="cut">cut</option> <!-- RENAME TODO -->
                 </select>
-            </form>
         </div>
         <div class="body-container">
 
