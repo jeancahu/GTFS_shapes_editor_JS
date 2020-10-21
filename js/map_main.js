@@ -213,11 +213,12 @@ map.on('click', (event)=> {
                     feature_onHover.parent.coordinates
                     //)
                 ); // TODO
-            } else {
-                overlay_node_info.setPosition(
-                    undefined
-                ); // TODO
             }
+        }
+        else {
+            overlay_node_info.setPosition(
+                undefined
+            ); // TODO
         }
         break;
 

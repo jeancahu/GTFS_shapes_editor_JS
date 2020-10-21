@@ -130,11 +130,18 @@ class streetElementGroup {
 
         this.historyPush = (command) => { // TODO private method
             // command is a list with an external function and its arguments
+            if (command[0] == "selectNodeByID") { // Process selectNodeByID
+                if (history[history.length -1][0] == "selectNodeByID") {
+                    // only save the last selected node if there are not editions in between
+                    history.pop();
+                }
+            }
             history.push(command);
         };
 
         this.historyLoad = (in_history) => { // TODO
             console.log("Load history");
+            // TODO if method is not in class, error code
             in_history.forEach( (commad) => {
                 this[commad[0]](...commad.slice(1, commad.length));
             });
@@ -153,6 +160,7 @@ class streetElementGroup {
 
         this.historyPop = function () { // TODO
             console.log("Pop from history");
+            history.pop();
         };
 
         this.addNode = (coordenate, type) => {
