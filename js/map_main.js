@@ -93,7 +93,7 @@ var map = new ol.Map({
 
 // Return node type from radio menu
 function get_node_type () {
-    const radio_buttons_node_type = document.getElementsByName("node_type"); // FIXME const??
+    const radio_buttons_node_type = document.getElementsByName("node_type");
 
     var result;
     radio_buttons_node_type.forEach( (radio_button) => {
@@ -106,7 +106,7 @@ function get_node_type () {
 }
 
 function set_node_type (type) {
-    const radio_buttons_node_type = document.getElementsByName("node_type"); // FIXME const??
+    const radio_buttons_node_type = document.getElementsByName("node_type");
     radio_buttons_node_type.forEach( (radio_button) => {
         if (radio_button.value == type){
             radio_button.checked = true;
@@ -116,8 +116,6 @@ function set_node_type (type) {
     });
 }
 
-
-// TODO: Review needed
 ///////////////////////////////////////////////////////////////////////
 // Aqui vamos haciendo la lista con puntos dependiendo de que clase sea
 // se crea una lista con los diferentes puntos a dibujar sobre el mapa
@@ -259,16 +257,16 @@ document.addEventListener('keydown', function(event) {
 document.addEventListener('keypress', function(event) {
     switch(event.key) {
     case "q":
-        set_node_type('shape');
+        set_node_type(streetElementNode.type.SHAPE);
         break;
     case "s":
-        set_node_type('stop');
+        set_node_type(streetElementNode.type.STOP);
         break;
     case "e":
-        set_node_type('endpoint');
+        set_node_type(streetElementNode.type.ENDPOINT);
         break;
     case "f":
-        set_node_type('fork');
+        set_node_type(streetElementNode.type.FORK);
         break;
     default:
         console.log("no action");
