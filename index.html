@@ -76,8 +76,11 @@
                     </tr>
                 </table>
 
-                <!-- NODES -->
-                <table v-show="isVisible('shape')" class="alt">
+                <!-- SHAPES -->
+                <div v-show="isVisible('shape')">
+                    Add a new shape:
+
+                <table class="alt">
                     <thead>
                         <tr>
                             <th v-for="field in shapeFields">{{field}}</th>
@@ -85,7 +88,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="shape in rev_nodes" :key="shape.getID">
+                        <tr v-for="shape in rev_nodes" :key="shape.getID"> <!-- FIXME chg nodes by shapes -->
                             <td> - </td> <!-- shp_a : TODO, generate nodes -->
                             <td><input type="text" :value="shape.coordinates[0]"></td>
                             <td><input type="text" :value="shape.coordinates[1]"></td>
@@ -95,7 +98,8 @@
                         </tr>
                     </tbody>
                 </table>
-                <!-- END NODES -->
+                </div>
+                <!-- END SHAPES -->
 
                 <!-- AGENCY -->
                 <table v-show="isVisible('agency')" class="alt">

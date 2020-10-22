@@ -143,7 +143,9 @@ map.on('click', (event)=> {
     case "remove":
         // Click on element to remove
         if ( feature_onHover ){
-            if ( feature_onHover.parent.isNode ){
+            if (streetElementNode.isInstance(
+                feature_onHover.parent)
+               ){ // if element is a node
                 o_se_group.deleteNodeByID(
                     feature_onHover.parent.getID);
             }
@@ -152,7 +154,9 @@ map.on('click', (event)=> {
 
     case "add":
         if (feature_onHover){
-            if (feature_onHover.parent.isNode){ // if element is a node
+            if (streetElementNode.isInstance(
+                feature_onHover.parent)
+               ){ // if element is a node
                 // Link a node with other by ID
                 o_se_group.linkNodesByID(
                     feature_onHover.parent.getID,
@@ -170,7 +174,9 @@ map.on('click', (event)=> {
     case "split":
         console.log("Split a line");
         if (feature_onHover){
-            if (feature_onHover.parent.isNode){
+            if (streetElementNode.isInstance(
+                feature_onHover.parent)
+                ){
                 // It is a node
                 console.log("It's a node");
             } else {
@@ -192,7 +198,9 @@ map.on('click', (event)=> {
     case "cut":
         console.log("Remove a link");
         if (feature_onHover){
-            if (feature_onHover.parent.isLink){
+            if (streetElementLink.isInstance(
+                feature_onHover.parent)
+               ){ // if element is a Link
                 console.log(feature_onHover.parent.getID);
                 o_se_group.deleteLinkByID(
                     feature_onHover.parent.getID
@@ -216,7 +224,9 @@ map.on('click', (event)=> {
 
     case "select":
         if (feature_onHover){ // if element exists
-            if (feature_onHover.parent.isNode){ // if element is a node
+            if (streetElementNode.isInstance(
+                feature_onHover.parent)
+               ){ // if element is a node
                 o_se_group.selectNodeByID(
                     feature_onHover.parent.getID
                 );

@@ -40,9 +40,35 @@ class streetElementLink { // Link between two nodes
         return false;
     }
 
+    static getLinkBetween (nodeA, nodeB) {
+        var result;
+        var links = nodeA.getConnections();
+        links.some((link) => {
+            if (link.getPartner(nodeA) == nodeB){
+                result = link;
+                return true;
+            }
+        });
+        return result;
+    }
 
-    get isNode () { return false; };
-    get isLink () { return true; };
+    static getLinksFromNode (node, exclude=[]) {
+        var result = [];
+        var links = node.getConnections();
+        links.forEach((link) =>{
+            //// for each link
+
+            if (exclude.some((excluded_link) => {
+                return link.getID == excluded_link.getID;
+            })){
+                // ignore the link
+            } else { // add the link
+                result.push(link);
+            }
+            //// end for each link
+        });
+        return result;
+    }
 
     update () { // Update figure on map
         var coordinates = [

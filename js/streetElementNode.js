@@ -60,9 +60,6 @@ class streetElementNode {
         return this.layer.name;
     }
 
-    get isNode () { return true; };
-    get isLink () { return false; };
-
     setID (value){
         this.id = value;
     }

@@ -130,8 +130,10 @@ class streetElementGroup {
 
         this.historyPush = (command) => { // TODO private method
             // command is a list with an external function and its arguments
-            if (command[0] == "selectNodeByID") { // Process selectNodeByID
-                if (history[history.length -1][0] == "selectNodeByID") {
+            if (command[0] == "selectNodeByID" | // Process selectNodeByID
+                command[0] == "unselectNode") {  // or unselectNode
+                if (history[history.length -1][0] == "selectNodeByID" |
+                    history[history.length -1][0] == "unselectNode") {
                     // only save the last selected node if there are not editions in between
                     history.pop();
                 }
@@ -305,6 +307,15 @@ class streetElementGroup {
         this.nodes.forEach((node) => {
             console.log(node.type);
         });
+    }
+
+    nodesBetween(nodeA, nodeB){
+        if ( streetElementNode.isInstance(nodeA) &
+             streetElementNode.isInstance(nodeB) ) {
+            console.log("both are nodes");
+        } else {
+            console.log("bad arguments");
+        }
     }
 
     addAgency(agency_id,
