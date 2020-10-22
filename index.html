@@ -17,18 +17,23 @@
 
     </head>
     <body style="padding: 0;"> <!-------- FIXME -------->
+
+        <div id="loading_screen"  class="loading_screen">
+            <img alt="loading_gif" src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/ab79a231234507.564a1d23814ef.gif"/>
+        </div>
+
         <div class="sidetools">
             <button onclick="downloadString(o_se_group.historyString(), 'street_element_group_history.js')">Save</button> <!-- TODO change expr -->
             <button onclick="toggleHideMap()">Map</button>
 
             <label>Type </label>
-            <input type="radio" id="nt_shape" name="node_type" value="shape">
+            <input type="radio" id="nt_shape" name="node_type" value="shape" checked="true">
             <label for="nt_shape">Shape</label><br>
-            <input type="radio" id="nt_endpoint" name="node_type" value="endpoint">
+            <input type="radio" id="nt_endpoint" name="node_type" value="endpoint" checked="false">
             <label for="nt_endpoint">Endpoint</label><br>
-            <input type="radio" id="nt_stop" name="node_type" value="stop">
+            <input type="radio" id="nt_stop" name="node_type" value="stop" checked="false">
             <label for="nt_stop">Stop</label><br>
-            <input type="radio" id="nt_fork" name="node_type" value="fork">
+            <input type="radio" id="nt_fork" name="node_type" value="fork" checked="false">
             <label for="nt_fork">Intersection</label><br>
 
             <label>Action </label>

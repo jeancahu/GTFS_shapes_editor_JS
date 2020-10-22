@@ -13,6 +13,10 @@ if (!String.prototype.format) {
     };
 }
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function toggleHideMap () {
     document.getElementById("map_container").hidden =
         !document.getElementById("map_container").hidden;
@@ -591,3 +595,9 @@ closer.onclick = function () {
     return false;
 };
 map.addOverlay(overlay_node_info);
+
+// delete the loading screen div
+map.once('postrender', async function(event) {
+    await sleep(2000); // wait for two seconds
+    document.getElementById("loading_screen").remove();
+});

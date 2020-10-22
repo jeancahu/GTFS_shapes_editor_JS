@@ -57,3 +57,19 @@
     /* background-color: white; */
 }
 
+.loading_screen {
+    z-index: 2;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    text-align: center;
+}
+.loading_screen img {
+    /* center vertically */
+    top: 60%;
+    -ms-transform: translateY(60%);
+    transform: translateY(60%);
+    /* center horizontally */
+    text-align: center;
+}
