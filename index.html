@@ -7,11 +7,8 @@
         <meta name="description" content="" />
         <meta name="keywords" content="" />
 
-        <!-- Styles by TEMPLATE -->
-        <link rel="stylesheet" href="css/TEMPLATE-CSS/skel.css" />
-        <link rel="stylesheet" href="css/TEMPLATE-CSS/style.css" />
-        <link rel="stylesheet" href="css/TEMPLATE-CSS/style-xlarge.css" />
-
+        <!-- mvp css -->
+        <link rel="stylesheet" href="https://unpkg.com/mvp.css"> <!-- temporal css sheet -->
         <link rel="stylesheet" href="css/editor-style.css" />
 
         <!-- OpenLayers style lib -->
@@ -19,19 +16,20 @@
         <link rel="stylesheet" href="css/ol_popup.css" type="text/css">
 
     </head>
-    <body>
+    <body style="padding: 0;"> <!-------- FIXME -------->
         <div class="sidetools">
-
             <button onclick="downloadString(o_se_group.historyString(), 'street_element_group_history.js')">Save</button> <!-- TODO change expr -->
+            <button onclick="toggleHideMap()">Map</button>
+
             <label>Type </label>
             <input type="radio" id="nt_shape" name="node_type" value="shape">
             <label for="nt_shape">Shape</label><br>
             <input type="radio" id="nt_endpoint" name="node_type" value="endpoint">
             <label for="nt_endpoint">Endpoint</label><br>
             <input type="radio" id="nt_stop" name="node_type" value="stop">
-            <label for="nt_stop">Stop</label>
+            <label for="nt_stop">Stop</label><br>
             <input type="radio" id="nt_fork" name="node_type" value="fork">
-            <label for="nt_fork">Intersection</label>
+            <label for="nt_fork">Intersection</label><br>
 
             <label>Action </label>
                 <select id="action">
@@ -63,8 +61,8 @@
                     </div>
                 </div>
 
-                <!-- <h1 v-if="last.lastSelect">Selected: {{ last.lastSelect.getID }} /--/ element type = {{ last.lastSelect.type }}</h1> -->
-                <table> <!-- TODO: change buttons format and replace table by a proper class -->
+                <!-- <table style="background: black; width: 100%; display: table;"> -->
+                <table style="width: 100%; display: table;"> <!-- TODO: change buttons format and replace table by a proper class -->
                     <tr>
                         <th><button @click="showAgency">agency</button></th>
                         <th><button @click="showShape">shapes</button></th>
@@ -80,29 +78,29 @@
                 <div v-show="isVisible('shape')">
                     Add a new shape:
 
-                <table class="alt">
-                    <thead>
-                        <tr>
-                            <th v-for="field in shapeFields">{{field}}</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="shape in rev_nodes" :key="shape.getID"> <!-- FIXME chg nodes by shapes -->
-                            <td> - </td> <!-- shp_a : TODO, generate nodes -->
-                            <td><input type="text" :value="shape.coordinates[0]"></td>
-                            <td><input type="text" :value="shape.coordinates[1]"></td>
-                            <td>{{shape.getID}}</td>
-                            <td><input type="text" :value="shape.feature.ol_uid"></td>
-                            <td><button>save</button></td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <table class="alt">
+                        <thead>
+                            <tr>
+                                <th v-for="field in shapeFields">{{field}}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="shape in rev_nodes" :key="shape.getID"> <!-- FIXME chg nodes by shapes -->
+                                <td> - </td> <!-- shp_a : TODO, generate nodes -->
+                                <td><input type="text" :value="shape.coordinates[0]"></td>
+                                <td><input type="text" :value="shape.coordinates[1]"></td>
+                                <td>{{shape.getID}}</td>
+                                <td><input type="text" :value="shape.feature.ol_uid"></td>
+                                <td><button>save</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <!-- END SHAPES -->
 
                 <!-- AGENCY -->
-                <table v-show="isVisible('agency')" class="alt">
+                <table v-show="isVisible('agency')" class="alt" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
                     <thead>
                         <tr>
                             <th v-for="field in agencyFields">{{field}}</th>
@@ -122,7 +120,7 @@
                             <td><button @click="saveAgency">add</button></td>
                         </tr>
                         <tr v-for="agency in rev_agencies">
-                            <td v-for="field in agency" >{{field}}</td> <!-- FIXME: need review -->
+                            <td v-for="field in agency" >{{field}}</td>
                             <td><button @click="removeAgency(agency.agency_id)">remove</button></td>
                         </tr>
 
@@ -141,10 +139,16 @@
                     <tbody>
                         <tr v-for="stop in rev_stops">
                             <td><input type="text" id="stop_id" :value="stop.getID"></td> <!-- TODO solve stop-id -->
+
+                            <!-- Page 1 -->
                             <td><input type="text" id="stop_name"></td>
                             <td><input type="text" id="stop_desc"></td>
+
+                            <!-- Page 2 -->
                             <td>{{stop.coordinates[0]}}</td>
                             <td>{{stop.coordinates[1]}}</td>
+
+                            <!-- Page 3 -->
                             <td><input type="text" id="stop_url"></td>
                             <td><button @click="saveStop">save</button></td>
                         </tr>
@@ -258,7 +262,7 @@
 
             <!-- --------------  END key command board  --------------------- -->
 
-            map: OpenStreetMap, table style by TEMPLATE.co
+            map: OpenStreetMap
         </div>
 
         <!-- <script src="https://unpkg.com/elm-pep"></script> -->

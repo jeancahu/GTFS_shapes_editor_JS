@@ -13,6 +13,14 @@ if (!String.prototype.format) {
     };
 }
 
+function toggleHideMap () {
+    document.getElementById("map_container").hidden =
+        !document.getElementById("map_container").hidden;
+    // map.setTarget(document.getElementById("map_container")); // FIXME
+    map.updateSize(); // FIXME
+    // yourLayer.getSource().changed(); // TODO
+}
+
 //////////////// global vars /////////////////////
 
 var popup_content = {
@@ -583,4 +591,3 @@ closer.onclick = function () {
     return false;
 };
 map.addOverlay(overlay_node_info);
-
