@@ -73,3 +73,7 @@
     /* center horizontally */
     text-align: center;
 }
+
+.id_input_short {
+    width: 80px;
+}

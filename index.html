@@ -45,6 +45,13 @@
                     <option value="remove">remove</option> <!-- RENAME TODO -->
                     <option value="cut">cut</option> <!-- RENAME TODO -->
                 </select>
+
+            <label>View</label>
+
+            <input type="checkbox" id="view_nodes_cb" value="Nodes" checked="true">
+            <label for="view_nodes_cb">Show Nodes</label><br>
+            <input type="checkbox" id="view_links_cb" value="Links" checked="true">
+            <label for="view_links_cb">Show Links</label>
         </div>
         <div class="body-container">
 
@@ -81,8 +88,38 @@
 
                 <!-- SHAPES -->
                 <div v-show="isVisible('shape')">
-                    Add a new shape:
+                    Add a new shape:<br>
+                    <table class="alt"><tr>
+                        <th><input class="id_input_short" name="new_shape_id" type="text" :value="'shp_' + shapes.length" placeholder="Shape ID" /></th>
 
+                        <!-- segments in new_shape -->
+                        <!-- <th v-for="segment in ns_segments"> -->
+                        <th>
+                            {{new_shape_sequence}}
+                        </th>
+                        <!-- end segments -->
+
+                        <!-- new segment (a node and a link for direction)-->
+                        <th v-show="!ns_segments.length">
+                            <select @change="newShapeOnChange($event, 'node')">
+                            <option value="noselect"> - </option>
+                            <option v-for="node in new_shape_allowed_nodes" :value="node.getID">E{{node.getID}}</option>
+                            </select>
+                        </th>
+
+                        <!-- allowed links -->
+                        <th v-show="ns_allowed_links.length">
+                            <select id="ns_shape_link_select" @change="newShapeOnChange($event, 'link')">
+                               <option value="noselect"> - </option>
+                               <option v-for="link in ns_allowed_links" :value="link.getID">L{{link.getID}}</option>
+                            </select>
+                        </th>
+
+                        <!-- element to add new segments in shape? -->
+
+                        <th><button>add</button></th>
+                    </tr></table>
+                    <br>
                     <table class="alt">
                         <thead>
                             <tr>
@@ -278,6 +315,9 @@
 
         <!-- OpenLayers library we use to show the map and draw on it -->
         <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/build/ol.js"></script>
+
+        <!-- Axios to post data -->
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
         <!-- editor history / file loaded FIXME remove-->
         <script src="js/street_element_group_history.js"></script>

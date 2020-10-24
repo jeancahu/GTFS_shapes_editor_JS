@@ -57,7 +57,7 @@ class streetElementNode {
     }
 
     get type (){ // Layer name is the element type
-        return this.layer.name;
+        return this.layer.name; // TODO: smarter type resolve
     }
 
     setID (value){

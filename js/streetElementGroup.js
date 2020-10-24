@@ -40,7 +40,8 @@ class streetElementGroup {
                 this.links.length, // ID number
                 nodeA,
                 nodeB,
-                layers["link"] // always link layer
+                layers[streetElementLink.type.LINK], // always link layer
+                layers[streetElementLink.type.DIRECTION] // direction layer
             );
             this.links.push(
                 connection
@@ -57,6 +58,7 @@ class streetElementGroup {
         var addLayer = (type, color) => {
             var radius;
             var style;
+
             switch (type) {
             case streetElementNode.type.SHAPE: // Shape element, blue
                 radius = 5;
@@ -103,7 +105,7 @@ class streetElementGroup {
 	                  })
                 });
                 break;
-            case 'link': // link, blue
+            case streetElementLink.type.LINK: // FIXME link, blue
                 radius = 2;
                 style =  new ol.style.Style({
                     stroke: new ol.style.Stroke({
@@ -113,6 +115,28 @@ class streetElementGroup {
 	                  })
                 });
                 break;
+            case streetElementLink.type.DIRECTION:
+                style = function (feature) {
+                    var geometry = feature.getGeometry();
+                    var style = [];
+                    geometry.forEachSegment(function (start, end) {
+                        var dx = end[0] - start[0];
+                        var dy = end[1] - start[1];
+                        var rotation = Math.atan2(dy, dx);
+                        style.push(
+                            new ol.style.Style({
+                                geometry: new ol.geom.Point(start),
+                                image: new ol.style.Icon({
+                                    src: 'assets/img/arrow.png',
+                                    anchor: [-0.15, 0.5],
+                                    rotateWithView: true,
+                                    rotation: -rotation,
+                                }),
+                            })
+                        );
+                    });
+                    return style;
+                };
             default:
                 console.log('Type: '+ type +' not found');
             }
@@ -169,15 +193,30 @@ class streetElementGroup {
             // coordenate: a single of coordenate, point
             // type: the element layer name
 
+            if (type == streetElementNode.type.ENDPOINT |
+                type == streetElementNode.type.STOP     |
+                type == streetElementNode.type.SHAPE    |
+                type == streetElementNode.type.FORK     )
+            {
+                // good type, continue
+            } else {
+                console.log("Bad node type on init");
+                return 1; // error
+            }
+
             this.historyPush(["addNode", coordenate, type]);
 
-            // Verify type TODO
-            this.nodes.push(
-                new streetElementNode(
-                    this.nodes.length, // ID number
-                    coordenate, // coordinate
-                    layers[type] // layer
-                ));
+            var new_node = new streetElementNode(
+                this.nodes.length, // ID number
+                coordenate, // coordinate
+                layers[type] // layer
+            );
+
+            this.nodes.push(new_node);
+
+            if (type == streetElementNode.type.ENDPOINT){
+                this.endpoints.push(new_node);
+            }
 
             if (lastSelect){ // Connect nodes
                 // TODO exceptions for endpoints
@@ -188,6 +227,7 @@ class streetElementGroup {
 
             // The new element is the lastSelect now
             this.selectNode(this.getLastElement);
+            return 0; // done
         };
 
         this.linkNodesByID = (nodeA_id, nodeB_id) => { // External
@@ -196,6 +236,10 @@ class streetElementGroup {
                 this.nodes[nodeA_id],
                 this.nodes[nodeB_id]
             );
+        };
+
+        this.addArrow = (node, link) => {
+            // TODO
         };
 
         this.deleteNodeByID = (value) => {
@@ -261,11 +305,40 @@ class streetElementGroup {
             return lastSelect; // FIXME
         };
 
+        this.disableElementsByType = (type) =>{
+            if (type == streetElementNode.type.ENDPOINT |
+                type == streetElementNode.type.STOP     |
+                type == streetElementNode.type.SHAPE    |
+                type == streetElementNode.type.FORK     |
+                type == streetElementLink.type.LINK     |
+                type == streetElementLink.type.DIRECTION)
+            {
+                layers[type].setVisible(false);
+            } else {
+                console.log("Error: layer "+ type +" not found");
+            }
+        };
+
+        this.enableElementsByType = (type) =>{
+            if (type == streetElementNode.type.ENDPOINT |
+                type == streetElementNode.type.STOP     |
+                type == streetElementNode.type.SHAPE    |
+                type == streetElementNode.type.FORK     |
+                type == streetElementLink.type.LINK     |
+                type == streetElementLink.type.DIRECTION)
+            {
+                layers[type].setVisible(true);
+            } else {
+                console.log("Error: layer "+ type +" not found");
+            }
+        };
+
         ////// END Privileged methods //////
 
         ////// Public data //////
         this.nodes     = []; // could it to be private? // TODO
         this.links     = []; // could it to be private? // TODO
+        this.endpoints = []; // could it to be private? // TODO
 
         this.shapes    = [];
         this.agencies  = [];
@@ -276,11 +349,12 @@ class streetElementGroup {
         ////// END Public data //////
 
         // Add layers
-        addLayer("link", "blue"); // links between nodes
+        addLayer(streetElementLink.type.LINK, "blue"); // links between nodes
         addLayer(streetElementNode.type.SHAPE, "blue");
         addLayer(streetElementNode.type.STOP, "red");
         addLayer(streetElementNode.type.FORK, "violet");
         addLayer(streetElementNode.type.ENDPOINT, "green");
+        addLayer(streetElementLink.type.DIRECTION, "yellow"); // link direction
         addLayer("select", "yellow");
     } ////// END streetElementGroup constructor //////
 

@@ -8,15 +8,20 @@
 ////
 
 class streetElementLink { // Link between two nodes
-    constructor (id, nodeA, nodeB, layer) {
+    constructor (id, nodeA, nodeB, layer, direction_layer) {
         this.valid = true;
         this.id = id;
 
         this.layer = layer;
+        this.direction_layer = direction_layer;
 
         var coordinates = [
             nodeA.feature.getGeometry().flatCoordinates,
             nodeB.feature.getGeometry().flatCoordinates
+        ];
+        var rev_coordinates = [
+            nodeB.feature.getGeometry().flatCoordinates,
+            nodeA.feature.getGeometry().flatCoordinates
         ];
 
         this.nodeA = nodeA;
@@ -26,7 +31,14 @@ class streetElementLink { // Link between two nodes
             geometry: new ol.geom.LineString(coordinates),
             name: 'Line'
         });
+        this.rev_feature = new ol.Feature({
+            geometry: new ol.geom.LineString(rev_coordinates),
+            name: 'Line'
+        });
+
         this.feature.parent = this;
+        this.rev_feature.parent = this;
+
         layer.getSource().addFeature(this.feature);
     }
 
@@ -38,6 +50,13 @@ class streetElementLink { // Link between two nodes
         }
         console.log("The variable is not a " + streetElementLink.name + " instance");
         return false;
+    }
+
+    static get type () {
+        return {
+            LINK: "link",
+            DIRECTION: "arrow"
+        };
     }
 
     static getLinkBetween (nodeA, nodeB) {
@@ -75,7 +94,13 @@ class streetElementLink { // Link between two nodes
             this.nodeA.feature.getGeometry().flatCoordinates,
             this.nodeB.feature.getGeometry().flatCoordinates
         ];
+        var rev_coordinates = [
+            this.nodeB.feature.getGeometry().flatCoordinates,
+            this.nodeA.feature.getGeometry().flatCoordinates
+        ];
+
         this.feature.getGeometry().setCoordinates(coordinates);
+        this.rev_feature.getGeometry().setCoordinates(rev_coordinates);
     }
 
     get getID (){
@@ -92,12 +117,57 @@ class streetElementLink { // Link between two nodes
         }
     }
 
+    setDirectionFromNode (node) {
+        if (node == this.nodeA){
+            console.log("set_direction 0");
+            this.direction_layer.getSource().addFeature(this.feature);
+
+            if (
+                this.direction_layer.getSource().getFeatures().some(
+                    (feature) => {return feature.ol_uid == this.rev_feature.ol_uid;}
+                )
+            ){
+                this.direction_layer.getSource().removeFeature(this.rev_feature);
+            }
+        } else if (node == this.nodeB){
+            console.log("set_direction 1");
+            this.direction_layer.getSource().addFeature(this.rev_feature);
+            if (
+                this.direction_layer.getSource().getFeatures().some(
+                    (feature) => {return feature.ol_uid == this.feature.ol_uid;}
+                )
+            ){
+                this.direction_layer.getSource().removeFeature(this.feature);
+            }
+        } else {
+            console.log("Error: node is not in the link");
+        }
+    }
+
+    hideDirection () {
+        if (
+            this.direction_layer.getSource().getFeatures().some(
+                (feature) => {return feature.ol_uid == this.rev_feature.ol_uid;}
+            )
+        ){
+            this.direction_layer.getSource().removeFeature(this.rev_feature);
+        }
+        if (
+            this.direction_layer.getSource().getFeatures().some(
+                (feature) => {return feature.ol_uid == this.feature.ol_uid;}
+            )
+        ){
+            this.direction_layer.getSource().removeFeature(this.feature);
+        }
+    }
+
     terminate (){
         // node: node who killed the link
         // delete feature // TODO
         // parent has to delete connections first
         this.valid = false;
         this.layer.getSource().removeFeature(this.feature);
+        this.hideDirection();
         this.nodeA.removeConnection(this);
         this.nodeB.removeConnection(this);
     }

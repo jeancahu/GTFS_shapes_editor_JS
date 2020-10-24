@@ -25,6 +25,28 @@ function toggleHideMap () {
     // yourLayer.getSource().changed(); // TODO
 }
 
+//////////////// filters /////////////////////////
+
+function filterValidNode (node) {
+    return node.valid;
+}
+
+function filterStopNode (node) {
+    return node.type == streetElementNode.type.STOP;
+}
+
+function filterShapeNode (node) {
+    return node.type == streetElementNode.type.SHAPE;
+}
+
+function filterForkNode (node) {
+    return node.type == streetElementNode.type.FORK;
+}
+
+function filterEndpointNode (node) {
+    return node.type == streetElementNode.type.ENDPOINT;
+}
+
 //////////////// global vars /////////////////////
 
 var popup_content = {
@@ -150,6 +172,24 @@ map.on('click', (event)=> {
         {
             return feature;
         });
+
+    ////////////////////////// create shape ////////////////
+
+    if ( feature_onHover ){
+        if (streetElementLink.isInstance(
+            feature_onHover.parent))
+        { // if element is a link
+            console.log("oneshot");
+            if (feature_onHover.parent.oneshot){
+                feature_onHover.parent.oneshot(
+                    feature_onHover.parent.getID
+                );
+                feature_onHover.parent.oneshot = undefined;
+            }
+        }
+    }
+
+    /////////////////////  end create shape ////////////////
 
     switch(action) {
     case "remove":
@@ -310,6 +350,23 @@ function downloadString(text, fileName) {
     setTimeout(function() { URL.revokeObjectURL(a.href); }, 1500);
 }
 
+//////////////////// Axios post /////////////////////////////////
+
+function postWithAxios (){
+    axios.post('/eso',
+               o_se_group.historyString(), // FIXME
+           { headers: {
+               'Content-type': 'application/x-www-form-urlencoded',
+           }
+           }
+          )
+    .then(function (response) {
+        console.log(response);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+}
 //////////////////// Vue experiments ////////////////////////////
 var app = new Vue({
     el: '#editor_gtfs_tables',
@@ -348,12 +405,18 @@ var app = new Vue({
 
             popup_content: popup_content, // Gobal object
 
-            nodes: o_se_group.nodes, // contains stops too
+            nodes: o_se_group.nodes, // contains stops too FIXME
+            endpoints: o_se_group.endpoints, // contains stops too
             shapes: o_se_group.shapes,
             routes: o_se_group.routes,
             agencies: o_se_group.agencies,
             trips: o_se_group.trips,
             stopTimes: o_se_group.stopTimes,
+
+            // Shapes section:
+            ns_allowed_links: [],
+            ns_segments: [],
+            ns_head_node_id: null,
 
             agencyFields: [
                 "agency_id",
@@ -423,6 +486,84 @@ var app = new Vue({
         };
     },
     methods: {
+        newShapeOnChange(event, element) {
+            var element_id;
+            if (typeof(event) == "number"){
+                element_id = event;
+            } else { // event object
+                element_id = event.target.value;
+                if (element != "node"){
+                    event.target.value = 'noselect';
+                }
+            }
+            if (element == 'node'){
+                console.log("node ID: "+element_id);
+                this.ns_head_node_id = Number(
+                    element_id);
+                if (element_id == 'noselect'){
+                    this.ns_allowed_links = [];
+                } else {
+                    view.setCenter(this.nodes[element_id].coordinates); // FIXME remove
+                    view.setZoom(17.9); // FIXME remove
+
+                    this.ns_allowed_links =
+                        this.nodes[element_id].getConnections();
+                }
+            } else {
+                console.log("link ID: "+element_id);
+                if (element_id == 'noselect'){
+                    // TODO
+                } else {
+                    var result = streetElementShape.routeSegment(
+                        this.nodes[this.ns_head_node_id],
+                        o_se_group.links[element_id] // FIXME
+                    );
+                    console.log(result);
+                    if(result){
+                        this.ns_segments.push(
+                            // result // FIXME cyclic
+                            [
+                                this.ns_head_node_id,
+                                Number(element_id),
+                                result[result.length -1].getID
+                            ]
+
+                        );
+                    }
+                    view.setCenter(result[result.length -1].coordinates); // FIXME remove
+                    view.setZoom(17.9); // FIXME remove
+                    this.ns_head_node_id =
+                        result[result.length -1].getID;
+
+                    excluded_link = streetElementLink.getLinkBetween(
+                        result[result.length -1],
+                        result[result.length -2]
+                    );
+
+                    // Hide direction
+                    this.ns_allowed_links.forEach((link) => {
+                        link.hideDirection();
+                        link.oneshot = undefined;
+                    });
+
+                    this.ns_allowed_links =
+                        streetElementLink.getLinksFromNode(
+                            result[result.length -1],
+                            [excluded_link]
+                        );
+
+                    // Show direction and set oneshot function
+                    this.ns_allowed_links.forEach((link) => {
+                        link.setDirectionFromNode(
+                            result[result.length -1]);
+                        link.oneshot = (link_id) => {
+                            app.newShapeOnChange(link_id, 'oneshot');
+                        };
+                    });
+
+                }
+            }
+        },
         translate(word) {
             result = this.dictionary[this.language][word];
             if ( result ){
@@ -526,25 +667,56 @@ var app = new Vue({
         }
     },
     computed: {
+        new_shape_sequence () {
+            if (this.ns_segments.length){
+                //
+            } else {
+                return '';
+            }
+
+            var result = 'b';
+
+            this.ns_segments.forEach((segment) => {
+                result += 'n'+String(segment[0]) + 'l'+String(segment[1]);
+            });
+
+            result += 'en' + String(this.ns_segments[
+                this.ns_segments.length -1
+            ][2]);
+
+            return result;
+        },
+        new_shape_allowed_nodes() {
+            var result = [];
+            if (this.ns_segments.length){
+                // this.ns_segments(
+                //     this.ns_segments.length -1
+                // ); // last node in shape
+            } else {
+                result = this.nodes.slice().reverse();
+                result = result.filter(filterValidNode);
+                result = result.filter(filterEndpointNode);
+            }
+            return result;
+        },
         rev_nodes () { // TODO
             result = [];
-            // this.nodes.slice().reverse().forEach( (value) => {
-            //     if (value.valid){
-            //         result.push(value);
-            //     }
-            // });
+            return result;
+        },
+        rev_endpoints () {
+            // return end valid endpoints
+            var result = this.nodes.slice().reverse();
+            result = result.filter(filterValidNode);
+            result = result.filter(filterEndpointNode);
             return result;
         },
         rev_shapes () {
             return []; // TODO
         },
         rev_stops () { // TODO
-            result = [];
-            this.nodes.slice().reverse().forEach( (value) => {
-                if (value.valid && value.type == 'stop'){
-                    result.push(value);
-                }
-            });
+            var result = this.nodes.slice().reverse();
+            result = result.filter(filterValidNode);
+            result = result.filter(filterStopNode);
             return result;
         },
         rev_agencies () {
@@ -596,8 +768,39 @@ closer.onclick = function () {
 };
 map.addOverlay(overlay_node_info);
 
-// delete the loading screen div
+////////// delete the loading screen div //////
 map.once('postrender', async function(event) {
     await sleep(2000); // wait for two seconds
     document.getElementById("loading_screen").remove();
 });
+
+///////// show and hide nodes and links //////
+document.getElementById("view_nodes_cb").addEventListener(
+    "change",
+    (event) => { console.log(event.target.checked );
+                 if (event.target.checked){
+                     o_se_group.enableElementsByType(
+                         streetElementNode.type.SHAPE
+                     );
+                 } else {
+                     o_se_group.disableElementsByType(
+                         streetElementNode.type.SHAPE
+                     );
+                 }
+               }
+);
+
+document.getElementById("view_links_cb").addEventListener(
+    "change",
+    (event) => { console.log(event.target.checked );
+                 if ( event.target.checked ){
+                     o_se_group.enableElementsByType(
+                         streetElementLink.type.LINK
+                     );
+                 } else {
+                     o_se_group.disableElementsByType(
+                         streetElementLink.type.LINK
+                     );
+                 }
+               }
+);
