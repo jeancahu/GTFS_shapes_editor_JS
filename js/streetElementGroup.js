@@ -111,7 +111,7 @@ class streetElementGroup {
                     stroke: new ol.style.Stroke({
                         color: color,
                         // width: 10, // TODO
-                        width: 3,
+                        width: 4.5,
 	                  })
                 });
                 break;
@@ -189,8 +189,8 @@ class streetElementGroup {
             history.pop();
         };
 
-        this.addNode = (coordenate, type) => {
-            // coordenate: a single of coordenate, point
+        this.addNode = (coordinate, type) => {
+            // coordinate: a single of coordinate, point
             // type: the element layer name
 
             if (type == streetElementNode.type.ENDPOINT |
@@ -204,19 +204,15 @@ class streetElementGroup {
                 return 1; // error
             }
 
-            this.historyPush(["addNode", coordenate, type]);
+            this.historyPush(["addNode", coordinate, type]);
 
             var new_node = new streetElementNode(
                 this.nodes.length, // ID number
-                coordenate, // coordinate
+                coordinate, // coordinate
                 layers[type] // layer
             );
 
             this.nodes.push(new_node);
-
-            if (type == streetElementNode.type.ENDPOINT){
-                this.endpoints.push(new_node);
-            }
 
             if (lastSelect){ // Connect nodes
                 // TODO exceptions for endpoints
@@ -238,8 +234,36 @@ class streetElementGroup {
             );
         };
 
-        this.addArrow = (node, link) => {
-            // TODO
+        this.splitLinkByID = (link_id, coordinate) => {
+            this.historyPush([
+                "splitLinkByID",
+                link_id,
+                coordinate
+            ]);
+            // invalidate the link
+            this.links[link_id].terminate();
+
+            // add a Shape Node
+            var new_node = new streetElementNode(
+                this.nodes.length, // ID number
+                coordinate, // coordinate
+                layers[streetElementNode.type.SHAPE] // layer
+            );
+
+            this.nodes.push(new_node);
+
+            // The new element is the lastSelect now
+            this.selectNode(new_node);
+
+            // Link with the previous node A
+            addLink(new_node,
+                    this.links[link_id].nodeA
+                   );
+
+            // Link with the previous node B
+            addLink(new_node,
+                    this.links[link_id].nodeB
+                   );
         };
 
         this.deleteNodeByID = (value) => {
@@ -338,7 +362,6 @@ class streetElementGroup {
         ////// Public data //////
         this.nodes     = []; // could it to be private? // TODO
         this.links     = []; // could it to be private? // TODO
-        this.endpoints = []; // could it to be private? // TODO
 
         this.shapes    = [];
         this.agencies  = [];
@@ -349,13 +372,13 @@ class streetElementGroup {
         ////// END Public data //////
 
         // Add layers
-        addLayer(streetElementLink.type.LINK, "blue"); // links between nodes
-        addLayer(streetElementNode.type.SHAPE, "blue");
-        addLayer(streetElementNode.type.STOP, "red");
-        addLayer(streetElementNode.type.FORK, "violet");
-        addLayer(streetElementNode.type.ENDPOINT, "green");
-        addLayer(streetElementLink.type.DIRECTION, "yellow"); // link direction
-        addLayer("select", "yellow");
+        addLayer(streetElementLink.type.LINK,        "#585CCB"); // links between nodes
+        addLayer(streetElementNode.type.SHAPE,       "#585CCB");
+        addLayer(streetElementNode.type.FORK,        "#A46FF5");
+        addLayer(streetElementNode.type.STOP,        "#DA1033");
+        addLayer(streetElementNode.type.ENDPOINT,    "green");
+        addLayer(streetElementLink.type.DIRECTION,   "yellow"); // link direction
+        addLayer("select",                           "yellow");
     } ////// END streetElementGroup constructor //////
 
     ////// Public methods //////
@@ -554,14 +577,6 @@ class streetElementGroup {
             }
         }
         return this.nodes[this.nodes.length-decrem];
-    }
-
-    splitLinkByID (link_id){ // TODO
-        this.historyPush([
-            "splitLinkByID",
-            link_id
-        ]);
-        this.links[link_id].terminate();
     }
 
     deleteLinkByID (link_id){ // TODO: move to link.terminate

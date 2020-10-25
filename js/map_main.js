@@ -226,20 +226,13 @@ map.on('click', (event)=> {
     case "split":
         console.log("Split a line");
         if (feature_onHover){
-            if (streetElementNode.isInstance(
+            if (streetElementLink.isInstance(
                 feature_onHover.parent)
                 ){
-                // It is a node
-                console.log("It's a node");
-            } else {
-                // It's a link
-                // TODO
-
-                // invalidate link
-                // unselect lastnode
-                // add a Node
-                // link node with node A
-                // link node with node B
+                // It is a Link
+                o_se_group.splitLinkByID(
+                    feature_onHover.parent.getID,
+                    coordinate);
             }
         } else {
             // does nothing
@@ -406,7 +399,7 @@ var app = new Vue({
             popup_content: popup_content, // Gobal object
 
             nodes: o_se_group.nodes, // contains stops too FIXME
-            endpoints: o_se_group.endpoints, // contains stops too
+
             shapes: o_se_group.shapes,
             routes: o_se_group.routes,
             agencies: o_se_group.agencies,
