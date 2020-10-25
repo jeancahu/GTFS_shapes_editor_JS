@@ -1,12 +1,11 @@
-# Shape editor
-GTFS shapes editor made mainly in Javascript, using Openstreet map and MVP sheet styles.
-The editor allows to add nodes who could represent *stops*, generic shapes points, *intersections* or *endpoints*, the last one are the shape points at the end and begin.
-This software tries to become an easier tool to ingress GTFS data required to generate an basic zipped file, the same file we could create using a Calc Sheet but 
-throug a webapp instead.
+# GTFS Shape editor
+GTFS shape editor made mainly in Javascript + Vue framework, using Openstreet map and MVP sheet styles.
+The editor is able to draw nodes and links on the map, those elements could represent *stops*, generic shapes points, *intersections* or *endpoints*,
+Easy ingress for GTFS data required to generate a basic zipped file, the same file we could create using a Calc Sheet but throug a webapp instead.
 
 ## How to use(develop):
 
-    $ npm install express
+    $ npm install .
     $ npm run serve
 
 Here some examples:
