@@ -25,6 +25,43 @@ function toggleHideMap () {
     // yourLayer.getSource().changed(); // TODO
 }
 
+///////////// initial values ////////////////////
+
+document.getElementById("view_nodes_cb").checked = true;
+document.getElementById("view_links_cb").checked = true;
+document.getElementById("view_stops_cb").checked = true;
+document.getElementsByName("node_type").forEach(
+    checkbox => {
+        console.log(checkbox.checked);
+        checkbox.checked = false;
+        // checkbox.disabled = true; // TODO
+    });
+document.getElementById("nt_shape").checked      = true;
+document.getElementById("action").value          = "select";
+
+///////////// sidebar ///////////////////////////
+
+function onActionChange () { // TODO
+    var event_value = document.getElementById("action").value;
+    switch(event_value) {
+    case "select":
+        break;
+    case "add":
+        break;
+    case "split":
+        break;
+    case "move":
+        break;
+    case "remove":
+        break;
+    case "cut":
+        break;
+    default:
+        console.log("unknown action");
+        document.getElementById("action").value = "select";
+    }
+}
+
 //////////////// filters /////////////////////////
 
 function filterValidNode (node) {
@@ -47,14 +84,19 @@ function filterEndpointNode (node) {
     return node.type == streetElementNode.type.ENDPOINT;
 }
 
+function filterNearestNode (coordinate) {
+    // TODO
+}
+
 //////////////// global vars /////////////////////
 
 var popup_content = {
-    id: '',
-    type: '',
-    geo_lon: 0,
-    geo_lat: 0,
-    stop_id: ''
+    id: null,
+    type: null,
+    connections: null,
+    geo_lon: '',
+    geo_lat: '',
+    stop_info: null
 };
 
 /////////////// components ///////////////////////
@@ -63,28 +105,28 @@ Vue.config.ignoredElements = [
     // nothing
 ];
 
-Vue.component('popup', {
-    props: ["content"],
-    template: `
-<div :id="container" class="ol-popup">
-  <a href="#" :id="closer" class="ol-popup-closer"></a>
-  <div id="popup-content">{{ content }}<p>{{ info }}</p></div>
-</div>
-`,
-    data(){
-        return {
-            info: "TODO TEST FIXME"
-        };
-    },
-    computed:{
-        container() {
-            return "popup_node_info";
-        },
-        closer () {
-            return "popup-closer";
-        }
-    }
-});
+// Vue.component('popup', {
+//     props: ["content"],
+//     template: `
+// <div :id="container" class="ol-popup">
+//   <a href="#" :id="closer" class="ol-popup-closer"></a>
+//   <div id="popup-content">{{ content }}<p>{{ info }}</p></div>
+// </div>
+// `,
+//     data(){
+//         return {
+//             info: "TODO TEST FIXME"
+//         };
+//     },
+//     computed:{
+//         container() {
+//             return "popup_node_info";
+//         },
+//         closer () {
+//             return "popup-closer";
+//         }
+//     }
+// });
 
 
 //////////////////////////////////////////////////
@@ -96,16 +138,6 @@ var view = new ol.View({
     // [minx,miny,max,may]
     extent: [-9375050.54, 1092000.79, -9352512.37, 1113049.659],
 });
-
-
-// var coord2; // coordenates vector
-// var customFormat = function(dgts)
-// {
-//     return (function(coord1) {
-//         coord2 = [coord1[0], coord1[1]];
-//         return ol.coordinate.toStringXY(coord2, dgts);
-//     });
-// }
 
 // Map need a layers group, we're
 // adding only base layer, streetElementNodes will be next
@@ -185,6 +217,7 @@ map.on('click', (event)=> {
                     feature_onHover.parent.getID
                 );
                 feature_onHover.parent.oneshot = undefined;
+                return; // end execution
             }
         }
     }
@@ -279,6 +312,10 @@ map.on('click', (event)=> {
                     feature_onHover.parent.getID;
                 popup_content.type =
                     feature_onHover.parent.type;
+                popup_content.connections =
+                    feature_onHover.parent.getConnections().length;
+                popup_content.stop_info =
+                    feature_onHover.parent.getStopInfo();
 
                 overlay_node_info.setPosition(
                     //ol.proj.fromLonLat(
@@ -301,12 +338,12 @@ map.on('click', (event)=> {
 });
 
 // ~~Undo~~ function ( not yet )
-document.addEventListener('keydown', function(event) {
-    if (event.ctrlKey && event.key === 'z') {
-        console.log('Remove last');
-        o_se_group.deleteLastElement();
-    }
-});
+// document.addEventListener('keydown', function(event) {
+//     if (event.ctrlKey && event.key === 'z') {
+//         console.log('Remove last');
+//         o_se_group.deleteLastElement();
+//     }
+// });
 
 // Shortcuts
 document.addEventListener('keypress', function(event) {
@@ -361,6 +398,8 @@ function postWithAxios (){
     });
 }
 //////////////////// Vue experiments ////////////////////////////
+
+
 var app = new Vue({
     el: '#editor_gtfs_tables',
     data() {
@@ -396,6 +435,7 @@ var app = new Vue({
 
             showList: "shape", // it shows Shapes by default
 
+            // Popup content structures
             popup_content: popup_content, // Gobal object
 
             nodes: o_se_group.nodes, // contains stops too FIXME
@@ -479,6 +519,12 @@ var app = new Vue({
         };
     },
     methods: {
+        changeNodeType(event, node_id){
+            console.log(event.target.value);
+            console.log(
+                o_se_group.nodes[node_id]
+            );
+        },
         newShapeOnChange(event, element) {
             var element_id;
             if (typeof(event) == "number"){
@@ -660,6 +706,10 @@ var app = new Vue({
         }
     },
     computed: {
+        popup_node_type_is_stop (){
+            return this.popup_content.type == streetElementNode.type.STOP |
+                this.popup_content.type == streetElementNode.type.ENDPOINT;
+        },
         new_shape_sequence () {
             if (this.ns_segments.length){
                 //
@@ -768,32 +818,53 @@ map.once('postrender', async function(event) {
 });
 
 ///////// show and hide nodes and links //////
+function toggleShowNodes (event) {
+    console.log(event.target.checked );
+    if (event.target.checked){
+        o_se_group.enableElementsByType(
+            streetElementNode.type.SHAPE
+        );
+    } else {
+        o_se_group.disableElementsByType(
+            streetElementNode.type.SHAPE
+        );
+    }
+}
 document.getElementById("view_nodes_cb").addEventListener(
     "change",
-    (event) => { console.log(event.target.checked );
-                 if (event.target.checked){
-                     o_se_group.enableElementsByType(
-                         streetElementNode.type.SHAPE
-                     );
-                 } else {
-                     o_se_group.disableElementsByType(
-                         streetElementNode.type.SHAPE
-                     );
-                 }
-               }
+    toggleShowNodes
 );
 
+function toggleShowLinks (event) {
+    console.log(event.target.checked );
+    if ( event.target.checked ){
+        o_se_group.enableElementsByType(
+            streetElementLink.type.LINK
+        );
+    } else {
+        o_se_group.disableElementsByType(
+            streetElementLink.type.LINK
+        );
+    }
+}
 document.getElementById("view_links_cb").addEventListener(
     "change",
-    (event) => { console.log(event.target.checked );
-                 if ( event.target.checked ){
-                     o_se_group.enableElementsByType(
-                         streetElementLink.type.LINK
-                     );
-                 } else {
-                     o_se_group.disableElementsByType(
-                         streetElementLink.type.LINK
-                     );
-                 }
-               }
+    toggleShowLinks
+);
+
+function toggleShowStops(event) {
+    console.log(event.target.checked );
+    if ( event.target.checked ){
+        o_se_group.enableElementsByType(
+            streetElementNode.type.STOP
+        );
+    } else {
+        o_se_group.disableElementsByType(
+            streetElementNode.type.STOP
+        );
+    }
+}
+document.getElementById("view_stops_cb").addEventListener(
+    "change",
+    toggleShowStops
 );

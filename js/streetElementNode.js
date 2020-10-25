@@ -25,6 +25,7 @@ class streetElementNode {
         });
 
         this.connections = [];    // Links who connect this element to others nodes
+        this.stop_info = {};
 
         this.feature.parent = this; // Pass parent reference
 
@@ -66,6 +67,20 @@ class streetElementNode {
 
     get getID (){
         return this.id;
+    }
+
+    setStopInfo (stop_info){
+        // @param: map: stop_info, a map with the stop info
+        this.stop_info = stop_info;
+    }
+
+    getStopInfo (){
+        if (this.type == streetElementNode.type.STOP |
+            this.type == streetElementNode.type.ENDPOINT){
+            return this.stop_info;
+        } else {
+            return {};
+        }
     }
 
     addConnection (value){

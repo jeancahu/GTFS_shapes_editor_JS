@@ -161,6 +161,12 @@ class streetElementGroup {
                     // only save the last selected node if there are not editions in between
                     history.pop();
                 }
+            } else if (command[0] == "setNodeCoordinatesByID" ) {
+                if (history[history.length -1][0] == "setNodeCoordinatesByID" |
+                    history[history.length -1][1] == command[1]) {
+                    // only save the last move for same node
+                    history.pop();
+                }
             }
             history.push(command);
         };

@@ -16,7 +16,7 @@ Here some examples:
 ## TODO
 
 * [ ] A photo for each stop in a shape
-* [*] Buttons style
-* [*] Select style
+* [x] Buttons style
+* [x] Select style
 * [ ] Table columns href to manual definitions
 * [ ] Explain how to add the editor to a web server

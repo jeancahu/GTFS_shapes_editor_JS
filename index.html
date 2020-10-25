@@ -37,21 +37,24 @@
             <label for="nt_fork">Intersection</label><br>
 
             <label>Action </label>
-                <select id="action">
-                    <option value="add">add</option>
-                    <option value="select">select</option>
-                    <option value="split">split</option> <!-- RENAME TODO -->
-                    <option value="move">move</option>
-                    <option value="remove">remove</option> <!-- RENAME TODO -->
-                    <option value="cut">cut</option> <!-- RENAME TODO -->
-                </select>
+            <select onchange="onActionChange()" id="action">
+                <option value="select">select</option>
+                <option value="add">add</option>
+                <option value="split">split</option> <!-- RENAME TODO -->
+                <option value="move">move</option>
+                <option value="remove">remove</option> <!-- RENAME TODO -->
+                <option value="cut">cut</option> <!-- RENAME TODO -->
+            </select>
 
             <label>View</label>
 
             <input type="checkbox" id="view_nodes_cb" value="Nodes" checked="true">
             <label for="view_nodes_cb">Show Nodes</label><br>
             <input type="checkbox" id="view_links_cb" value="Links" checked="true">
-            <label for="view_links_cb">Show Links</label>
+            <label for="view_links_cb">Show Links</label><br>
+            <input type="checkbox" id="view_stops_cb" value="Stops" checked="true">
+            <label for="view_stops_cb">Show Stops</label>
+
         </div>
         <div class="body-container">
 
@@ -68,8 +71,32 @@
                 <div id="popup_node_info" class="ol-popup">
                     <a href="#" id="popup-closer" class="ol-popup-closer"></a>
                     <div id="popup-content">
-                        <p>{{ popup_content.id }}</p>
-                        <p>{{ popup_content.type }}</p>
+                        Node ID: {{ popup_content.id }}<br>
+                        <label for="ol_node_type">Node type: </label>
+                        <select id="ol_node_type" name="ol_node_type" v-model="popup_content.type">
+                            <option value="fork">
+                                Intersection
+                            </option>
+                            <option v-if="popup_content.connections < 3" value="shape">
+                                Shape
+                            </option>
+                            <option v-if="popup_content.connections < 3" value="stop">
+                                Stop
+                            </option>
+                            <option v-if="popup_content.connections < 3" value="endpoint">
+                                Endpoint
+                            </option>
+                        </select>
+
+                        <div v-if="popup_node_type_is_stop">
+                            <label for="ol_in_stop_id">Stop ID: </label>
+                            <input type="text" id="ol_in_stop_id" name="ol_in_stop_id" placeholder="Stop ID" />
+                            <label for="ol_in_stop_name">Stop name: </label>
+                            <input type="text" id="ol_in_stop_name" name="ol_in_stop_name" placeholder="Stop Name" />
+                        </div>
+
+                        <button @click="changeNodeType($event, popup_content.id)">save</button>
+
                     </div>
                 </div>
 
