@@ -71,6 +71,7 @@ class streetElementNode {
 
     setStopInfo (stop_info){
         // @param: map: stop_info, a map with the stop info
+        // TODO verify info
         this.stop_info = stop_info;
     }
 
@@ -79,7 +80,11 @@ class streetElementNode {
             this.type == streetElementNode.type.ENDPOINT){
             return this.stop_info;
         } else {
-            return {};
+            var result = {
+                id: '',
+                name: '',
+            };
+            return result;
         }
     }
 

@@ -88,14 +88,14 @@
                             </option>
                         </select>
 
-                        <div v-if="popup_node_type_is_stop">
+                        <div v-show="popup_node_type_is_stop">
                             <label for="ol_in_stop_id">Stop ID: </label>
-                            <input type="text" id="ol_in_stop_id" name="ol_in_stop_id" placeholder="Stop ID" />
+                            <input type="text" id="ol_in_stop_id" name="ol_in_stop_id" placeholder="Stop ID" :value="popup_content.stop_info.id"/>
                             <label for="ol_in_stop_name">Stop name: </label>
-                            <input type="text" id="ol_in_stop_name" name="ol_in_stop_name" placeholder="Stop Name" />
+                            <input type="text" id="ol_in_stop_name" name="ol_in_stop_name" placeholder="Stop Name" :value="popup_content.stop_info.name"/>
                         </div>
 
-                        <button @click="changeNodeType($event, popup_content.id)">save</button>
+                        <button @click="changeNodeInfoFromPopup(popup_content.id)">save</button>
 
                     </div>
                 </div>
@@ -207,11 +207,11 @@
                     </thead>
                     <tbody>
                         <tr v-for="stop in rev_stops">
-                            <td><input type="text" id="stop_id" :value="stop.getID"></td> <!-- TODO solve stop-id -->
+                            <td><input type="text" id="stop_id"   :value="stop.getStopInfo().id"></td>
 
                             <!-- Page 1 -->
-                            <td><input type="text" id="stop_name"></td>
-                            <td><input type="text" id="stop_desc"></td>
+                            <td><input type="text" id="stop_name" :value="stop.getStopInfo().name"></td>
+                            <td><input type="text" id="stop_desc" :value="stop.getStopInfo().description"></td>
 
                             <!-- Page 2 -->
                             <td>{{stop.coordinates[0]}}</td>

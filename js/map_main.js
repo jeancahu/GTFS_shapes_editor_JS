@@ -69,7 +69,9 @@ function filterValidNode (node) {
 }
 
 function filterStopNode (node) {
-    return node.type == streetElementNode.type.STOP;
+    // endpoints are stops too
+    return node.type == streetElementNode.type.STOP |
+        node.type == streetElementNode.type.ENDPOINT;
 }
 
 function filterShapeNode (node) {
@@ -96,7 +98,7 @@ var popup_content = {
     connections: null,
     geo_lon: '',
     geo_lat: '',
-    stop_info: null
+    stop_info: {}
 };
 
 /////////////// components ///////////////////////
@@ -265,7 +267,9 @@ map.on('click', (event)=> {
                 // It is a Link
                 o_se_group.splitLinkByID(
                     feature_onHover.parent.getID,
-                    coordinate);
+                    coordinate,
+                    get_node_type() // TODO
+                );
             }
         } else {
             // does nothing
@@ -308,6 +312,8 @@ map.on('click', (event)=> {
                 o_se_group.selectNodeByID(
                     feature_onHover.parent.getID
                 );
+                // clear the name input
+                document.getElementById("ol_in_stop_name").value = '';
                 popup_content.id =
                     feature_onHover.parent.getID;
                 popup_content.type =
@@ -316,7 +322,6 @@ map.on('click', (event)=> {
                     feature_onHover.parent.getConnections().length;
                 popup_content.stop_info =
                     feature_onHover.parent.getStopInfo();
-
                 overlay_node_info.setPosition(
                     //ol.proj.fromLonLat(
                     feature_onHover.parent.coordinates
@@ -519,11 +524,18 @@ var app = new Vue({
         };
     },
     methods: {
-        changeNodeType(event, node_id){
-            console.log(event.target.value);
-            console.log(
-                o_se_group.nodes[node_id]
+        changeNodeInfoFromPopup(node_id){
+            o_se_group.changeNodeInfoByID(
+                node_id,
+                {
+                    node_type: document.getElementById("ol_node_type").value,
+                    stop_id: document.getElementById("ol_in_stop_id").value,
+                    stop_name: document.getElementById("ol_in_stop_name").value
+                    //stop_description: document.getElementById("").value,
+                }
             );
+            // Update popup
+            popup_content.stop_info = o_se_group.nodes[node_id].getStopInfo();
         },
         newShapeOnChange(event, element) {
             var element_id;

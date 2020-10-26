@@ -218,6 +218,18 @@ class streetElementGroup {
                 layers[type] // layer
             );
 
+            // If node has stop type, add stop info
+            if (type == streetElementNode.type.STOP    |
+                type == streetElementNode.type.ENDPOINT)
+            {
+                new_node.setStopInfo(
+                    {
+                        id: this.nodes.length,
+                        name: '' // TODO
+                    }
+                );
+            }
+
             this.nodes.push(new_node);
 
             if (lastSelect){ // Connect nodes
@@ -240,14 +252,18 @@ class streetElementGroup {
             );
         };
 
-        this.splitLinkByID = (link_id, coordinate) => {
+        this.splitLinkByID = (link_id, coordinate, type) => {
             this.historyPush([
                 "splitLinkByID",
                 link_id,
-                coordinate
+                coordinate,
+                type
             ]);
             // invalidate the link
             this.links[link_id].terminate();
+
+            // TODO projection on the link to get a coordinate
+            // TODO type node
 
             // add a Shape Node
             var new_node = new streetElementNode(
@@ -270,6 +286,40 @@ class streetElementGroup {
             addLink(new_node,
                     this.links[link_id].nodeB
                    );
+        };
+
+        this.changeNodeInfoByID = (node_id, info) => { // TODO improve
+            this.historyPush([
+                "changeNodeInfoByID",
+                node_id,
+                info
+            ]);
+            // { // input param: info::
+            //     node_type: layer,
+            //     stop_id: number,
+            //     stop_name: text,
+            //     stop_description: text,
+            // }
+            // TODO verify the type
+            this.nodes[node_id].setLayer(
+                layers[info.node_type]
+            );
+
+            // verify the data
+            var stop_info = {};
+            if (info.stop_id){
+                stop_info['id'] = info.stop_id;
+            }
+            if (info.stop_name){
+                stop_info['name'] = info.stop_name;
+            }
+            if (info.stop_description){
+                stop_info['description'] = info.stop_description;
+            }
+
+            this.nodes[node_id].setStopInfo(
+                stop_info
+            );
         };
 
         this.deleteNodeByID = (value) => {
