@@ -244,6 +244,26 @@ class streetElementGroup {
             return 0; // done
         };
 
+        this.addShape = (shape_id, shape_segments) => {
+            // TODO: verify segments are continuous
+
+            this.historyPush(["addShape", shape_id, shape_segments]);
+
+            // TODO: make shape a private attribute
+            this.shapes.push(
+                new streetElementShape(
+                    shape_id,
+                    shape_segments
+                )
+            );
+        };
+
+        this.removeShape = (shape_id) => {
+            this.historyPush(["removeShape", shape_id]);
+            console.log("Remove Shape, TODO");
+            // TODO: remove shape
+        };
+
         this.linkNodesByID = (nodeA_id, nodeB_id) => { // External
             this.historyPush(["linkNodesByID", nodeA_id, nodeB_id]);
             addLink (
@@ -426,6 +446,7 @@ class streetElementGroup {
 
         this.shapes    = [];
         this.agencies  = [];
+        this.services  = [];
         this.routes    = [];
         this.trips     = [];
         this.stopTimes = [];
@@ -457,14 +478,6 @@ class streetElementGroup {
     // Method to get the amount of nodes
     get length (){
         return this.nodes.length;
-    }
-
-    computeShapes () { // TODO
-        console.log("Compute shapes");
-        endpoints = [];
-        this.nodes.forEach((node) => {
-            console.log(node.type);
-        });
     }
 
     nodesBetween(nodeA, nodeB){
@@ -514,6 +527,41 @@ class streetElementGroup {
         this.agencies.push(agency);
 
         return true; // TODO
+    }
+
+    addService (service_info
+               ){
+        // Verify data
+        if ( typeof(service_info.monday) == 'boolean'){} else { return 1; }
+        if ( typeof(service_info.tuesday) == 'boolean'){} else { return 1; }
+        if ( typeof(service_info.wednesday) == 'boolean'){} else { return 1; }
+        if ( typeof(service_info.thursday) == 'boolean'){} else { return 1; }
+        if ( typeof(service_info.friday) == 'boolean'){} else { return 1; }
+        if ( typeof(service_info.saturday) == 'boolean'){} else { return 1; }
+        if ( typeof(service_info.sunday) == 'boolean'){} else { return 1; }
+
+        this.historyPush([
+            "addService",
+            service_info
+        ]);
+
+        this.services.push(
+            new streetElementCalendar(
+                service_info
+            )
+        );
+
+        return 0;
+    }
+
+    removeService (service_id
+                  ){
+        this.historyPush([
+            "removeService",
+            service_id
+        ]);
+        // FIXME
+        // TODO: invalidate a service
     }
 
     addRoute(route_id,

@@ -90,6 +90,12 @@ function filterNearestNode (coordinate) {
     // TODO
 }
 
+function filterValidShapeSegment (shape) {
+    //return shape.valid(); // TODO
+    return true; // FIXME
+}
+
+
 //////////////// global vars /////////////////////
 
 var popup_content = {
@@ -130,15 +136,33 @@ Vue.config.ignoredElements = [
 //     }
 // });
 
-
 //////////////////////////////////////////////////
+//       +++++++++
+//       +       +
+//       +  Map  +
+//       +       +
+// --->  @++++++++
+var extent_area =
+    ol.proj.fromLonLat([-84.43669241118701,9.726525930153954]
 
-//// Constrained map in the area of interst
+);
+
+// ++++++++@ <---
+// +       +
+// +  Map  +
+// +       +
+// +++++++++
+extent_area = extent_area.concat(
+    ol.proj.fromLonLat([-83.72894500499169,9.99625455768836]
+
+));
+
+//// Constrained map in the work area
 var view = new ol.View({
     center: ol.proj.fromLonLat([-84.1027104, 9.865107]),
     zoom: 12,
     // [minx,miny,max,may]
-    extent: [-9375050.54, 1092000.79, -9352512.37, 1113049.659],
+    extent: extent_area,
 });
 
 // Map need a layers group, we're
@@ -448,6 +472,7 @@ var app = new Vue({
             shapes: o_se_group.shapes,
             routes: o_se_group.routes,
             agencies: o_se_group.agencies,
+            services: o_se_group.services,
             trips: o_se_group.trips,
             stopTimes: o_se_group.stopTimes,
 
@@ -513,6 +538,15 @@ var app = new Vue({
                 "c_start_day",
                 "c_end_day"
             ],
+            calendarCheckboxFields: [
+                "c_monday",
+                "c_tuesday",
+                "c_wednesday",
+                "c_thursday",
+                "c_friday",
+                "c_saturday",
+                "c_sunday"
+            ],
 
             r_routeType: [
                 {value: 3, name: "autobus"},
@@ -534,6 +568,7 @@ var app = new Vue({
             );
             // Update popup
             popup_content.stop_info = o_se_group.nodes[node_id].getStopInfo();
+            alert("Success: edit data"); // FIXME : remove
         },
         changeNodeInfoFromStopSection(node_id){
             o_se_group.changeNodeInfoByID(
@@ -547,6 +582,7 @@ var app = new Vue({
             );
             // Update popup
             popup_content.stop_info = o_se_group.nodes[node_id].getStopInfo();
+            alert("Success: edit data"); // FIXME : remove
         },
         newShapeOnChange(event, element) {
             var element_id;
@@ -692,10 +728,47 @@ var app = new Vue({
         removeRoute (route_id){ // TODO
             console.log("remove route: " + route_id);
         },
+        saveShape(){ // save shape into streetElementGroup
+            console.log(this.ns_segments);
+            o_se_group.addShape(
+                document.getElementById("new_shape_id").value,
+                this.ns_segments
+            );
+            this.saveShapeStop();
+        },
+        saveShapeStop(){ // ends a new shape ingress or abort
+            o_se_group.nodes[
+                // lastnode in shape
+                this.ns_segments[this.ns_segments.length -1][2]
+            ].getConnections().forEach(
+                connection => {
+                    connection.hideDirection();     //
+                    connection.oneshot = undefined; //
+                });
+            this.ns_segments = [];
+            this.ns_allowed_links = [];
+            this.ns_head_node_id = null;
+        },
         saveCalendar(){
-            // o_se_group.addCalendar(
-            //     document.getElementById("c_service_id").value
-            // );
+            var service_info = {};
+            this.calendarFields.forEach(field => {
+                if (document.getElementById(field).type == 'checkbox'){
+                    console.log(document.getElementById(field).checked);
+                    service_info[field.substring(2)] =
+                        document.getElementById(field).checked;
+                } else {
+                    console.log(document.getElementById(field).value);
+                    service_info[field.substring(2)] =
+                        document.getElementById(field).value;
+                }
+            });
+
+            // TODO verify data
+            o_se_group.addService(
+                service_info
+            );
+
+            console.log(service_info);
             console.log("saveCalendar");
         },
         removeCalendar (service_id){ // TODO
@@ -758,10 +831,6 @@ var app = new Vue({
             }
             return result;
         },
-        rev_nodes () { // TODO
-            result = [];
-            return result;
-        },
         rev_endpoints () {
             // return end valid endpoints
             var result = this.nodes.slice().reverse();
@@ -770,7 +839,9 @@ var app = new Vue({
             return result;
         },
         rev_shapes () {
-            return []; // TODO
+            var result = this.shapes.slice().reverse();
+            result = result.filter(filterValidShapeSegment);
+            return result;
         },
         rev_stops () { // TODO
             var result = this.nodes.slice().reverse();
@@ -785,7 +856,7 @@ var app = new Vue({
             return this.routes.slice().reverse();
         },
         rev_services () {
-            return []; // TODO
+            return this.services.slice().reverse();
         },
         rev_trips () {
             return this.trips.slice().reverse();

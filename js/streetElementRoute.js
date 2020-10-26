@@ -14,11 +14,14 @@ class streetElementRoute {
                  route_long_name,
                  route_type
                 ) {
-        this.route_id = route_id;
         this.agency_id = agency_id;
         this.route_short_name = route_short_name;
         this.route_long_name = route_long_name;
         this.route_type = route_type;
+
+        this.getID = () => {
+            return route_id;
+        };
     }
     // Create a function for every param to
     // verify if it is a valid valor // TODO

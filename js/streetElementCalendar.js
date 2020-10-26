@@ -8,9 +8,26 @@
 ////
 
 class streetElementCalendar {
-    constructor (service_id,
+    constructor (service_info
                 ) {
-        this.agency_id = agency_id;
+        console.log("New service");
+        this.getServiceInfo = () => {
+            return service_info;
+        };
+        this.getServiceDays = () => {
+            return [
+                service_info["monday"],
+                service_info["tuesday"],
+                service_info["wednesday"],
+                service_info["thursday"],
+                service_info["friday"],
+                service_info["saturday"],
+                service_info["sunday"]
+            ];
+        };
+        this.getID = () => {
+            return service_info.service_id;
+        };
     }
 
     static get type () {

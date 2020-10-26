@@ -117,7 +117,7 @@
                 <div v-show="isVisible('shape')">
                     Add a new shape:<br>
                     <table class="alt"><tr>
-                        <th><input class="id_input_short" name="new_shape_id" type="text" :value="'shp_' + shapes.length" placeholder="Shape ID" /></th>
+                        <th><input id="new_shape_id" name="new_shape_id" type="text" :value="'shp_' + shapes.length" placeholder="Shape ID" /></th>
 
                         <!-- segments in new_shape -->
                         <!-- <th v-for="segment in ns_segments"> -->
@@ -143,8 +143,8 @@
                         </th>
 
                         <!-- element to add new segments in shape? -->
-
-                        <th><button>add</button></th>
+                        <th><button @click="saveShapeStop()" v-show="ns_segments.length">abort</button></th>
+                        <th><button @click="saveShape()">add</button></th>
                     </tr></table>
                     <br>
                     <table class="alt">
@@ -155,12 +155,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="shape in rev_nodes" :key="shape.getID"> <!-- FIXME chg nodes by shapes -->
-                                <td> - </td> <!-- shp_a : TODO, generate nodes -->
-                                <td><input type="text" :value="shape.coordinates[0]"></td>
-                                <td><input type="text" :value="shape.coordinates[1]"></td>
-                                <td>{{shape.getID}}</td>
-                                <td><input type="text" :value="shape.feature.ol_uid"></td>
+                            <tr v-for="shape in rev_shapes" :key="shape.getID()">
+                                <td>{{shape.getID()}}</td>
+                                <!-- <td>{{shape.getSequenceText()}}</td> // REMOVE method -->
+                                <td>
+                                    <!-- <div v-for="nodea,link,nodeb in shape.getSegments()">
+                                         {{nodea}}{{link}}{{nodeb}}
+                                         </div> -->
+                                </td>
                                 <td><button>save</button></td>
                             </tr>
                         </tbody>
@@ -246,7 +248,7 @@
                         </tr>
                         <tr v-for="route in rev_routes">
                             <td v-for="field in route" >{{field}}</td> <!-- FIXME: need review -->
-                            <td><button @click="removeRoute(route.route_id)">remove</button></td>
+                            <td><button @click="removeRoute(route.getID())">remove</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -262,10 +264,27 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td v-for="field in calendarFields"><input type="text" :id="field"></td>
+                            <td><input type="text" id="c_service_id"></td>
+                            <td v-for="field in calendarCheckboxFields">
+                                <input type="checkbox" :id="field" checked="true">
+                                <!-- <label for="view_nodes_cb">{{field}}</label><br> -->
+                            </td>
+                            <td><input type="text" id="c_start_day"></td>
+                            <td><input type="text" id="c_end_day"></td>
                             <td><button @click="saveCalendar">add</button></td>
                         </tr>
                         <tr v-for="service in rev_services">
+                            <td>{{ service.getID() }}</td>
+                            <td v-for="status in service.getServiceDays()">
+                                <div v-if="status" class="green_text">
+                                    active
+                                </div>
+                                <div v-if="!status" class="red_text">
+                                    inactive
+                                </div>
+                                <!-- status ? "active" : "inactive" -->
+                            </td>
+                            <td><button>remove</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -281,10 +300,16 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><select id="t_route_id">
-                                <option v-for="route in rev_routes" :value="route.route_id">{{route.route_id}}</option>
-                            </select></td>
-                            <td><input type="text" id="t_service_id"></td>
+                            <td>
+                                <select id="t_route_id">
+                                    <option v-for="route in rev_routes" :value="route.getID()">{{route.getID()}}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select id="t_service_id">
+                                    <option v-for="service in rev_services" :value="service.getID()">{{service.getID()}}</option>
+                                </select>
+                            </td>
                             <td><input type="text" id="t_trip_id"></td>
                             <td><select id="t_direction_id">
                                 <option value="0">outbound travel</option>
@@ -351,6 +376,7 @@
         <script src="js/streetElementLink.js"></script>        <!-- Link     class -->
         <script src="js/streetElementAgency.js"></script>      <!-- Agency   class -->
         <script src="js/streetElementRoute.js"></script>       <!-- Route    class -->
+        <script src="js/streetElementCalendar.js"></script>    <!-- Calendar class -->
         <script src="js/streetElementShape.js"></script>       <!-- Shape    class -->
         <script src="js/streetElementTrip.js"></script>        <!-- Trip     class -->
         <script src="js/streetElementStopTime.js"></script>    <!-- StopTime class -->

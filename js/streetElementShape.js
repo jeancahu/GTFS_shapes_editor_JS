@@ -8,25 +8,43 @@
 ////
 
 class streetElementShape {
-    constructor (shape_id
+    constructor (shape_id,
+                 segments
                 ) {
-        var shape_array = [];
+        var shape_nodes = [];
         var shape_id_array = [];
 
         //////////// Privileged //////////////
-        this.shape_id = () => {
+        this.getID = () => {
             return shape_id; // TODO
         };
 
-        this.getShapeArray = () => {
-            return shape_array;
+        this.getSequenceText = () => {
+            var result = '';
+            segments.forEach(
+                segment =>{
+                    result += 'n'+segment[0]+'l'+segment[1]+',';
+                });
+            return result; // TODO
+        };
+
+        this.getSegments = () => {
+            return segments;
+        };
+
+        this.valid = () =>{
+            return true; // TODO
+        };
+
+        this.getNodeArray = () => { // nodes in the shape
+            return shape_nodes;
         };
 
         this.concatSegment = (shape_segment) => {
-            if (shape_array.length == 0){
-                shape_array = shape_segment;
+            if (shape_nodes.length == 0){
+                shape_nodes = shape_segment;
             } else {
-                if (shape_array[shape_array.length -1] == shape_segment[0]){
+                if (shape_nodes[shape_nodes.length -1] == shape_segment[0]){
                     // it's ok
                 } else {
                     // it's not compatible
@@ -35,18 +53,18 @@ class streetElementShape {
         };
 
         this.getAllowedSegmentsToConcat = () => {
-            if (shape_array.length){
+            if (shape_nodes.length){
                 var result = [];
                 var link_to_exclude = streetElementLink.getLinkBetween(
-                    shape_array[shape_array.length -1],
-                    shape_array[shape_array.length -2],
+                    shape_nodes[shape_nodes.length -1],
+                    shape_nodes[shape_nodes.length -2],
                 );
                 var allowed_links = streetElementLink.getLinksFromNode(
-                    shape_array[shape_array.length -1],
+                    shape_nodes[shape_nodes.length -1],
                     [link_to_exclude]
                 );
                 allowed_links.forEach((link) => {
-                    result.push([shape_array[shape_array.length -1], link]);
+                    result.push([shape_nodes[shape_nodes.length -1], link]);
                 });
                 return result;
             } else {
@@ -65,25 +83,6 @@ class streetElementShape {
         }
         console.log("The variable is not a " + streetElementShape.name + " instance");
         return false;
-    }
-
-    // static route (nodeA, nodeB) {
-    //     if (streetElementNode.isInstance(nodeA) &
-    //         streetElementNode.isInstance(nodeB)) {
-    //         result = [];
-    //         var connections = nodeA.getConnections();
-    //         for (var i=0; i < connections.length ; i++) {
-    //             console.log(connections[i]);
-    //         }
-    //         return result;
-    //     } else {
-    //         // bad arguments
-    //         return null;
-    //     }
-    // }
-
-    static routeSegmentUntilNode (nodeA, link, nodeB) { // return a shape segment
-        return []; // TODO
     }
 
     static routeSegment (node, link) { // return a shape segment
