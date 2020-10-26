@@ -83,6 +83,8 @@ class streetElementNode {
             var result = {
                 id: '',
                 name: '',
+                description: '',
+                url: ''
             };
             return result;
         }

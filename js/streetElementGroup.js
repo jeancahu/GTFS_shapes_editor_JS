@@ -301,9 +301,11 @@ class streetElementGroup {
             //     stop_description: text,
             // }
             // TODO verify the type
-            this.nodes[node_id].setLayer(
-                layers[info.node_type]
-            );
+            if (info.node_type){
+                this.nodes[node_id].setLayer(
+                    layers[info.node_type]
+                );
+            }
 
             // verify the data
             var stop_info = {};
@@ -315,6 +317,9 @@ class streetElementGroup {
             }
             if (info.stop_description){
                 stop_info['description'] = info.stop_description;
+            }
+            if (info.stop_url){
+                stop_info['url'] = info.stop_description;
             }
 
             this.nodes[node_id].setStopInfo(

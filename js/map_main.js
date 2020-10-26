@@ -477,8 +477,6 @@ var app = new Vue({
                 "stop_id",
                 "stop_name",
                 "stop_desc",
-                "stop_lat", // same than shape
-                "stop_lon", // same than shape
                 "stop_url"  // page with a photo and info about
             ],
             stopTimeFields: [
@@ -532,6 +530,19 @@ var app = new Vue({
                     stop_id: document.getElementById("ol_in_stop_id").value,
                     stop_name: document.getElementById("ol_in_stop_name").value
                     //stop_description: document.getElementById("").value,
+                }
+            );
+            // Update popup
+            popup_content.stop_info = o_se_group.nodes[node_id].getStopInfo();
+        },
+        changeNodeInfoFromStopSection(node_id){
+            o_se_group.changeNodeInfoByID(
+                node_id,
+                {
+                    stop_id: document.getElementById("stop_id_"+node_id).value,
+                    stop_name: document.getElementById("stop_name_"+node_id).value,
+                    stop_description: document.getElementById("stop_desc_"+node_id).value,
+                    stop_url: document.getElementById("stop_url_"+node_id).value,
                 }
             );
             // Update popup
@@ -667,13 +678,6 @@ var app = new Vue({
         },
         removeAgency (agency_id){ // TODO
             console.log("remove agency: " + agency_id);
-        },
-        saveStop(){
-            // this.stopFields.forEach( (value) => {
-            //     console.log(value);
-            //     console.log(document.getElementById(value).value);
-            // });
-            console.log("saveStop");
         },
         saveRoute(){
             o_se_group.addRoute(

@@ -202,24 +202,21 @@
                     <thead>
                         <tr>
                             <th v-for="field in stopFields">{{field}}</th>
+
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="stop in rev_stops">
-                            <td><input type="text" id="stop_id"   :value="stop.getStopInfo().id"></td>
+                            <td><input type="text" :id="'stop_id_'+stop.getID"   :value="stop.getStopInfo().id"></td>
 
                             <!-- Page 1 -->
-                            <td><input type="text" id="stop_name" :value="stop.getStopInfo().name"></td>
-                            <td><input type="text" id="stop_desc" :value="stop.getStopInfo().description"></td>
+                            <td><input type="text" :id="'stop_name_'+stop.getID" :value="stop.getStopInfo().name"></td>
+                            <td><input type="text" :id="'stop_desc_'+stop.getID" :value="stop.getStopInfo().description"></td>
 
                             <!-- Page 2 -->
-                            <td>{{stop.coordinates[0]}}</td>
-                            <td>{{stop.coordinates[1]}}</td>
-
-                            <!-- Page 3 -->
-                            <td><input type="text" id="stop_url"></td>
-                            <td><button @click="saveStop">save</button></td>
+                            <td><input type="text" :id="'stop_url_'+stop.getID"></td>
+                            <td><button @click="changeNodeInfoFromStopSection(stop.getID)">save</button></td>
                         </tr>
                     </tbody>
                 </table>
