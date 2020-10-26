@@ -74,6 +74,15 @@
     text-align: center;
 }
 
-.id_input_short {
-    width: 80px;
+.orange_text{
+    color: orange;
+}
+.green_text {
+    color: green;
+}
+.green_blue {
+    color: blue;
+}
+.red_text {
+    color: red;
 }
