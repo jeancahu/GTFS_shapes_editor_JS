@@ -27,7 +27,16 @@ class streetElementRoute {
                 type: type
             };
         };
+
+        this.typeToText = () => {
+            return {
+                1: "Metro",
+                2: "Train",
+                3: "Autobus"
+            }[type];
+        };
     }
+
     // Create a function for every param to
     // verify if it is a valid valor // TODO
     static isInstance (obj) {

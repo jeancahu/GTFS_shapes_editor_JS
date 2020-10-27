@@ -86,3 +86,15 @@
 .red_text {
     color: red;
 }
+
+.button_grid{
+    text-align: center;
+    margin-top: 20 px;
+}
+
+.sidetools button {
+    text-align: center;
+    padding: 20px;
+    margin-top: 5px;
+    width: 90%;
+}

@@ -8,23 +8,32 @@
 ////
 
 class streetElementAgency {
-    constructor (agency_id,
-                 agency_name,
-                 agency_url,
-                 agency_timezone,
-                 agency_lang,
-                 agency_phone,
-                 agency_fare_url,
-                 agency_email
+    constructor (id,
+                 name,
+                 url,
+                 timezone,
+                 lang,
+                 phone,
+                 fare_url,
+                 email
                 ) {
-        this.agency_id = agency_id;
-        this.agency_name = agency_name;
-        this.agency_url = agency_url;
-        this.agency_timezone = agency_timezone;
-        this.agency_lang = agency_lang;
-        this.agency_phone = agency_phone;
-        this.agency_fare_url = agency_fare_url;
-        this.agency_email = agency_email;
+
+        this.getID = () => {
+            return id;
+        };
+
+        this.getInfo = () => {
+            return {
+                id: id,
+                name: name,
+                url: url,
+                timezone: timezone,
+                lang: lang,
+                phone: phone,
+                fare_url: fare_url,
+                email: email
+            };
+        };
     }
     // Create a function for every param to
     // verify if it is a valid valor // TODO

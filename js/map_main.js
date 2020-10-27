@@ -476,6 +476,9 @@ var app = new Vue({
             trips: o_se_group.trips,
             stopTimes: o_se_group.stopTimes,
 
+            // Stop times section
+            in_st_stop_id: 0,
+
             // Shapes section:
             ns_allowed_links: [],
             ns_segments: [],
@@ -488,7 +491,6 @@ var app = new Vue({
                 "agency_timezone",
                 "agency_lang",
                 "agency_phone",
-                "agency_fare_url",
                 "agency_email"
             ],
             shapeFields: [
@@ -628,8 +630,7 @@ var app = new Vue({
 
                         );
                     }
-                    view.setCenter(result[result.length -1].coordinates); // FIXME remove
-                    view.setZoom(17.9); // FIXME remove
+                    this.goToNodeOnMap(result[result.length -1].getID);
                     this.ns_head_node_id =
                         result[result.length -1].getID;
 
@@ -662,12 +663,10 @@ var app = new Vue({
                 }
             }
         },
-        translate(word) {
-            result = this.dictionary[this.language][word];
-            if ( result ){
-                return result;
-            }
-            return word;
+        goToNodeOnMap (node_id) { // TODO needs testing
+            view.setCenter(this.nodes[node_id].coordinates);
+            view.setZoom(17.9); // TODO use a config file
+            console.log(node_id);
         },
         isVisible(value) { // Return a bool
             return ( value == this.showList );
@@ -707,7 +706,7 @@ var app = new Vue({
                 document.getElementById("agency_timezone").value,
                 document.getElementById("agency_lang").value,
                 document.getElementById("agency_phone").value,
-                document.getElementById("agency_fare_url").value,
+                null, // FIXME
                 document.getElementById("agency_email").value
             );
             console.log("saveAgency");
