@@ -156,16 +156,20 @@ class streetElementGroup {
             // command is a list with an external function and its arguments
             if (command[0] == "selectNodeByID" | // Process selectNodeByID
                 command[0] == "unselectNode") {  // or unselectNode
+
                 if (history[history.length -1][0] == "selectNodeByID" |
                     history[history.length -1][0] == "unselectNode") {
                     // only save the last selected node if there are not editions in between
-                    history.pop();
+                    this.historyPop();
                 }
-            } else if (command[0] == "setNodeCoordinatesByID" ) {
-                if (history[history.length -1][0] == "setNodeCoordinatesByID" |
-                    history[history.length -1][1] == command[1]) {
+            }
+            else
+                if (command[0] == "setNodeCoordinatesByID" ) {
+
+                    if (history[history.length -1][0] == "setNodeCoordinatesByID" &
+                        history[history.length -1][1] == command[1]) {
                     // only save the last move for same node
-                    history.pop();
+                    this.historyPop();
                 }
             }
             history.push(command);
