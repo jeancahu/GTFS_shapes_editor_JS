@@ -831,6 +831,18 @@ var app = new Vue({
             }
             return result;
         },
+        stopsWhenTrip () { // TODO
+            // document.getElementById("st_trip_id")
+            // get shape from trip
+            // get nodes from shape
+            // get stops from nodes
+            // return stops
+
+            var result = this.nodes.slice().reverse();
+            result = result.filter(filterValidNode);
+            result = result.filter(filterStopNode);
+            return result;
+        },
         rev_endpoints () {
             // return end valid endpoints
             var result = this.nodes.slice().reverse();

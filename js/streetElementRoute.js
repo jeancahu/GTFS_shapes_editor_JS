@@ -8,19 +8,24 @@
 ////
 
 class streetElementRoute {
-    constructor (route_id,
+    constructor (id,
                  agency_id,  // agency object
-                 route_short_name,
-                 route_long_name,
-                 route_type
+                 short_name,
+                 long_name,
+                 type
                 ) {
-        this.agency_id = agency_id;
-        this.route_short_name = route_short_name;
-        this.route_long_name = route_long_name;
-        this.route_type = route_type;
 
         this.getID = () => {
-            return route_id;
+            return id;
+        };
+
+        this.getInfo = () => {
+            return {
+                agency_id: agency_id,
+                short_name: short_name,
+                long_name: long_name,
+                type: type
+            };
         };
     }
     // Create a function for every param to

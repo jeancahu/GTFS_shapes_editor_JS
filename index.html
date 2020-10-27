@@ -183,11 +183,11 @@
                             <td><input type="text" id="agency_id" placeholder="ID" required></td> <!-- required TODO -->
                             <td><input type="text" id="agency_name" placeholder="Name" required></td>
                             <td><input type="text" id="agency_url" placeholder="URL" required></td>
-                            <td><input type="text" id="agency_timezone" required></td>
-                            <td><input type="text" id="agency_lang"></td>
-                            <td><input type="text" id="agency_phone"></td>
+                            <td><input type="text" id="agency_timezone" placeholder="Continent/Region" required></td>
+                            <td><input type="text" id="agency_lang" placeholder="Language"></td>
+                            <td><input type="text" id="agency_phone" placeholder="+0 8888 8888"></td>
                             <td><input type="text" id="agency_fare_url"></td>
-                            <td><input type="text" id="agency_email"></td>
+                            <td><input type="text" id="agency_email" placeholder="example@corp.com"></td>
                             <td><button @click="saveAgency">add</button></td>
                         </tr>
                         <tr v-for="agency in rev_agencies">
@@ -210,14 +210,14 @@
                     </thead>
                     <tbody>
                         <tr v-for="stop in rev_stops">
-                            <td><input type="text" :id="'stop_id_'+stop.getID"   :value="stop.getStopInfo().id"></td>
+                            <td><input type="text" :id="'stop_id_'+stop.getID"   :value="stop.getStopInfo().id" placeholder="Stop ID"></td>
 
                             <!-- Page 1 -->
-                            <td><input type="text" :id="'stop_name_'+stop.getID" :value="stop.getStopInfo().name"></td>
-                            <td><input type="text" :id="'stop_desc_'+stop.getID" :value="stop.getStopInfo().description"></td>
+                            <td><input type="text" :id="'stop_name_'+stop.getID" :value="stop.getStopInfo().name" placeholder="Name"></td>
+                            <td><input type="text" :id="'stop_desc_'+stop.getID" :value="stop.getStopInfo().description" placeholder="Description"></td>
 
                             <!-- Page 2 -->
-                            <td><input type="text" :id="'stop_url_'+stop.getID"></td>
+                            <td><input type="text" :id="'stop_url_'+stop.getID" placeholder="Info URL"></td>
                             <td><button @click="changeNodeInfoFromStopSection(stop.getID)">save</button></td>
                         </tr>
                     </tbody>
@@ -235,19 +235,23 @@
                     <tbody>
                         <tr>
                             <!-- <th v-for="field in routeFields"><input type="text" :id="field"></th> -->
-                            <td><input type="text" id="r_route_id"></td>
+                            <td><input type="text" id="r_route_id" placeholder="Route ID"></td>
                             <td><select id="r_agency_id">
                                 <option v-for="agency in rev_agencies" :value="agency.agency_id">{{agency.agency_id}}</option>
                             </select></td>
-                            <td><input type="text" id="r_route_short_name"></td>
-                            <td><input type="text" id="r_route_long_name"></td>
+                            <td><input type="text" id="r_route_short_name" placeholder="Short name"></td>
+                            <td><input type="text" id="r_route_long_name" placeholder="Long name"></td>
                             <td><select id="r_route_type">
                                 <option v-for="routeType in r_routeType" :value="routeType.value">{{routeType.name}}</option>
                             </select></td>
                             <td><button @click="saveRoute">add</button></td>
                         </tr>
                         <tr v-for="route in rev_routes">
-                            <td v-for="field in route" >{{field}}</td> <!-- FIXME: need review -->
+                            <td >{{route.getID()}}</td>
+                            <td >{{route.getInfo().agency_id}}</td>
+                            <td >{{route.getInfo().short_name}}</td>
+                            <td >{{route.getInfo().long_name}}</td>
+                            <td >{{route.getInfo().type}}</td>
                             <td><button @click="removeRoute(route.getID())">remove</button></td>
                         </tr>
                     </tbody>
@@ -316,13 +320,19 @@
                                 <option value="1">inbound travel</option>
                             </select></td>
                             <td><select id="t_shape_id">
-                                <option v-for="shape in rev_shapes" :value="shape.name">{{shape.name}}</option>
+                                <option v-for="shape in rev_shapes" :value="shape.getID()">{{shape.getID()}}</option>
                             </select></td>
                             <td><button @click="saveTrip">add</button></td>
                         </tr>
                         <tr v-for="trip in rev_trips">
-                            <td v-for="field in trip" >{{field}}</td> <!-- FIXME: need review -->
-                            <td><button @click="removeTrip(trip.trip_id)">{{ translate("remove") }}</button></td>
+
+                            <td>{{trip.getInfo().route_id        }}</td>
+                            <td>{{trip.getInfo().service_id      }}</td>
+                            <td>{{trip.getID()                   }}</td>
+                            <td>{{trip.getInfo().direction_id    }}</td>
+                            <td>{{trip.getInfo().shape_id        }}</td>
+
+                            <td><button @click="removeTrip(trip.getID())">{{ translate("remove") }}</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -338,11 +348,37 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td v-for="field in stopTimeFields"><input type="text" :id="field"></td>
+                            <td>
+                                <select id="st_trip_id">
+                                    <option v-for="trip in rev_trips" :value="trip.getID()">{{trip.getID()}}</option>
+                                </select>
+                            </td>
+
+                            <td>
+                                <!-- TODO add AM and selector -->
+                                <input type="text" id="st_arrival_time" placeholder="06:45">
+                            </td>
+                            <td>
+                                <!-- TODO add AM and selector with VUE and calendars-->
+                                <input type="text" id="st_departure_time" placeholder="07:10">
+                            </td>
+
+                            <td>
+                                <select id="st_stop_id" name="">
+                                    <option v-for="stop in stopsWhenTrip" :value="stop.getID">{{stop.getID}}: {{stop.getStopInfo().name ? stop.getStopInfo().name : "no name"}}</option>
+                                </select>
+                            </td>
+
+                            <td>stop sequence</td>
+
                             <td><button @click="saveStopTime">add</button></td>
                         </tr>
                         <tr v-for="stoptime in rev_stoptimes">
-                            <td v-for="field in stoptime" >{{field}}</td> <!-- FIXME: need review -->
+                            <td>{{stoptime.getInfo().trip_id}}</td>
+                            <td>{{stoptime.getInfo().arrival_time}}</td>
+                            <td>{{stoptime.getInfo().departure_time}}</td>
+                            <td>{{stoptime.getID()}}</td>
+                            <td>{{stoptime.getInfo().stop_sequence}}</td>
                             <td><button @click="removeStopTime(stoptime.trip_id, stoptime.stop_id)">remove</button></td>
                         </tr>
                     </tbody>
