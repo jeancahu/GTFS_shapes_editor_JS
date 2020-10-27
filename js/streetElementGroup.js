@@ -137,6 +137,7 @@ class streetElementGroup {
                     });
                     return style;
                 };
+                break;
             default:
                 console.log('Type: '+ type +' not found');
             }
