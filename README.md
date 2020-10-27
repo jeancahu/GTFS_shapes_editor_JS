@@ -10,7 +10,7 @@ Easy ingress for GTFS data required to generate a basic zipped file, the same fi
 
 Here some examples:
 [Editor preview](https://jeancahu.github.io/GTFS_shapes_editor_JS/index.html)
-<img src="http://161.35.54.122:10066/gtfs_shape_editor.png" >
+<img src="http://161.35.54.122:10066/./gtfs_editor.png" >
 
 ## TODO
 
