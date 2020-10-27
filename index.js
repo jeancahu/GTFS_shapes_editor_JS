@@ -13,8 +13,16 @@ app.get('/', (request, response) => {
     response.sendFile(__dirname + "/index.html");
 });
 
-app.get('/editor', (request, response) => {
-    response.sendFile(__dirname + "/index.html");
+app.get('/:name', (request, response) => { // FIXME temporal
+    const { name } = request.params;
+    console.log(name);
+    response.sendFile(__dirname + '/' + name);
+});
+
+app.get(':name', (request, response) => { // FIXME temporal
+    const { name } = request.params;
+    console.log(name);
+    response.sendFile(__dirname + '/' + name);
 });
 
 app.get('/js/:name', (request, response) => {
@@ -28,24 +36,10 @@ app.get('/css/:name', (request, response) => {
     response.sendFile(__dirname + "/css/" + name);
 });
 
-app.get('/css/TEMPLATE-CSS/:name', (request, response) => {
-    const { name } = request.params;
-    response.sendFile(__dirname + "/css/TEMPLATE-CSS/" + name);
-});
-
 app.get('/fonts/:name', (request, response) => {
     const { name } = request.params;
     response.sendFile(__dirname + "/templates/fonts/" + name);
 });
-
-app.get('/form', (request, response) => {
-    response.sendFile( __dirname + "/templates/" + "form.html" );
-});
-
-app.get('/vue_js', (request, response) => {
-    response.sendFile( __dirname + "/templates/" + "vue_js.html" );
-});
-
 
 app.get('/ejemplo', (request, response) => {
 
@@ -92,13 +86,6 @@ app.get('/assets/img/:name', (request, response) => {
     console.log(__dirname + "/assets/img/" + name + ": JS request");
     response.sendFile(__dirname + "/assets/img/" + name);
 });
-
-
-app.get('/:name', (request, response) => {
-    // http://localhost:$port/ejemplo?name=algo
-    const { name } = request.params;
-    response.sendFile(__dirname + "/templates/" + name);
-})
 
 // Start the server at port number 9000
 console.log(`Server is running at address:port http://localhost:${port}\n`);
