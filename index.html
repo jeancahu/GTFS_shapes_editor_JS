@@ -31,35 +31,35 @@
                 <button onclick="toggleHideMap()">Map</button>
             </div><br>
 
-            <label>Type </label><br>
-            <input type="radio" id="nt_shape" name="node_type" value="shape" checked="true">
-            <label for="nt_shape">Shape</label><br>
-            <input type="radio" id="nt_endpoint" name="node_type" value="endpoint" checked="false">
-            <label for="nt_endpoint">Endpoint</label><br>
-            <input type="radio" id="nt_stop" name="node_type" value="stop" checked="false">
-            <label for="nt_stop">Stop</label><br>
-            <input type="radio" id="nt_fork" name="node_type" value="fork" checked="false">
-            <label for="nt_fork">Intersection</label><br>
+            <div class="toolbar">
+                <label>Action </label><br>
+                <select onchange="onActionChange()" id="action">
+                    <option class="orange_text" value="select">select</option>
+                    <option value="add">add</option>
+                    <option value="split">split</option> <!-- RENAME TODO -->
+                    <option value="move">move</option>
+                    <option value="remove">remove</option> <!-- RENAME TODO -->
+                    <option value="cut">cut</option> <!-- RENAME TODO -->
+                </select>
 
-            <label>Action </label><br>
-            <select onchange="onActionChange()" id="action">
-                <option class="orange_text" value="select">select</option>
-                <option value="add">add</option>
-                <option value="split">split</option> <!-- RENAME TODO -->
-                <option value="move">move</option>
-                <option value="remove">remove</option> <!-- RENAME TODO -->
-                <option value="cut">cut</option> <!-- RENAME TODO -->
-            </select>
+                <label>Type </label><br>
+                <input type="radio" id="nt_shape" name="node_type" value="shape" checked="true">
+                <label for="nt_shape">Shape</label><br>
+                <input type="radio" id="nt_endpoint" name="node_type" value="endpoint" checked="false">
+                <label for="nt_endpoint">Endpoint</label><br>
+                <input type="radio" id="nt_stop" name="node_type" value="stop" checked="false">
+                <label for="nt_stop">Stop</label><br>
+                <input type="radio" id="nt_fork" name="node_type" value="fork" checked="false">
+                <label for="nt_fork">Intersection</label><br>
 
-            <label>View</label><br>
-
-            <input type="checkbox" id="view_nodes_cb" value="Nodes" checked="true">
-            <label for="view_nodes_cb">Show Nodes</label><br>
-            <input type="checkbox" id="view_links_cb" value="Links" checked="true">
-            <label for="view_links_cb">Show Links</label><br>
-            <input type="checkbox" id="view_stops_cb" value="Stops" checked="true">
-            <label for="view_stops_cb">Show Stops</label>
-
+                <label>View</label><br>
+                <input type="checkbox" id="view_nodes_cb" value="Nodes" checked="true">
+                <label for="view_nodes_cb">Show Nodes</label><br>
+                <input type="checkbox" id="view_links_cb" value="Links" checked="true">
+                <label for="view_links_cb">Show Links</label><br>
+                <input type="checkbox" id="view_stops_cb" value="Stops" checked="true">
+                <label for="view_stops_cb">Show Stops</label>
+            </div>
         </div>
         <div class="body-container">
 
