@@ -1,5 +1,5 @@
 # GTFS Shape editor
-GTFS shape editor made mainly in Javascript + Vue framework, using Openstreet map and MVP sheet styles.
+GTFS shape editor made mainly in Javascript + Vue framework, using Openstreet map and Chota sheet styles.
 The editor is able to draw nodes and links on the map, those elements could represent *stops*, generic shapes points, *intersections* or *endpoints*,
 Easy ingress for GTFS data required to generate a basic zipped file, the same file we could create using a Calc Sheet but throug a webapp instead.
 
