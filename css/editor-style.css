@@ -4,8 +4,9 @@
 
 .body-container {
     /*background: e2efef;*/
-    margin-left: 160px; /* Same as the width of the sidebar */
+    margin-left: 165px; /* Same as the width of the sidebar */
     padding: 0px 0px;
+    width: 100% - 170px;
 }
 
 .map_container {
@@ -101,4 +102,10 @@
 
 .toolbar {
     padding: 15px;
+}
+
+.horizontaltoolbar {
+    text-align: center;
+    padding: 15px;
+    width: 100%;
 }

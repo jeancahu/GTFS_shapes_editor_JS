@@ -1,3 +1,9 @@
 *~
 node_modules/*
 static/vue.js
+
+*.png
+*.zip
+*.svg
+
+templates/

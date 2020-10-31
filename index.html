@@ -20,7 +20,7 @@
     <body style="padding: 0;"> <!-------- FIXME -------->
 
         <div id="loading_screen"  class="loading_screen">
-            <img alt="loading_gif" src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/ab79a231234507.564a1d23814ef.gif"/>
+            <img alt="loading_gif" src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/ab79a231234507.564a1d23814ef.gif"/> <!-- FIXME -->
         </div>
 
         <div class="sidetools">
@@ -106,18 +106,15 @@
                     </div>
                 </div>
 
-                <!-- <table style="background: black; width: 100%; display: table;"> -->
-                <table style="width: 100%; display: table;"> <!-- TODO: change buttons format and replace table by a proper class -->
-                    <tr>
-                        <th><button class="button primary" @click="showAgency">agency</button></th>
-                        <th><button class="button primary" @click="showShape">shapes</button></th>
-                        <th><button class="button primary" @click="showStop">stops</button></th>
-                        <th><button class="button primary" @click="showRoute">routes</button></th>
-                        <th><button class="button primary" @click="showCalendar">calendar</button></th>
-                        <th><button class="button primary" @click="showTrip">trips</button></th>
-                        <th><button class="button primary" @click="showStopTime">stop_times</button></th>
-                    </tr>
-                </table>
+                <div class="row horizontaltoolbar">
+                    <div class="col"><button class="button primary" @click="showAgency">agency</button></div>
+                    <div class="col"><button class="button primary" @click="showShape">shapes</button></div>
+                    <div class="col"><button class="button primary" @click="showStop">stops</button></div>
+                    <div class="col"><button class="button primary" @click="showRoute">routes</button></div>
+                    <div class="col"><button class="button primary" @click="showCalendar">calendar</button></div>
+                    <div class="col"><button class="button primary" @click="showTrip">trips</button></div>
+                    <div class="col"><button class="button primary" @click="showStopTime">stop_times</button></div>
+                </div>
 
                 <!-- SHAPES -->
                 <div v-show="isVisible('shape')">
