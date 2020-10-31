@@ -11,7 +11,7 @@ class streetElementCalendar {
     constructor (service_info
                 ) {
         console.log("New service");
-        this.getServiceInfo = () => {
+        this.getInfo = () => {
             return service_info;
         };
         this.getServiceDays = () => {

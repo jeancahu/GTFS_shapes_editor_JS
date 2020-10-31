@@ -191,7 +191,7 @@ class streetElementGroup {
             ).replace(/\]\,\[/g,"],\n\t\t\t[");
             result = result.replace(/\[\[/,"[\n\t\t\t[");
             result = "const _streetElementGroupHistory = " + result;
-            result = result.replace(/\]$/,"\n];");
+            result = result.replace(/\]$/,"\n];\n");
             return result;
         };
 
