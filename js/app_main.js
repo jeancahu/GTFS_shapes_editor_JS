@@ -115,7 +115,7 @@ const es_CR = {
 };
 
 var app = new Vue({
-    el: '#editor_gtfs_tables',
+    el: '#editor_gtfs',
     data() {
         return {
             language: "en_US",
@@ -432,6 +432,12 @@ var app = new Vue({
         },
         removeStopTime (trip_id, stop_id){ // TODO
             console.log("remove stoptime: " + trip_id + ' ' + stop_id);
+        },
+        saveScheme(){
+            console.log("add trip: N" + " to service: M");
+        },
+        removeScheme (service_id, trip_id){ // TODO
+            console.log("remove trip: " + trip_id + " from service: " + service_id);
         }
     },
     computed: {

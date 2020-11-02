@@ -179,7 +179,7 @@ var map = new ol.Map({
     ],
     keyboardEventTarget: document,
     //overlays: [overlay_node_info],
-    target: 'map_container', // It shows coordinates on page
+    // target: 'map_container', // It shows coordinates on page
     view: view,
 });
 

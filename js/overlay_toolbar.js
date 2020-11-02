@@ -1,3 +1,8 @@
+/////////////////// set map target ////////////
+map.setTarget(
+    document.getElementById("map_container")
+);
+
 /////////////////// add overlay ///////////////
 
 //// Popups/overlay
