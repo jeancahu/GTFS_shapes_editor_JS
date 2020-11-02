@@ -10,6 +10,7 @@ const en_US = {
     trips:           "Trips",
     calendar:        "Calendar",
     stop_times:      "Stop times",
+    scheme:          "Scheme",
 
     shape_id:        "Shape ID",
 
@@ -66,6 +67,7 @@ const es_CR = {
     trips:           "Viajes",
     calendar:        "Servicios",
     stop_times:      "Horarios",
+    scheme:          "Programa",
 
     shape_id:        "ID Recor.",
 
@@ -328,30 +330,6 @@ var app = new Vue({
         isVisible(value) { // Return a bool
             return ( value == this.showList );
         },
-        showAgency() {
-            this.showList = "agency";
-        },
-        showShape() {
-            this.showList = "shape";
-        },
-        showStop() {
-            this.showList = "stop";
-        },
-        showStopTime() {
-            this.showList = "stoptime";
-        },
-        showRoute() {
-            this.showList = "route";
-        },
-        showCalendar() {
-            this.showList = "calendar";
-        },
-        showTrip() {
-            this.showList = "trip";
-        },
-        // popupInfo(){ // FIXME
-        //     return o_se_group.getLastSelectedNode().getID;
-        // },
         saveAgency(){
             this.agencyFields.forEach( (value) => {
                 console.log(value);
@@ -391,6 +369,9 @@ var app = new Vue({
                 this.ns_segments
             );
             this.saveShapeStop();
+        },
+        removeShape (shape_id){ // TODO
+            console.log("remove shape: " + shape_id);
         },
         saveShapeStop(){ // ends a new shape ingress or abort
             o_se_group.nodes[

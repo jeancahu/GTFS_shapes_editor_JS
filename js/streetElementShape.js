@@ -73,6 +73,8 @@ class streetElementShape {
 
         };
 
+        // TODO // this.getStops
+
     }
 
     static isInstance (obj) {

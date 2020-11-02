@@ -81,11 +81,14 @@
 .green_text {
     color: green;
 }
-.green_blue {
+.blue_text {
     color: blue;
 }
 .red_text {
     color: red;
+}
+.black_text {
+    color: black;
 }
 
 .button_grid{

@@ -107,20 +107,21 @@
                 </div>
 
                 <div class="row horizontaltoolbar">
-                    <div class="col"><button class="button primary" @click="showAgency"  >{{ dict.agency     }}</button></div>
-                    <div class="col"><button class="button primary" @click="showShape"   >{{ dict.shapes     }}</button></div>
-                    <div class="col"><button class="button primary" @click="showStop"    >{{ dict.stops      }}</button></div>
-                    <div class="col"><button class="button primary" @click="showRoute"   >{{ dict.routes     }}</button></div>
-                    <div class="col"><button class="button primary" @click="showCalendar">{{ dict.calendar   }}</button></div>
-                    <div class="col"><button class="button primary" @click="showTrip"    >{{ dict.trips      }}</button></div>
-                    <div class="col"><button class="button primary" @click="showStopTime">{{ dict.stop_times }}</button></div>
+                    <div class="col"><button class="button primary" @click="showList = 'agency'"  >{{ dict.agency     }}</button></div>
+                    <div class="col"><button class="button primary" @click="showList = 'shape'"   >{{ dict.shapes     }}</button></div>
+                    <div class="col"><button class="button primary" @click="showList = 'stop'"    >{{ dict.stops      }}</button></div>
+                    <div class="col"><button class="button primary" @click="showList = 'route'"   >{{ dict.routes     }}</button></div>
+                    <div class="col"><button class="button primary" @click="showList = 'trip'"    >{{ dict.trips      }}</button></div>
+                    <div class="col"><button class="button primary" @click="showList = 'stoptime'">{{ dict.stop_times }}</button></div>
+                    <div class="col"><button class="button primary" @click="showList = 'calendar'">{{ dict.calendar   }}</button></div>
+                    <div class="col"><button class="button primary" @click="showList = 'scheme'"  >{{ dict.scheme     }}</button></div>
                 </div>
 
                 <!-- SHAPES -->
                 <div v-show="isVisible('shape')">
                     Add a new shape:<br>
                     <table class="alt"><tr>
-                        <th><input id="new_shape_id" name="new_shape_id" type="text" :value="'shp_' + shapes.length" placeholder="Shape ID" /></th>
+                        <th><input id="new_shape_id" name="new_shape_id" type="text" placeholder="Shape ID" /></th>
 
                         <!-- segments in new_shape -->
                         <!-- <th v-for="segment in ns_segments"> -->
@@ -153,7 +154,8 @@
                     <table class="alt">
                         <thead>
                             <tr>
-                                <th v-for="field in shapeFields">{{field}}</th>
+                                <th>{{ dict['shape_id'] ? dict['shape_id'] : 'shape_id' }}</th>
+                                <th>{{ dict['shape_sequence'] ? dict['shape_sequence'] : 'shape_sequence' }}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -162,11 +164,14 @@
                                 <td>{{shape.getID()}}</td>
                                 <!-- <td>{{shape.getSequenceText()}}</td> // REMOVE method -->
                                 <td>
-                                    <!-- <div v-for="nodea,link,nodeb in shape.getSegments()">
-                                         {{nodea}}{{link}}{{nodeb}}
-                                         </div> -->
+                                    <a class="black_text" v-for="segment in shape.getSegments()" @click="goToNodeOnMap(segment[0])">
+                                        <span class="orange_text">n{{segment[0]}}</span><span class="green_text">l{{segment[1]}}</span>,
+                                    </a>
+                                    <a class="orange_text" @click="goToNodeOnMap(shape.getSegments()[shape.getSegments().length -1][2])">
+                                        n{{shape.getSegments()[shape.getSegments().length -1][2]}}
+                                    </a>
                                 </td>
-                                <td><button>save</button></td>
+                                <td><button class="button error" @click="removeShape(shape.getID())">remove</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -183,13 +188,13 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input type="text" id="agency_id" placeholder="ID" required></td> <!-- required TODO -->
-                            <td><input type="text" id="agency_name" placeholder="Name" required></td>
-                            <td><input type="text" id="agency_url" placeholder="URL" required></td>
+                            <td><input type="text" id="agency_id"       placeholder="ID" required></td> <!-- required TODO -->
+                            <td><input type="text" id="agency_name"     placeholder="Name" required></td>
+                            <td><input type="text" id="agency_url"      placeholder="URL" required></td>
                             <td><input type="text" id="agency_timezone" placeholder="Continent/Region" required></td>
-                            <td><input type="text" id="agency_lang" placeholder="Language"></td>
-                            <td><input type="text" id="agency_phone" placeholder="+0 8888 8888"></td>
-                            <td><input type="text" id="agency_email" placeholder="example@corp.com"></td>
+                            <td><input type="text" id="agency_lang"     placeholder="Language"></td>
+                            <td><input type="text" id="agency_phone"    placeholder="+0 8888 8888"></td>
+                            <td><input type="text" id="agency_email"    placeholder="example@corp.com"></td>
                             <td><button @click="saveAgency">add</button></td>
                         </tr>
                         <tr v-for="agency in rev_agencies">
