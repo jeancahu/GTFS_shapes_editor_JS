@@ -111,4 +111,20 @@
     text-align: center;
     padding: 15px;
     width: 100%;
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+
+    height: 100%;
 }
+
+.horizontaltoolbar button{
+    white-space: nowrap;
+}
+
+
+
+
+
+

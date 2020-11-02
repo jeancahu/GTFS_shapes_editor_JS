@@ -169,12 +169,10 @@ var app = new Vue({
                 "st_trip_id",
                 "st_arrival_time",
                 "st_departure_time",
-                "st_stop_id",
-                "st_stop_sequence"
+                "st_stop_id"
             ],
             tripFields: [
                 "t_route_id",
-                "t_service_id",
                 "t_trip_id",
                 "t_direction_id",
                 "t_shape_id"
@@ -414,7 +412,6 @@ var app = new Vue({
         saveTrip(){
             o_se_group.addTrip(
                 document.getElementById("t_route_id").value, // TODO, try to get the value without getElementById, using vue
-                document.getElementById("t_service_id").value,
                 document.getElementById("t_trip_id").value,
                 document.getElementById("t_direction_id").value,
                 document.getElementById("t_shape_id").value
@@ -425,6 +422,12 @@ var app = new Vue({
             console.log("remove trip: " + trip_id);
         },
         saveStopTime(){
+            o_se_group.addStopTime(
+                document.getElementById("st_trip_id").value, // TODO, get value without getElementById
+                document.getElementById("st_arrival_time").value,
+                document.getElementById("st_departure_time").value,
+                document.getElementById("st_stop_id").value
+            );
             console.log("saveStopTime");
         },
         removeStopTime (trip_id, stop_id){ // TODO

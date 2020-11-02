@@ -601,7 +601,6 @@ class streetElementGroup {
     }
 
     addTrip(route_id, // Route object
-            service_id,
             trip_id,
             direction_id,
             shape_id  // Shape object
@@ -609,7 +608,6 @@ class streetElementGroup {
 
         var trip = new streetElementTrip(
             route_id, // Route object
-            service_id,
             trip_id,
             direction_id,
             shape_id  // Shape object
@@ -618,7 +616,6 @@ class streetElementGroup {
         this.historyPush([
             "addTrip",
             route_id, // Route object
-            service_id,
             trip_id,
             direction_id,
             shape_id  // Shape object
@@ -634,15 +631,13 @@ class streetElementGroup {
     addStopTime (trip_id,  // Trip object
                  arrival_time,
                  departure_time,
-                 stop_id,  // Stop object
-                 stop_sequence
+                 stop_id  // Stop object
                 ) {
         var stoptime = new streetElementStopTime(
             trip_id,  // Trip object
             arrival_time,
             departure_time,
-            stop_id,  // Stop object
-            stop_sequence
+            stop_id  // Stop object
         );
 
         this.historyPush([
@@ -650,8 +645,7 @@ class streetElementGroup {
             trip_id,  // Trip object
             arrival_time,
             departure_time,
-            stop_id,  // Stop object
-            stop_sequence
+            stop_id  // Stop object
         ]);
 
         console.log(stoptime);

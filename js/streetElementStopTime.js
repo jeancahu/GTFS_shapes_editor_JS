@@ -11,8 +11,7 @@ class streetElementStopTime {
     constructor (trip_id,  // Trip object
                  arrival_time,
                  departure_time,
-                 stop_id,  // Stop object
-                 stop_sequence
+                 stop_id  // Stop object
                 ) {
 
         this.getID = () => {
@@ -24,8 +23,7 @@ class streetElementStopTime {
                 trip_id: trip_id,
                 arrival_time: arrival_time,
                 departure_time: departure_time,
-                stop_id: stop_id,
-                stop_sequence: stop_sequence
+                stop_id: stop_id
             };
         };
     }

@@ -9,7 +9,6 @@
 
 class streetElementTrip {
     constructor (route_id, // Route object
-                 service_id,
                  id, // trip id // TODO move top
                  direction_id,
                  shape_id  // Shape object
@@ -22,7 +21,6 @@ class streetElementTrip {
         this.getInfo = () => {
             return {
                 route_id: route_id,
-                service_id: service_id,
                 trip_id: id,
                 direction_id: direction_id,
                 shape_id: shape_id
