@@ -122,13 +122,9 @@
                     Add a new shape:<br>
                     <table class="alt"><tr>
                         <th><input id="new_shape_id" name="new_shape_id" type="text" placeholder="Shape ID" /></th>
-
-                        <!-- segments in new_shape -->
-                        <!-- <th v-for="segment in ns_segments"> -->
                         <th>
                             {{new_shape_sequence}}
                         </th>
-                        <!-- end segments -->
 
                         <!-- new segment (a node and a link for direction)-->
                         <th v-show="!ns_segments.length">
@@ -154,14 +150,21 @@
                     <table class="alt">
                         <thead>
                             <tr>
-                                <th>{{ dict['shape_id'] ? dict['shape_id'] : 'shape_id' }}</th>
+                                <th>
+                                    {{ dict['shape_id'] ? dict['shape_id'] : 'shape_id' }}
+                                </th>
                                 <th>{{ dict['shape_sequence'] ? dict['shape_sequence'] : 'shape_sequence' }}</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="shape in rev_shapes" :key="shape.getID()">
-                                <td>{{shape.getID()}}</td>
+                                <td>
+                                    <input type="radio" :id="'shapeOnMap_' + shape.getID()" name="shapeOnMap" :value="shape.getID()" checked="false">
+                                    <label :for="'shapeOnMap_' + shape.getID()">
+                                        {{ shape.getID() }}
+                                    </label>
+                                </td>
                                 <!-- <td>{{shape.getSequenceText()}}</td> // REMOVE method -->
                                 <td>
                                     <a class="black_text" v-for="segment in shape.getSegments()" @click="goToNodeOnMap(segment[0])">
