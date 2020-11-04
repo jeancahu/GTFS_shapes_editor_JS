@@ -339,7 +339,7 @@
 
                             <td>{{trip.getInfo().route_id        }}</td>
                             <td>{{trip.getID()                   }}</td>
-                            <td>{{trip.getInfo().direction_id ? dict["inbound_travel"] : dict["outbound_travel"] }}</td>
+                            <td>{{trip.getInfo().direction_id == "0" ? dict["outbound_travel"] : dict["inbound_travel"] }}</td>
                             <td>{{trip.getInfo().shape_id        }}</td>
 
                             <td><button class="button error" @click="removeTrip(trip.getID())">remove</button></td>

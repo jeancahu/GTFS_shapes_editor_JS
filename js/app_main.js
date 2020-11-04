@@ -50,6 +50,8 @@ const en_US = new Proxy(
     t_trip_id:       "Trip ID",
     t_direction_id:  "Direction",
     t_shape_id:      "Shape",
+    inbound_travel:  "Inbound",
+    outbound_travel: "Outbound",
 
     st_trip_id:        "Trip",
     st_arrival_time:   "Arrival time",
@@ -64,8 +66,8 @@ const en_US = new Proxy(
     }
 );
 
-
-const es_CR = {
+const es_CR = new Proxy(
+    {
     add:             "Agregar",
     remove:          "Eliminar",
     agency:          "Empresa",
@@ -114,13 +116,21 @@ const es_CR = {
     t_trip_id:       "ID viaje",
     t_direction_id:  "Dirección",
     t_shape_id:      "Recorrido",
+    inbound_travel:  "Regreso",
+    outbound_travel: "Ida",
 
     st_trip_id:        "Viaje",
     st_arrival_time:   "Llegada",
     st_departure_time: "Salida",
     st_stop_id:        "Parada",
     st_stop_sequence:  "Secuencia"
-};
+},
+      { // handler
+          get: function(target, name) {
+              return target.hasOwnProperty(name) ? target[name] : name;
+          }
+      }
+);
 
 var app = new Vue({
     el: '#editor_gtfs',
