@@ -1,6 +1,7 @@
 //////////////////// Vue experiments ////////////////////////////
 
-const en_US = {
+const en_US = new Proxy(
+{
     add:             "Add",
     remove:          "Remove",
     agency:          "Agency",
@@ -55,7 +56,14 @@ const en_US = {
     st_departure_time: "Departure time",
     st_stop_id:        "Stop",
     st_stop_sequence:  "Sequence"
-};
+},
+    { // handler
+        get: function(target, name) {
+            return target.hasOwnProperty(name) ? target[name] : name;
+        }
+    }
+);
+
 
 const es_CR = {
     add:             "Agregar",
