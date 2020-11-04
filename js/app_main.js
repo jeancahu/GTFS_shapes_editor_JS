@@ -185,9 +185,9 @@ var app = new Vue({
             ],
             stopTimeFields: [
                 "st_trip_id",
+                "st_stop_id",
                 "st_arrival_time",
-                "st_departure_time",
-                "st_stop_id"
+                "st_departure_time"
             ],
             tripFields: [
                 "t_route_id",
