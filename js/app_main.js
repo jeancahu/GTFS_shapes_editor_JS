@@ -150,6 +150,7 @@ var app = new Vue({
             routes: o_se_group.routes,
             agencies: o_se_group.agencies,
             services: o_se_group.services,
+            schemes: o_se_group.schemes,
             trips: o_se_group.trips,
             stopTimes: o_se_group.stopTimes,
 
@@ -278,7 +279,7 @@ var app = new Vue({
                 if (element_id == 'noselect'){
                     this.ns_allowed_links = [];
                 } else {
-                    view.setCenter(this.nodes[element_id].coordinates); // FIXME remove
+                    view.setCenter(this.nodes[element_id].getCoordinates()); // FIXME remove
                     view.setZoom(17.9); // FIXME remove
 
                     this.ns_allowed_links =
@@ -339,7 +340,7 @@ var app = new Vue({
             }
         },
         goToNodeOnMap (node_id) { // TODO needs testing
-            view.setCenter(this.nodes[node_id].coordinates);
+            view.setCenter(this.nodes[node_id].getCoordinates());
             view.setZoom(17.9); // TODO use a config file
             console.log(node_id);
         },
@@ -452,10 +453,14 @@ var app = new Vue({
             console.log("remove stoptime: " + trip_id + ' ' + stop_id);
         },
         saveScheme(){
-            console.log("add trip: N" + " to service: M");
+            o_se_group.addScheme(
+                o_se_group.schemes.length, // FIXME
+                document.getElementById("sc_service_id").value,
+                document.getElementById("sc_trip_id").value
+            );
         },
-        removeScheme (service_id, trip_id){ // TODO
-            console.log("remove trip: " + trip_id + " from service: " + service_id);
+        removeScheme (scheme_id){ // TODO
+            console.log("remove scheme: " + scheme_id);
         }
     },
     computed: {
@@ -540,12 +545,9 @@ var app = new Vue({
         rev_stoptimes () { // TODO
             return this.stopTimes.slice().reverse();
         },
-        // popup () {
-        //     return "TODO";
-        // },
-        // popup_info () { // TODO
-        //     return this.selectedNode.getID;
-        // }
+        rev_schemes () { // TODO
+            return this.schemes.slice().reverse();
+        }
     },
     filters: {
         input_box(value) {

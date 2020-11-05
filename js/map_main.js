@@ -348,7 +348,7 @@ map.on('click', (event)=> {
                     feature_onHover.parent.getStopInfo();
                 overlay_node_info.setPosition(
                     //ol.proj.fromLonLat(
-                    feature_onHover.parent.coordinates
+                    feature_onHover.parent.getCoordinates()
                     //)
                 ); // TODO
             }

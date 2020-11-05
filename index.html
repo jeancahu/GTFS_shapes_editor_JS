@@ -399,19 +399,21 @@
                     <tbody>
                         <tr>
                             <td>
-                                <select>
+                                <select id="sc_service_id">
                                     <option v-for="service in rev_services">{{ service.getID() }}</option>
                                 </select>
                             </td>
                             <td>
-                                <select>
+                                <select id="sc_trip_id">
                                     <option v-for="trip in rev_trips">{{ trip.getID() }}</option>
                                 </select>
                             </td>
-                            <td><button>add</button></td>
+                            <td><button @click="saveScheme">add</button></td>
                         </tr>
-                        <tr>
-
+                        <tr v-for="scheme in rev_schemes">
+                            <td>{{ scheme.getInfo().service_id }}</td>
+                            <td>{{ scheme.getInfo().trip_id }}</td>
+                            <td><button @click="removeScheme(scheme.getID())">remove</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -445,6 +447,7 @@
         <script src="js/streetElementAgency.js"></script>      <!-- Agency   class -->
         <script src="js/streetElementRoute.js"></script>       <!-- Route    class -->
         <script src="js/streetElementCalendar.js"></script>    <!-- Calendar class -->
+        <script src="js/streetElementScheme.js"></script>      <!-- Scheme   class -->
         <script src="js/streetElementShape.js"></script>       <!-- Shape    class -->
         <script src="js/streetElementTrip.js"></script>        <!-- Trip     class -->
         <script src="js/streetElementStopTime.js"></script>    <!-- StopTime class -->

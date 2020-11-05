@@ -269,6 +269,25 @@ class streetElementGroup {
             // TODO: remove shape
         };
 
+        this.addScheme = (scheme_id, service_id, trip_id) => {
+            this.historyPush(["addScheme", scheme_id, service_id, trip_id]);
+
+            this.schemes.push(
+                new streetElementScheme(
+                    scheme_id,
+                    service_id,
+                    trip_id
+                )
+            );
+        };
+
+        this.removeScheme = (scheme_id, service_id, trip_id) => {
+            this.historyPush(["removeScheme", scheme_id, service_id, trip_id]);
+
+            // TODO: remove the scheme
+            console.log("TODO: remove scheme");
+        };
+
         this.linkNodesByID = (nodeA_id, nodeB_id) => { // External
             this.historyPush(["linkNodesByID", nodeA_id, nodeB_id]);
             addLink (
@@ -395,19 +414,34 @@ class streetElementGroup {
             }
         };
 
+        this.getFeatureByUID = (ol_uid) => {
+            var result = [];
+            Object.entries(layers).forEach(([key, value]) => {
+                if (value.getSource().getFeatureByUid(ol_uid)){
+                    result.push(value.getSource().getFeatureByUid(ol_uid));
+                }
+            });
+            return result.length ? result[0] : null;
+        };
+
         this.selectNode = (element) => {
             if ( lastSelect ){
                 if (element)
                 {this.updateElementLayerByID(element.getID);}
-                layers["select"].getSource().removeFeature(
-                    lastSelect.feature
-                );
+
+                if (this.getFeatureByUID(lastSelect.getFeatureUID())){
+                    layers["select"].getSource().removeFeature(
+                        this.getFeatureByUID(lastSelect.getFeatureUID())
+                    );
+                }
             }
             lastSelect = element;
             if ( lastSelect ){
-                layers["select"].getSource().addFeature(
-                    lastSelect.feature
-                );
+                if (this.getFeatureByUID(lastSelect.getFeatureUID())){
+                    layers["select"].getSource().addFeature(
+                        this.getFeatureByUID(lastSelect.getFeatureUID())
+                    );
+                }
             }
         };
 
@@ -452,6 +486,7 @@ class streetElementGroup {
         this.shapes    = [];
         this.agencies  = [];
         this.services  = [];
+        this.schemes   = [];
         this.routes    = [];
         this.trips     = [];
         this.stopTimes = [];

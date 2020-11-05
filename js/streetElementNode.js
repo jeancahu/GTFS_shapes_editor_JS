@@ -17,7 +17,7 @@ class streetElementNode {
         this.valid = true;
         this.id = id;            // The streetElementNode ID
 
-        this.feature = new ol.Feature({ // The feature
+        const feature = new ol.Feature({ // The feature
 	          geometry: new ol.geom.Point(ol.proj.fromLonLat([
 	              coordenate[0],
                 coordenate[1]
@@ -27,11 +27,58 @@ class streetElementNode {
         this.connections = [];    // Links who connect this element to others nodes
         this.stop_info = {};
 
-        this.feature.parent = this; // Pass parent reference
+        feature.parent = this; // Pass parent reference
 
         this.layer = layer; // Define the layer ( and type )
-        this.layer.getSource().addFeature(this.feature); // Gettin visible on map
+        this.layer.getSource().addFeature(feature); // Gettin visible on map
 
+        this.getCoordinates = () => {
+            return feature.getGeometry().getCoordinates();
+        };
+
+        this.getFlatCoordinates = () => {
+            return feature.getGeometry().flatCoordinates;
+        };
+
+        this.setCoordinates = ( coordenate ) => {
+            feature.getGeometry().setCoordinates(
+                ol.proj.fromLonLat([
+	                  coordenate[0],
+                    coordenate[1]
+	              ]));
+            for( var i in this.connections ){
+                this.connections[i].update(); // Update link
+            }
+        };
+
+        this.setLayer = (layer) => {
+            this.layer.getSource().removeFeature(feature);
+            this.layer = layer;
+            this.layer.getSource().addFeature(feature);
+        };
+
+        this.getFeatureUID = () => {
+            return feature.ol_uid;
+        };
+
+        // Terminate element
+        this.terminate = () => {
+            // delete feature // TODO
+            // parent has to delete connections first
+
+            // Set it as invalid
+            this.valid = false;
+
+            // Terminate links:
+            this.connections.forEach((value, index)=>{
+                console.log(value);
+                value.terminate(); // Terminate link
+            });
+
+            // Remove feature from map
+            this.layer.getSource().removeFeature(feature);
+
+        };
     }
 
     static isInstance (obj) {
@@ -111,46 +158,5 @@ class streetElementNode {
             }
         }
         }
-    }
-
-    get coordinates (){
-        return this.feature.getGeometry().getCoordinates();
-    }
-
-
-    setCoordinates ( coordenate ){
-        this.feature.getGeometry().setCoordinates(
-            ol.proj.fromLonLat([
-	              coordenate[0],
-                coordenate[1]
-	          ]));
-        for( var i in this.connections ){
-            this.connections[i].update(); // Update link
-        }
-    }
-
-    setLayer (layer){
-        this.layer.getSource().removeFeature(this.feature);
-        this.layer = layer;
-        this.layer.getSource().addFeature(this.feature);
-    }
-
-    // Terminate element
-    terminate (){
-        // delete feature // TODO
-        // parent has to delete connections first
-
-        // Set it as invalid
-        this.valid = false;
-
-        // Terminate links:
-        this.connections.forEach((value, index)=>{
-            console.log(value);
-            value.terminate(); // Terminate link
-        });
-
-        // Remove feature from map
-        this.layer.getSource().removeFeature(this.feature);
-
     }
 }
