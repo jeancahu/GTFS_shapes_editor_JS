@@ -15,9 +15,7 @@ class streetElementShape {
         var shape_id_array = [];
 
         //////////// Privileged //////////////
-        this.getID = () => {
-            return shape_id; // TODO
-        };
+        this.getID = () => shape_id; // TODO
 
         this.getSequenceText = () => {
             var result = '';
@@ -28,17 +26,11 @@ class streetElementShape {
             return result; // TODO
         };
 
-        this.getSegments = () => {
-            return segments;
-        };
+        this.getSegments = () => segments;
 
-        this.valid = () =>{
-            return true; // TODO
-        };
+        this.valid = () => true; // TODO
 
-        this.getNodeArray = () => { // nodes in the shape
-            return shape_nodes;
-        };
+        this.getNodeArray = () => shape_nodes;
 
         this.concatSegment = (shape_segment) => {
             if (shape_nodes.length == 0){

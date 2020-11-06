@@ -15,9 +15,7 @@ class streetElementRoute {
                  type
                 ) {
 
-        this.getID = () => {
-            return id;
-        };
+        this.getID = () => id;
 
         this.getInfo = () => {
             return {
