@@ -10,7 +10,6 @@
 class streetElementCalendar {
     constructor (service_info
                 ) {
-        console.log("New service");
         this.getInfo = () => {
             return service_info;
         };

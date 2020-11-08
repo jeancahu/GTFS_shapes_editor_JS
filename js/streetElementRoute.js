@@ -19,6 +19,7 @@ class streetElementRoute {
 
         this.getInfo = () => {
             return {
+                id: id,
                 agency_id: agency_id,
                 short_name: short_name,
                 long_name: long_name,

@@ -411,18 +411,24 @@ function downloadString(text, fileName) {
 
 //////////////////// Axios post /////////////////////////////////
 
-function postWithAxios (){
-    axios.post('/eso',
-               o_se_group.historyString(), // FIXME
-           { headers: {
-               'Content-type': 'application/x-www-form-urlencoded',
-           }
-           }
-          )
-    .then(function (response) {
-        console.log(response);
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
+function postHistoryWithAxios (){
+    axios.post('/input_path_history',
+               o_se_group.historyJSON() // FIXME
+         ).then(function (response) {
+             console.log(response);
+         }
+         ).catch(function (error) {
+            console.log(error);
+        });
+}
+
+function postGTFSWithAxios (){
+    axios.post('/input_path_gtfs',
+               o_se_group.toJSON() // FIXME
+              ).then(function (response) {
+                  console.log(response);
+              }
+                    ).catch(function (error) {
+                        console.log(error);
+                    });
 }

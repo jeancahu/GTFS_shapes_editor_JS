@@ -66,12 +66,17 @@ app.get('/process_get', (request, response) => {
 });
 
 // Use the application urlencodedParser
-app.post('/eso', (request, response) => {
+app.post('/input_path_history', (request, response) => {
     console.log(request.body);
 
     response.end(); // post end
 });
 
+app.post('/input_path_gtfs', (request, response) => {
+    console.log(request.body);
+
+    response.end(""); // post end
+});
 
 // It serves static files
 //app.use(express.static('/static'));

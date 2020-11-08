@@ -152,6 +152,9 @@ class streetElementGroup {
         }; // END addLayer
 
         ////// Privileged methods //////
+        this.historyJSON = () => {
+            return history.slice();
+        };
 
         this.historyPush = (command) => { // TODO private method
             // command is a list with an external function and its arguments
@@ -477,6 +480,61 @@ class streetElementGroup {
             }
         };
 
+        this.toJSON = () => { // Create a static data JSON with the whole info needed
+            var result = {};
+            result.agencies = [];
+            this.agencies.forEach((agency) => {
+                result.agencies.push(
+                    agency.getInfo()
+                );
+            });
+
+            result.routes = [];
+            this.routes.forEach((route) => {
+                result.routes.push(
+                    route.getInfo()
+                );
+            });
+
+            result.services = [];
+            this.services.forEach((service) => {
+                result.services.push(
+                    service.getInfo()
+                );
+            });
+
+            result.trips = [];
+            this.trips.forEach((trip) => {
+                result.trips.push(
+                    trip.getInfo()
+                );
+            });
+
+            result.stopTimes = [];
+            this.stopTimes.forEach((stoptime) => {
+                result.stopTimes.push(
+                    stoptime.getInfo()
+                );
+            });
+
+            result.schemes = [];
+            this.schemes.forEach((scheme) => {
+                result.schemes.push(
+                    scheme.getInfo()
+                );
+            });
+
+            result.shapes = [];
+            this.shapes.forEach((shape) => {
+                result.shapes.push(
+                    shape.getInfo()
+                );
+            });
+
+            // Stops info // TODO
+
+            return result;
+        };
         ////// END Privileged methods //////
 
         ////// Public data //////

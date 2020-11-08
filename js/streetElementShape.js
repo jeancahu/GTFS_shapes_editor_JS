@@ -17,6 +17,13 @@ class streetElementShape {
         //////////// Privileged //////////////
         this.getID = () => shape_id; // TODO
 
+        this.getInfo = () => {
+            return {
+                id: shape_id,
+                points: [] // TODO
+            };
+        };
+
         this.getSequenceText = () => {
             var result = '';
             segments.forEach(
