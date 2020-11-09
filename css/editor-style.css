@@ -1,6 +1,10 @@
-/* body, html { */
-/*     height: 100%; */
-/* } */
+
+/* Google fonts */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+* {
+	font-family: 'Open Sans', sans-serif;
+}
 
 .body-container {
     /*background: e2efef;*/
