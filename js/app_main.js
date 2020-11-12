@@ -555,5 +555,10 @@ const editor_gtfs_conf = {
     }
 };
 
-const main_app = Vue.createApp(editor_gtfs_conf);
-main_app.mount('#editor_gtfs');
+// VUE 3
+// const main_app = Vue.createApp(editor_gtfs_conf);
+// main_app.mount('#editor_gtfs');
+
+// VUE 2
+editor_gtfs_conf['el'] = '#editor_gtfs';
+const app = new Vue(editor_gtfs_conf);
