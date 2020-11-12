@@ -109,33 +109,6 @@ var popup_content = {
 
 /////////////// components ///////////////////////
 
-Vue.config.ignoredElements = [
-    // nothing
-];
-
-// Vue.component('popup', {
-//     props: ["content"],
-//     template: `
-// <div :id="container" class="ol-popup">
-//   <a href="#" :id="closer" class="ol-popup-closer"></a>
-//   <div id="popup-content">{{ content }}<p>{{ info }}</p></div>
-// </div>
-// `,
-//     data(){
-//         return {
-//             info: "TODO TEST FIXME"
-//         };
-//     },
-//     computed:{
-//         container() {
-//             return "popup_node_info";
-//         },
-//         closer () {
-//             return "popup-closer";
-//         }
-//     }
-// });
-
 //////////////////////////////////////////////////
 //       +++++++++
 //       +       +

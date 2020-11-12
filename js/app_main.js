@@ -132,8 +132,7 @@ const es_CR = new Proxy(
       }
 );
 
-var app = new Vue({
-    el: '#editor_gtfs',
+const editor_gtfs_conf = {
     data() {
         return {
             language: "en_US",
@@ -146,9 +145,9 @@ var app = new Vue({
 
             nodes: o_se_group.nodes, // contains stops too FIXME
 
+            agencies: o_se_group.agencies,
             shapes: o_se_group.shapes,
             routes: o_se_group.routes,
-            agencies: o_se_group.agencies,
             services: o_se_group.services,
             schemes: o_se_group.schemes,
             trips: o_se_group.trips,
@@ -554,4 +553,7 @@ var app = new Vue({
             return "<input type=\"text\" value=\"" + value + "\">";
         }
     }
-});
+};
+
+const main_app = Vue.createApp(editor_gtfs_conf);
+main_app.mount('#editor_gtfs');
