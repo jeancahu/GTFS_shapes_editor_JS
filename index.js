@@ -1,8 +1,32 @@
 
 const express = require('express');
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
+const sqlite3 = require('sqlite3').verbose(); // Database package
+
 const app = express();
 const port = 9000;
+
+/////////// Open Database connection
+let db = new sqlite3.Database(
+    './gtfs-data.db',
+    sqlite3.OPEN_READWRITE,
+    (err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        return console.log('Connected to the in-memory SQlite database.');
+    }
+);
+
+/////////// Close Database connection
+db.close(
+    (err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        return console.log('Close the database connection.');
+    }
+);
 
 // Create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: true });
