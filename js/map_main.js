@@ -69,20 +69,20 @@ function filterValidNode (node) {
 
 function filterStopNode (node) {
     // endpoints are stops too
-    return node.type == streetElementNode.type.STOP |
-        node.type == streetElementNode.type.ENDPOINT;
+    return node.getType() == streetElementNode.type.STOP |
+        node.getType() == streetElementNode.type.ENDPOINT;
 }
 
 function filterShapeNode (node) {
-    return node.type == streetElementNode.type.SHAPE;
+    return node.getType() == streetElementNode.type.SHAPE;
 }
 
 function filterForkNode (node) {
-    return node.type == streetElementNode.type.FORK;
+    return node.getType() == streetElementNode.type.FORK;
 }
 
 function filterEndpointNode (node) {
-    return node.type == streetElementNode.type.ENDPOINT;
+    return node.getType() == streetElementNode.type.ENDPOINT;
 }
 
 function filterNearestNode (coordinate) {
@@ -310,7 +310,7 @@ map.on('click', (event)=> {
                 popup_content.id =
                     feature_onHover.parent.getID();
                 popup_content.type =
-                    feature_onHover.parent.type;
+                    feature_onHover.parent.getType();
                 popup_content.connections =
                     feature_onHover.parent.getConnections().length;
                 popup_content.stop_info =

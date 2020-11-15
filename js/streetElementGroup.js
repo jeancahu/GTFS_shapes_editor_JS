@@ -404,7 +404,7 @@ class streetElementGroup {
             //     this.nodes[element_id].setLayer(layers["endpoint"]);
             // } else if (this.nodes[element_id].connections.length < 3){
             //     // Shape or stop
-            //     if (this.nodes[element_id].type == "stop") {
+            //     if (this.nodes[element_id].getType() == "stop") {
             //         return;
             //     } else {
             //         this.nodes[element_id].setLayer(layers["shape"]);

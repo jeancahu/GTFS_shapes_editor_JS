@@ -101,7 +101,7 @@ class streetElementShape {
             if (nextNode.getConnections().length > 2){ // It is a fork
                 result.push(nextNode); // to return the fork and end execution
             } else if (nextNode.getConnections().length == 1 |
-                      nextNode.type == streetElementNode.type.ENDPOINT){ // Endpoint
+                      nextNode.getType() == streetElementNode.type.ENDPOINT){ // Endpoint
                 result.push(nextNode); // to return the endpoint and end execution
             } else { // return the nodes until fork/endpoint
                 nextNode.getConnections().forEach((inner_link) => {

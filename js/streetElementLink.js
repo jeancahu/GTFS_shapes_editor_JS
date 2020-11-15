@@ -17,9 +17,6 @@ class streetElementLink { // Link between two nodes
     ) {
         this.valid = true;
 
-        this.layer = layer;
-        this.direction_layer = direction_layer;
-
         var coordinates = [
             nodeA.getFlatCoordinates(),
             nodeB.getFlatCoordinates()
@@ -67,24 +64,24 @@ class streetElementLink { // Link between two nodes
         this.setDirectionFromNode = (node) => {
             if (node == this.nodeA){
                 console.log("set_direction 0");
-                this.direction_layer.getSource().addFeature(feature);
+                direction_layer.getSource().addFeature(feature);
 
                 if (
-                    this.direction_layer.getSource().getFeatures().some(
+                    direction_layer.getSource().getFeatures().some(
                         (feature) => {return feature.ol_uid == rev_feature.ol_uid;}
                     )
                 ){
-                    this.direction_layer.getSource().removeFeature(rev_feature);
+                    direction_layer.getSource().removeFeature(rev_feature);
                 }
             } else if (node == this.nodeB){
                 console.log("set_direction 1");
-                this.direction_layer.getSource().addFeature(rev_feature);
+                direction_layer.getSource().addFeature(rev_feature);
                 if (
-                    this.direction_layer.getSource().getFeatures().some(
+                    direction_layer.getSource().getFeatures().some(
                         (feature) => {return feature.ol_uid == feature.ol_uid;}
                     )
                 ){
-                    this.direction_layer.getSource().removeFeature(feature);
+                    direction_layer.getSource().removeFeature(feature);
                 }
             } else {
                 console.log("Error: node is not in the link");
@@ -93,18 +90,18 @@ class streetElementLink { // Link between two nodes
 
         this.hideDirection = () => {
             if (
-                this.direction_layer.getSource().getFeatures().some(
+                direction_layer.getSource().getFeatures().some(
                     (feature) => {return feature.ol_uid == rev_feature.ol_uid;}
                 )
             ){
-                this.direction_layer.getSource().removeFeature(rev_feature);
+                direction_layer.getSource().removeFeature(rev_feature);
             }
             if (
-                this.direction_layer.getSource().getFeatures().some(
+                direction_layer.getSource().getFeatures().some(
                     (feature) => {return feature.ol_uid == feature.ol_uid;}
                 )
             ){
-                this.direction_layer.getSource().removeFeature(feature);
+                direction_layer.getSource().removeFeature(feature);
             }
         };
 
@@ -113,7 +110,7 @@ class streetElementLink { // Link between two nodes
             // delete feature // TODO
             // parent has to delete connections first
             this.valid = false;
-            this.layer.getSource().removeFeature(feature);
+            layer.getSource().removeFeature(feature);
             this.hideDirection();
             this.nodeA.removeConnection(this);
             this.nodeB.removeConnection(this);

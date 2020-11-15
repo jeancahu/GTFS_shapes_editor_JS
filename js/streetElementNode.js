@@ -28,8 +28,7 @@ class streetElementNode {
 
         feature.parent = this; // Pass parent reference
 
-        this.layer = layer; // Define the layer ( and type )
-        this.layer.getSource().addFeature(feature); // Gettin visible on map
+        layer.getSource().addFeature(feature); // Gettin visible on map
 
         /////////////// Privileged methods
 
@@ -54,10 +53,14 @@ class streetElementNode {
             }
         };
 
-        this.setLayer = (layer) => {
-            this.layer.getSource().removeFeature(feature);
-            this.layer = layer;
-            this.layer.getSource().addFeature(feature);
+        this.setLayer = (new_layer) => {
+            layer.getSource().removeFeature(feature);
+            layer = new_layer;
+            layer.getSource().addFeature(feature);
+        };
+
+        this.getType = () => { // Layer name is the element type
+            return layer.name; // TODO: smarter type resolve
         };
 
         this.getFeatureUID = () => {
@@ -79,7 +82,7 @@ class streetElementNode {
             });
 
             // Remove feature from map
-            this.layer.getSource().removeFeature(feature);
+            layer.getSource().removeFeature(feature);
 
         };
     }
@@ -107,10 +110,6 @@ class streetElementNode {
         };
     }
 
-    get type (){ // Layer name is the element type
-        return this.layer.name; // TODO: smarter type resolve
-    }
-
     setStopInfo (stop_info){
         // @param: map: stop_info, a map with the stop info
         // TODO verify info
@@ -118,8 +117,8 @@ class streetElementNode {
     }
 
     getStopInfo (){
-        if (this.type == streetElementNode.type.STOP |
-            this.type == streetElementNode.type.ENDPOINT){
+        if (this.getType() == streetElementNode.type.STOP |
+            this.getType() == streetElementNode.type.ENDPOINT){
             return this.stop_info;
         } else {
             var result = {
