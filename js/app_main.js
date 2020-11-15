@@ -135,6 +135,18 @@ const es_CR = new Proxy(
 const editor_gtfs_conf = {
     data() {
         return {
+
+            /////////////////// SIDEBAR
+            map_hidden: false, // TODO
+            map_action: 'select',
+
+            // map_node_type:, // TODO
+
+            map_view_nodes: true,
+            map_view_links: true,
+            map_view_stops: true,
+            ////////////////// END SIDEBAR
+
             language: "en_US",
             dict: en_US,
 
@@ -232,7 +244,72 @@ const editor_gtfs_conf = {
             ]
         };
     },
+    watch:{
+        map_action (new_state, old_state) {
+            switch(new_state) { // TODO
+            case "select":
+                break;
+            case "add":
+                break;
+            case "split":
+                break;
+            case "move":
+                break;
+            case "remove":
+                break;
+            case "cut":
+                break;
+            default:
+                console.log("unknown action");
+                this.map_action = "select";
+            }
+        },
+        map_hidden (new_state, old_state) {
+            document.getElementById("map_container").hidden =
+                new_state;
+            map.updateSize();
+        },
+        map_view_nodes (new_state, old_state) {
+            if (new_state){
+                o_se_group.enableElementsByType(
+                    streetElementNode.type.SHAPE
+                );
+            } else {
+                o_se_group.disableElementsByType(
+                    streetElementNode.type.SHAPE
+                );
+            }
+        },
+        map_view_links (new_state, old_state) {
+            if ( new_state ){
+                o_se_group.enableElementsByType(
+                    streetElementLink.type.LINK
+                );
+            } else {
+                o_se_group.disableElementsByType(
+                    streetElementLink.type.LINK
+                );
+            }
+        },
+        map_view_stops (new_state, old_state) {
+            if ( new_state ){
+                o_se_group.enableElementsByType(
+                    streetElementNode.type.STOP
+                );
+            } else {
+                o_se_group.disableElementsByType(
+                    streetElementNode.type.STOP
+                );
+            }
+        }
+    },
     methods: {
+        toggleHideMap () {
+            document.getElementById("map_container").hidden =
+                !document.getElementById("map_container").hidden;
+            this.map_hidden = document.getElementById("map_container").hidden;
+            map.updateSize();
+        },
         changeNodeInfoFromPopup(node_id){
             o_se_group.changeNodeInfoByID(
                 node_id,

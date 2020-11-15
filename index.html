@@ -29,12 +29,12 @@
                     Save
                     <img src="https://icongr.am/feather/file.svg?size=16&amp;color=ffffff" alt="icon">
                 </button>
-                <button onclick="toggleHideMap()">Map</button>
+                <button @click="toggleHideMap()">Map</button> <!-- Change to use VUE TODO -->
             </div><br>
 
             <div class="toolbar">
                 <label>Action </label><br>
-                <select onchange="onActionChange()" id="action">
+                <select id="action" v-model="map_action">
                     <option class="orange_text" value="select">select</option>
                     <option value="add">add</option>
                     <option value="split">split</option> <!-- RENAME TODO -->
@@ -54,11 +54,11 @@
                 <label for="nt_fork">Intersection</label><br>
 
                 <label>View</label><br>
-                <input type="checkbox" id="view_nodes_cb" value="Nodes" checked="true">
+                <input type="checkbox" id="view_nodes_cb" value="Nodes" checked="true" v-model="map_view_nodes">
                 <label for="view_nodes_cb">Show Nodes</label><br>
-                <input type="checkbox" id="view_links_cb" value="Links" checked="true">
+                <input type="checkbox" id="view_links_cb" value="Links" checked="true" v-model="map_view_links">
                 <label for="view_links_cb">Show Links</label><br>
-                <input type="checkbox" id="view_stops_cb" value="Stops" checked="true">
+                <input type="checkbox" id="view_stops_cb" value="Stops" checked="true" v-model="map_view_stops">
                 <label for="view_stops_cb">Show Stops</label>
             </div>
         </div>

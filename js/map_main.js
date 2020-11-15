@@ -17,14 +17,6 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function toggleHideMap () {
-    document.getElementById("map_container").hidden =
-        !document.getElementById("map_container").hidden;
-    // map.setTarget(document.getElementById("map_container")); // FIXME
-    map.updateSize(); // FIXME
-    // yourLayer.getSource().changed(); // TODO
-}
-
 ///////////// initial values ////////////////////
 
 document.getElementById("view_nodes_cb").checked = true;
@@ -37,29 +29,6 @@ document.getElementsByName("node_type").forEach(
     });
 document.getElementById("nt_shape").checked      = true;
 document.getElementById("action").value          = "select";
-
-///////////// sidebar ///////////////////////////
-
-function onActionChange () { // TODO
-    var event_value = document.getElementById("action").value;
-    switch(event_value) {
-    case "select":
-        break;
-    case "add":
-        break;
-    case "split":
-        break;
-    case "move":
-        break;
-    case "remove":
-        break;
-    case "cut":
-        break;
-    default:
-        console.log("unknown action");
-        document.getElementById("action").value = "select";
-    }
-}
 
 //////////////// filters /////////////////////////
 
