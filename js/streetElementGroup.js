@@ -399,19 +399,7 @@ class streetElementGroup {
         };
 
         this.updateElementLayerByID = (element_id) => { // TODO
-            // if (this.nodes[element_id].connections.length < 2){
-            //     // Endpoint
-            //     this.nodes[element_id].setLayer(layers["endpoint"]);
-            // } else if (this.nodes[element_id].connections.length < 3){
-            //     // Shape or stop
-            //     if (this.nodes[element_id].getType() == "stop") {
-            //         return;
-            //     } else {
-            //         this.nodes[element_id].setLayer(layers["shape"]);
-            //     }
-            // } else {
-
-            if (this.nodes[element_id].connections.length > 2){
+            if (this.nodes[element_id].getConnections().length > 2){
                 // Intersection
                 this.nodes[element_id].setLayer(layers["fork"]);
             }

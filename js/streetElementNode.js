@@ -12,6 +12,7 @@
 class streetElementNode {
     constructor (id, coordenate, layer) {
         // Private
+        var connections = [];    // Links who connect this element to others nodes
 
         // Public elements
         this.valid = true;
@@ -23,8 +24,7 @@ class streetElementNode {
 	          ]))
         });
 
-        this.connections = [];    // Links who connect this element to others nodes
-        this.stop_info = {};
+        this.stop_info = {}; // TODO : private
 
         feature.parent = this; // Pass parent reference
 
@@ -48,8 +48,8 @@ class streetElementNode {
 	                  coordenate[0],
                     coordenate[1]
 	              ]));
-            for( var i in this.connections ){
-                this.connections[i].update(); // Update link
+            for( var i in connections ){
+                connections[i].update(); // Update link
             }
         };
 
@@ -67,6 +67,28 @@ class streetElementNode {
             return feature.ol_uid;
         };
 
+        this.addConnection = (value) =>{
+            // value: streetElementLink
+            //verify if there are more than X connections
+            connections.push(value);
+        };
+
+        this.getConnections = () => {
+            return connections;
+        };
+
+        // TODO push, rotation
+        this.removeConnection = (link) => {
+            // link: streetElementLink
+            if (this.valid){
+                for (var i in connections ){ // TODO : use filter
+                    if (connections[i].getID() == link.getID()){
+                        connections.splice(i, 1);
+                    }
+                }
+            }
+        };
+
         // Terminate element
         this.terminate = () => {
             // delete feature // TODO
@@ -76,7 +98,7 @@ class streetElementNode {
             this.valid = false;
 
             // Terminate links:
-            this.connections.forEach((value, index)=>{
+            connections.forEach((value, index)=>{
                 console.log(value);
                 value.terminate(); // Terminate link
             });
@@ -128,29 +150,6 @@ class streetElementNode {
                 url: ''
             };
             return result;
-        }
-    }
-
-    addConnection (value){
-        // value: streetElementLink
-        //verify if there are more than X connections
-        this.connections.push(value);
-    }
-
-    getConnections () {
-        return this.connections;
-    }
-
-
-    // TODO push, rotation
-    removeConnection (link) {
-        // link: streetElementLink
-        if (this.valid){
-        for (var i in this.connections ){
-            if (this.connections[i].getID() == link.getID()){
-                this.connections.splice(i, 1);
-            }
-        }
         }
     }
 }

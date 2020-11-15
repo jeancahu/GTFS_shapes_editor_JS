@@ -1,6 +1,7 @@
 
 # TODO
 
+* [x] Mover las rutinas del sidebar a la app Vue
 * [ ] Cambiar diccionario por medio de URL?dict=es\_CR
 * [ ] Cambiar diccionario por medio de botón
 * [ ] Implementar los botones de *remove* en la herramienta
