@@ -12,10 +12,3 @@ Here some examples:
 [Editor preview](https://jeancahu.github.io/GTFS_shapes_editor_JS/index.html)
 <img src="http://161.35.54.122:10066/./gtfs_editor.png" >
 
-## TODO
-
-* [ ] A photo for each stop in a shape
-* [x] Buttons style
-* [x] Select style
-* [ ] Table columns href to manual definitions
-* [ ] Explain how to add the editor to a web server
