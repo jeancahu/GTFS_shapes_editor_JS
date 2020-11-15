@@ -14,9 +14,7 @@ class streetElementStopTime {
                  stop_id  // Stop object
                 ) {
 
-        this.getID = () => {
-            return stop_id;
-        };
+        this.getID = () => stop_id;
 
         this.getInfo = () => {
             return {

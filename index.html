@@ -127,7 +127,7 @@
                         <th v-show="!ns_segments.length">
                             <select @change="newShapeOnChange($event, 'node')">
                             <option value="noselect"> - </option>
-                            <option v-for="node in new_shape_allowed_nodes" :value="node.getID">E{{node.getID}}</option>
+                            <option v-for="node in new_shape_allowed_nodes" :value="node.getID()">E{{node.getID()}}</option>
                             </select>
                         </th>
 
@@ -135,7 +135,7 @@
                         <th v-show="ns_allowed_links.length">
                             <select id="ns_shape_link_select" @change="newShapeOnChange($event, 'link')">
                                <option value="noselect"> - </option>
-                               <option v-for="link in ns_allowed_links" :value="link.getID">L{{link.getID}}</option>
+                               <option v-for="link in ns_allowed_links" :value="link.getID()">L{{link.getID()}}</option>
                             </select>
                         </th>
 
@@ -217,15 +217,15 @@
                     </thead>
                     <tbody>
                         <tr v-for="stop in rev_stops">
-                            <td><input type="text" :id="'stop_id_'+stop.getID"   :value="stop.getStopInfo().id" placeholder="Stop ID"></td>
+                            <td><input type="text" :id="'stop_id_'+stop.getID()"   :value="stop.getStopInfo().id" placeholder="Stop ID"></td>
 
                             <!-- Page 1 -->
-                            <td><input type="text" :id="'stop_name_'+stop.getID" :value="stop.getStopInfo().name" placeholder="Name"></td>
-                            <td><input type="text" :id="'stop_desc_'+stop.getID" :value="stop.getStopInfo().description" placeholder="Description"></td>
+                            <td><input type="text" :id="'stop_name_'+stop.getID()" :value="stop.getStopInfo().name" placeholder="Name"></td>
+                            <td><input type="text" :id="'stop_desc_'+stop.getID()" :value="stop.getStopInfo().description" placeholder="Description"></td>
 
                             <!-- Page 2 -->
-                            <td><input type="text" :id="'stop_url_'+stop.getID" placeholder="Info URL"></td>
-                            <td><button @click="changeNodeInfoFromStopSection(stop.getID)">save</button></td>
+                            <td><input type="text" :id="'stop_url_'+stop.getID()" placeholder="Info URL"></td>
+                            <td><button @click="changeNodeInfoFromStopSection(stop.getID())">save</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -362,7 +362,7 @@
                             </td>
                             <td>
                                 <select @change="goToNodeOnMap(in_st_stop_id)" id="st_stop_id" v-model="in_st_stop_id">
-                                    <option v-for="stop in stopsWhenTrip" :value="stop.getID">{{stop.getID}}: {{stop.getStopInfo().name ? stop.getStopInfo().name : "no name"}}</option>
+                                    <option v-for="stop in stopsWhenTrip" :value="stop.getID()">{{stop.getID()}}: {{stop.getStopInfo().name ? stop.getStopInfo().name : "no name"}}</option>
                                 </select>
                             </td>
                             <td>

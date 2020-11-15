@@ -18,19 +18,19 @@ class streetElementGroup {
 
         ////// Private methods //////
         var addLink = (nodeA, nodeB) => { // Internal
-            if (nodeA.getID == nodeB.getID){
+            if (nodeA.getID() == nodeB.getID()){
                 return 1;} // Error
 
             if (nodeA.valid & nodeB.valid) {} //OK
             else {return 2;} // ERROR
 
             nodeA.getConnections().forEach((value, index)=>{
-                if ( value.getPartner(nodeA).getID == nodeB.getID ){
+                if ( value.getPartner(nodeA).getID() == nodeB.getID() ){
                     return; // duplicate link
                 }
             });
             nodeB.getConnections().forEach((value, index)=>{
-                if ( value.getPartner(nodeB).getID == nodeA.getID ){
+                if ( value.getPartner(nodeB).getID() == nodeA.getID() ){
                     console.log("Half link error at :", value);
                     return; // half-link error
                 }
@@ -47,12 +47,12 @@ class streetElementGroup {
                 connection
             );
             // Update link on nodes
-            this.nodes[nodeA.getID].addConnection(connection);
-            this.nodes[nodeB.getID].addConnection(connection);
+            this.nodes[nodeA.getID()].addConnection(connection);
+            this.nodes[nodeB.getID()].addConnection(connection);
 
-            this.updateElementLayerByID(nodeA.getID);
-            this.updateElementLayerByID(nodeB.getID);
-            return connection.getID;
+            this.updateElementLayerByID(nodeA.getID());
+            this.updateElementLayerByID(nodeB.getID());
+            return connection.getID();
         }; // END addlink
 
         var addLayer = (type, color) => {
@@ -430,7 +430,7 @@ class streetElementGroup {
         this.selectNode = (element) => {
             if ( lastSelect ){
                 if (element)
-                {this.updateElementLayerByID(element.getID);}
+                {this.updateElementLayerByID(element.getID());}
 
                 if (this.getFeatureByUID(lastSelect.getFeatureUID())){
                     layers["select"].getSource().removeFeature(
@@ -790,7 +790,7 @@ class streetElementGroup {
 
     deleteLastElement (){
         if (this.getLastElement){
-            this.deleteNodeByID (this.getLastElement.getID);
+            this.deleteNodeByID (this.getLastElement.getID());
         } else {
             console.log("there are no valid nodes in the vector");
         }

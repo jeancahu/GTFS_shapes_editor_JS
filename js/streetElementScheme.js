@@ -13,9 +13,7 @@ class streetElementScheme {
                  trip_id
                 ) {
 
-        this.getID = () => {
-            return id;
-        };
+        this.getID = () => id;
 
         this.getInfo = () => {
             return {

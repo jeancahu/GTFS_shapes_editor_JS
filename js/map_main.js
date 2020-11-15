@@ -229,7 +229,7 @@ map.on('click', (event)=> {
                 feature_onHover.parent)
                ){ // if element is a node
                 o_se_group.deleteNodeByID(
-                    feature_onHover.parent.getID);
+                    feature_onHover.parent.getID());
             }
         }
         break;
@@ -241,7 +241,7 @@ map.on('click', (event)=> {
                ){ // if element is a node
                 // Link a node with other by ID
                 o_se_group.linkNodesByID(
-                    feature_onHover.parent.getID,
+                    feature_onHover.parent.getID(),
                     o_se_group.getLastSelectedNode().getID
                 );
                 o_se_group.selectNodeByID(
@@ -261,7 +261,7 @@ map.on('click', (event)=> {
                 ){
                 // It is a Link
                 o_se_group.splitLinkByID(
-                    feature_onHover.parent.getID,
+                    feature_onHover.parent.getID(),
                     coordinate,
                     get_node_type() // TODO
                 );
@@ -291,7 +291,7 @@ map.on('click', (event)=> {
     case "move":
         if (o_se_group.getLastSelectedNode()){
             o_se_group.setNodeCoordinatesByID(
-                o_se_group.getLastSelectedNode().getID,
+                o_se_group.getLastSelectedNode().getID(),
                 coordinate
             );
         }
@@ -308,7 +308,7 @@ map.on('click', (event)=> {
                 // clear the name input
                 document.getElementById("ol_in_stop_name").value = '';
                 popup_content.id =
-                    feature_onHover.parent.getID;
+                    feature_onHover.parent.getID();
                 popup_content.type =
                     feature_onHover.parent.type;
                 popup_content.connections =

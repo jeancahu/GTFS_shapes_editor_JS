@@ -305,9 +305,9 @@ const editor_gtfs_conf = {
 
                         );
                     }
-                    this.goToNodeOnMap(result[result.length -1].getID);
+                    this.goToNodeOnMap(result[result.length -1].getID());
                     this.ns_head_node_id =
-                        result[result.length -1].getID;
+                        result[result.length -1].getID();
 
                     excluded_link = streetElementLink.getLinkBetween(
                         result[result.length -1],

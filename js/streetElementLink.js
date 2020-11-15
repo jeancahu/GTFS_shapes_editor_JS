@@ -8,9 +8,14 @@
 ////
 
 class streetElementLink { // Link between two nodes
-    constructor (id, nodeA, nodeB, layer, direction_layer) {
+    constructor (
+        id,        // Link indentificator
+        nodeA,     // StreetElementNode object
+        nodeB,     // StreetElementNode object
+        layer,     // OL-Layer object
+        direction_layer  // OL-Layer object
+    ) {
         this.valid = true;
-        this.id = id;
 
         this.layer = layer;
         this.direction_layer = direction_layer;
@@ -40,6 +45,10 @@ class streetElementLink { // Link between two nodes
         rev_feature.parent = this;
 
         layer.getSource().addFeature(feature);
+
+        ////// Privileged methods
+
+        this.getID = () => id;
 
         this.update = () => { // Update figure on map
             var coordinates = [
@@ -147,7 +156,7 @@ class streetElementLink { // Link between two nodes
             //// for each link
 
             if (exclude.some((excluded_link) => {
-                return link.getID == excluded_link.getID;
+                return link.getID() == excluded_link.getID();
             })){
                 // ignore the link
             } else { // add the link
@@ -158,14 +167,10 @@ class streetElementLink { // Link between two nodes
         return result;
     }
 
-    get getID (){
-        return this.id;
-    }
-
     getPartner (node) {
-        if ( node.getID == this.nodeA.getID ){
+        if ( node.getID() == this.nodeA.getID() ){
             return this.nodeB;
-        } else if ( node.getID == this.nodeB.getID ){
+        } else if ( node.getID() == this.nodeB.getID() ){
             return this.nodeA;
         } else {
             return null;

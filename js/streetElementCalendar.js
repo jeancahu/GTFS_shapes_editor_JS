@@ -24,9 +24,7 @@ class streetElementCalendar {
                 service_info["sunday"]
             ];
         };
-        this.getID = () => {
-            return service_info.service_id;
-        };
+        this.getID = () => service_info.service_id;
     }
 
     static get type () {

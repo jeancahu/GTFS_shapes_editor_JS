@@ -15,7 +15,6 @@ class streetElementNode {
 
         // Public elements
         this.valid = true;
-        this.id = id;            // The streetElementNode ID
 
         const feature = new ol.Feature({ // The feature
 	          geometry: new ol.geom.Point(ol.proj.fromLonLat([
@@ -31,6 +30,10 @@ class streetElementNode {
 
         this.layer = layer; // Define the layer ( and type )
         this.layer.getSource().addFeature(feature); // Gettin visible on map
+
+        /////////////// Privileged methods
+
+        this.getID = () => id;
 
         this.getCoordinates = () => {
             return feature.getGeometry().getCoordinates();
@@ -108,14 +111,6 @@ class streetElementNode {
         return this.layer.name; // TODO: smarter type resolve
     }
 
-    setID (value){
-        this.id = value;
-    }
-
-    get getID (){
-        return this.id;
-    }
-
     setStopInfo (stop_info){
         // @param: map: stop_info, a map with the stop info
         // TODO verify info
@@ -153,7 +148,7 @@ class streetElementNode {
         // link: streetElementLink
         if (this.valid){
         for (var i in this.connections ){
-            if (this.connections[i].getID == link.getID){
+            if (this.connections[i].getID() == link.getID()){
                 this.connections.splice(i, 1);
             }
         }

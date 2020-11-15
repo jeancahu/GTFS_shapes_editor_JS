@@ -14,9 +14,7 @@ class streetElementTrip {
                  shape_id  // Shape object
                 ) {
 
-        this.getID = () => {
-            return id;
-        };
+        this.getID = () => id;
 
         this.getInfo = () => {
             return {
