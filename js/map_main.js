@@ -32,7 +32,6 @@ document.getElementById("view_links_cb").checked = true;
 document.getElementById("view_stops_cb").checked = true;
 document.getElementsByName("node_type").forEach(
     checkbox => {
-        console.log(checkbox.checked);
         checkbox.checked = false;
         // checkbox.disabled = true; // TODO
     });
@@ -163,7 +162,6 @@ function get_node_type () {
     var result;
     radio_buttons_node_type.forEach( (radio_button) => {
         if (radio_button.checked){
-            console.log(radio_button.value);
             result = radio_button.value;
         }
     });
@@ -280,7 +278,6 @@ map.on('click', (event)=> {
             if (streetElementLink.isInstance(
                 feature_onHover.parent)
                ){ // if element is a Link
-                console.log(feature_onHover.parent.getID);
                 o_se_group.deleteLinkByID(
                     feature_onHover.parent.getID
                 );
@@ -292,7 +289,6 @@ map.on('click', (event)=> {
         break;
 
     case "move":
-        console.log("move");
         if (o_se_group.getLastSelectedNode()){
             o_se_group.setNodeCoordinatesByID(
                 o_se_group.getLastSelectedNode().getID,
