@@ -506,6 +506,7 @@ const editor_gtfs_conf = {
         },
         removeCalendar (service_id){ // TODO
             console.log("remove service: " + service_id);
+            o_se_group.removeService(service_id);
         },
         saveTrip(){
             o_se_group.addTrip(
@@ -618,7 +619,7 @@ const editor_gtfs_conf = {
             return this.routes.array.slice().reverse();
         },
         rev_services () {
-            return this.services.slice().reverse();
+            return this.services.array.slice().reverse();
         },
         rev_trips () {
             return this.trips.array.slice().reverse();

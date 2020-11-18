@@ -488,7 +488,7 @@ class streetElementGroup {
             });
 
             result.services = [];
-            this.services.forEach((service) => {
+            this.services.array.forEach((service) => {
                 result.services.push(
                     service.getInfo()
                 );
@@ -534,7 +534,7 @@ class streetElementGroup {
 
         this.shapes    = {array: []};
         this.agencies  = {array: []};
-        this.services  = [];
+        this.services  = {array: []};
         this.schemes   = [];
         this.routes    = {array: []};
         this.trips     = {array: []};
@@ -646,7 +646,7 @@ class streetElementGroup {
             service_info
         ]);
 
-        this.services.push(
+        this.services.array.push(
             new streetElementCalendar(
                 service_info
             )
@@ -661,8 +661,9 @@ class streetElementGroup {
             "removeService",
             service_id
         ]);
-        // FIXME
-        // TODO: invalidate a service
+
+        // This removes the service from the array
+        this.services.array = this.services.array.filter(service => service.getID() != service_id);
     }
 
     addRoute(route_id,

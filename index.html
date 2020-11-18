@@ -301,7 +301,7 @@
                             <td>
                                 {{ service.getInfo().end_day }}
                             </td>
-                            <td><button class="button error">remove</button></td>
+                            <td><button class="button error" @click="removeCalendar(service.getID())">remove</button></td>
                         </tr>
                     </tbody>
                 </table>
