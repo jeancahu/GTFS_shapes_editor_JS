@@ -466,6 +466,7 @@ const editor_gtfs_conf = {
         },
         removeShape (shape_id){ // TODO
             console.log("remove shape: " + shape_id);
+            o_se_group.removeShape(shape_id);
         },
         saveShapeStop(){ // ends a new shape ingress or abort
             o_se_group.nodes[
@@ -597,7 +598,7 @@ const editor_gtfs_conf = {
             return result;
         },
         rev_shapes () {
-            var result = this.shapes.slice().reverse();
+            var result = this.shapes.array.slice().reverse();
             result = result.filter(filterValidShapeSegment);
             return result;
         },

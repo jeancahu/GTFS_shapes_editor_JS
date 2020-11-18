@@ -258,7 +258,7 @@ class streetElementGroup {
             this.historyPush(["addShape", shape_id, shape_segments]);
 
             // TODO: make shape a private attribute
-            this.shapes.push(
+            this.shapes.array.push(
                 new streetElementShape(
                     shape_id,
                     shape_segments
@@ -269,7 +269,9 @@ class streetElementGroup {
         this.removeShape = (shape_id) => {
             this.historyPush(["removeShape", shape_id]);
             console.log("Remove Shape, TODO");
-            // TODO: remove shape
+
+            // This removes the shape from the array
+            this.shapes.array = this.shapes.array.filter(shape => shape.getID() != shape_id);
         };
 
         this.addScheme = (scheme_id, service_id, trip_id) => {
@@ -514,7 +516,7 @@ class streetElementGroup {
             });
 
             result.shapes = [];
-            this.shapes.forEach((shape) => {
+            this.shapes.array.forEach((shape) => {
                 result.shapes.push(
                     shape.getInfo()
                 );
@@ -530,7 +532,7 @@ class streetElementGroup {
         this.nodes     = []; // could it to be private? // TODO
         this.links     = []; // could it to be private? // TODO
 
-        this.shapes    = [];
+        this.shapes    = {array: []};
         this.agencies  = {array: []};
         this.services  = [];
         this.schemes   = [];
