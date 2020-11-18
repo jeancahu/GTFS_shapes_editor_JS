@@ -180,7 +180,7 @@ map.on('click', (event)=> {
             console.log("oneshot");
             if (feature_onHover.parent.oneshot){
                 feature_onHover.parent.oneshot(
-                    feature_onHover.parent.getID
+                    feature_onHover.parent.getID()
                 );
                 feature_onHover.parent.oneshot = undefined;
                 return; // end execution
@@ -211,10 +211,10 @@ map.on('click', (event)=> {
                 // Link a node with other by ID
                 o_se_group.linkNodesByID(
                     feature_onHover.parent.getID(),
-                    o_se_group.getLastSelectedNode().getID
+                    o_se_group.getLastSelectedNode().getID()
                 );
                 o_se_group.selectNodeByID(
-                    feature_onHover.parent.getID
+                    feature_onHover.parent.getID()
                 );
             }
         } else {
@@ -248,7 +248,7 @@ map.on('click', (event)=> {
                 feature_onHover.parent)
                ){ // if element is a Link
                 o_se_group.deleteLinkByID(
-                    feature_onHover.parent.getID
+                    feature_onHover.parent.getID()
                 );
             }
         } else {
@@ -272,7 +272,7 @@ map.on('click', (event)=> {
                 feature_onHover.parent)
                ){ // if element is a node
                 o_se_group.selectNodeByID(
-                    feature_onHover.parent.getID
+                    feature_onHover.parent.getID()
                 );
                 // clear the name input
                 document.getElementById("ol_in_stop_name").value = '';
