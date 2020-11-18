@@ -502,7 +502,7 @@ class streetElementGroup {
             });
 
             result.stopTimes = [];
-            this.stopTimes.forEach((stoptime) => {
+            this.stopTimes.array.forEach((stoptime) => {
                 result.stopTimes.push(
                     stoptime.getInfo()
                 );
@@ -538,7 +538,7 @@ class streetElementGroup {
         this.schemes   = [];
         this.routes    = {array: []};
         this.trips     = {array: []};
-        this.stopTimes = [];
+        this.stopTimes = {array: []};
 
         ////// END Public data //////
 
@@ -696,13 +696,13 @@ class streetElementGroup {
         return true; // TODO
     }
 
-    removeRoute = (route_id) => {
+    removeRoute (route_id) {
         this.historyPush(["removeRoute", route_id]);
         console.log("Remove Route, TODO");
 
         // This removes the route from the array
         this.routes.array = this.routes.array.filter(route => route.getID() != route_id);
-    };
+    }
 
     addTrip(route_id, // Route object
             trip_id,
@@ -732,13 +732,13 @@ class streetElementGroup {
         return true; // TODO
     }
 
-    removeTrip = (trip_id) => {
+    removeTrip (trip_id) {
         this.historyPush(["removeTrip", trip_id]);
         console.log("Remove Trip, TODO");
 
         // This removes the trip from the array
         this.trips.array = this.trips.array.filter(trip => trip.getID() != trip_id);
-    };
+    }
 
     addStopTime (trip_id,  // Trip object
                  arrival_time,
@@ -762,9 +762,18 @@ class streetElementGroup {
 
         console.log(stoptime);
 
-        this.stopTimes.push(stoptime);
+        this.stopTimes.array.push(stoptime);
 
         return true; // TODO
+    }
+
+    removeStopTime = (trip_id, stop_id) => {
+        this.historyPush(["removeStopTime", trip_id, stop_id]);
+        console.log("Remove StopTime, TODO");
+
+        // This removes the stoptime from the array
+        this.stopTimes.array = this.stopTimes.array.filter(
+            stoptime => ( stoptime.getID() != stop_id | stoptime.getInfo().trip_id != trip_id));
     }
 
     unselectNode () {

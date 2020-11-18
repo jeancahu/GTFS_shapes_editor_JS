@@ -378,7 +378,7 @@
                             <td>{{stoptime.getID()}}: {{nodes[stoptime.getID()].getStopInfo().name}}</td>
                             <td>{{stoptime.getInfo().arrival_time}}</td>
                             <td>{{stoptime.getInfo().departure_time}}</td>
-                            <td><button class="button error" @click="removeStopTime(stoptime.trip_id, stoptime.stop_id)">remove</button></td>
+                            <td><button class="button error" @click="removeStopTime(stoptime.getInfo().trip_id, stoptime.getID())">remove</button></td>
                         </tr>
                     </tbody>
                 </table>

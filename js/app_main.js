@@ -531,6 +531,7 @@ const editor_gtfs_conf = {
         },
         removeStopTime (trip_id, stop_id){ // TODO
             console.log("remove stoptime: " + trip_id + ' ' + stop_id);
+            o_se_group.removeStopTime(trip_id, stop_id);
         },
         saveScheme(){
             o_se_group.addScheme(
@@ -623,7 +624,7 @@ const editor_gtfs_conf = {
             return this.trips.array.slice().reverse();
         },
         rev_stoptimes () { // TODO
-            return this.stopTimes.slice().reverse();
+            return this.stopTimes.array.slice().reverse();
         },
         rev_schemes () { // TODO
             return this.schemes.slice().reverse();
