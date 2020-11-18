@@ -455,6 +455,7 @@ const editor_gtfs_conf = {
         },
         removeRoute (route_id){ // TODO
             console.log("remove route: " + route_id);
+            o_se_group.removeRoute(route_id);
         },
         saveShape(){ // save shape into streetElementGroup
             console.log(this.ns_segments);
@@ -612,7 +613,7 @@ const editor_gtfs_conf = {
             return this.agencies.array.slice().reverse();
         },
         rev_routes () {
-            return this.routes.slice().reverse();
+            return this.routes.array.slice().reverse();
         },
         rev_services () {
             return this.services.slice().reverse();

@@ -481,7 +481,7 @@ class streetElementGroup {
             });
 
             result.routes = [];
-            this.routes.forEach((route) => {
+            this.routes.array.forEach((route) => {
                 result.routes.push(
                     route.getInfo()
                 );
@@ -536,7 +536,7 @@ class streetElementGroup {
         this.agencies  = {array: []};
         this.services  = [];
         this.schemes   = [];
-        this.routes    = [];
+        this.routes    = {array: []};
         this.trips     = [];
         this.stopTimes = [];
 
@@ -691,10 +691,18 @@ class streetElementGroup {
 
         console.log(route);
 
-        this.routes.push(route);
+        this.routes.array.push(route);
 
         return true; // TODO
     }
+
+    removeRoute = (route_id) => {
+        this.historyPush(["removeRoute", route_id]);
+        console.log("Remove Route, TODO");
+
+        // This removes the route from the array
+        this.routes.array = this.routes.array.filter(route => route.getID() != route_id);
+    };
 
     addTrip(route_id, // Route object
             trip_id,
