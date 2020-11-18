@@ -518,6 +518,7 @@ const editor_gtfs_conf = {
         },
         removeTrip (trip_id){ // TODO
             console.log("remove trip: " + trip_id);
+            o_se_group.removeTrip(trip_id);
         },
         saveStopTime(){
             o_se_group.addStopTime(
@@ -619,7 +620,7 @@ const editor_gtfs_conf = {
             return this.services.slice().reverse();
         },
         rev_trips () {
-            return this.trips.slice().reverse();
+            return this.trips.array.slice().reverse();
         },
         rev_stoptimes () { // TODO
             return this.stopTimes.slice().reverse();

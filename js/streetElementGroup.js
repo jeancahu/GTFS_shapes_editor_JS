@@ -495,7 +495,7 @@ class streetElementGroup {
             });
 
             result.trips = [];
-            this.trips.forEach((trip) => {
+            this.trips.array.forEach((trip) => {
                 result.trips.push(
                     trip.getInfo()
                 );
@@ -537,7 +537,7 @@ class streetElementGroup {
         this.services  = [];
         this.schemes   = [];
         this.routes    = {array: []};
-        this.trips     = [];
+        this.trips     = {array: []};
         this.stopTimes = [];
 
         ////// END Public data //////
@@ -727,10 +727,18 @@ class streetElementGroup {
 
         console.log(trip);
 
-        this.trips.push(trip);
+        this.trips.array.push(trip);
 
         return true; // TODO
     }
+
+    removeTrip = (trip_id) => {
+        this.historyPush(["removeTrip", trip_id]);
+        console.log("Remove Trip, TODO");
+
+        // This removes the trip from the array
+        this.trips.array = this.trips.array.filter(trip => trip.getID() != trip_id);
+    };
 
     addStopTime (trip_id,  // Trip object
                  arrival_time,
