@@ -441,6 +441,7 @@ const editor_gtfs_conf = {
         },
         removeAgency (agency_id){ // TODO
             console.log("remove agency: " + agency_id);
+            o_se_group.removeAgency(agency_id);
         },
         saveRoute(){
             o_se_group.addRoute(
@@ -607,7 +608,7 @@ const editor_gtfs_conf = {
             return result;
         },
         rev_agencies () {
-            return this.agencies.slice().reverse();
+            return this.agencies.array.slice().reverse();
         },
         rev_routes () {
             return this.routes.slice().reverse();

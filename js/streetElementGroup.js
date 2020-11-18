@@ -471,8 +471,9 @@ class streetElementGroup {
         this.toJSON = () => { // Create a static data JSON with the whole info needed
             var result = {};
             result.agencies = [];
-            this.agencies.forEach((agency) => {
+            this.agencies.array.forEach((agency) => {
                 result.agencies.push(
+                    // TODO: verify info
                     agency.getInfo()
                 );
             });
@@ -530,7 +531,7 @@ class streetElementGroup {
         this.links     = []; // could it to be private? // TODO
 
         this.shapes    = [];
-        this.agencies  = [];
+        this.agencies  = {array: []};
         this.services  = [];
         this.schemes   = [];
         this.routes    = [];
@@ -610,9 +611,21 @@ class streetElementGroup {
 
         console.log(agency);
 
-        this.agencies.push(agency);
+        this.agencies.array.push(agency);
 
         return true; // TODO
+    }
+
+    removeAgency (agency_id
+                  ){
+        this.historyPush([
+            "removeAgency",
+            agency_id
+        ]);
+
+        // This removes the agency from the list
+        this.agencies.array = this.agencies.array.filter(agency => agency.getID() != agency_id);
+
     }
 
     addService (service_info
