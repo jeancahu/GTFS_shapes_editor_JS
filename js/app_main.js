@@ -161,7 +161,6 @@ const editor_gtfs_conf = {
             shapes: o_se_group.shapes,
             routes: o_se_group.routes,
             services: o_se_group.services,
-            schemes: o_se_group.schemes,
             trips: o_se_group.trips,
             stopTimes: o_se_group.stopTimes,
 
@@ -535,13 +534,12 @@ const editor_gtfs_conf = {
         },
         saveScheme(){
             o_se_group.addScheme(
-                o_se_group.schemes.length, // FIXME
                 document.getElementById("sc_service_id").value,
                 document.getElementById("sc_trip_id").value
             );
         },
-        removeScheme (scheme_id){ // TODO
-            console.log("remove scheme: " + scheme_id);
+        removeScheme (service_id, trip_id){ // TODO
+            console.log("remove scheme: " + service_id + " " + trip_id);
         }
     },
     computed: {
@@ -625,9 +623,6 @@ const editor_gtfs_conf = {
         },
         rev_stoptimes () { // TODO
             return this.stopTimes.array.slice().reverse();
-        },
-        rev_schemes () { // TODO
-            return this.schemes.slice().reverse();
         }
     },
     filters: {
