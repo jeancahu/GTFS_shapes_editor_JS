@@ -276,19 +276,20 @@ class streetElementGroup {
 
         this.addScheme = (service_id, trip_id) => {
             this.historyPush(["addScheme", service_id, trip_id]);
-            // FIXME
-            // this.schemes.push(
-            //         scheme_id,
-            //         service_id,
-            //         trip_id
-            // );
+            this.services.array.filter(
+                service => service.getID() == service_id
+            )[0].addTrip(
+                trip_id
+            );
         };
 
         this.removeScheme = (service_id, trip_id) => {
             this.historyPush(["removeScheme", service_id, trip_id]);
-
-            // TODO: remove the scheme
-            console.log("TODO: remove scheme");
+            this.services.array.filter(
+                service => service.getID() == service_id
+            )[0].removeTrip(
+                trip_id
+            );
         };
 
         this.linkNodesByID = (nodeA_id, nodeB_id) => { // External

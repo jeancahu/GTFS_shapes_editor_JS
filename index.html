@@ -387,13 +387,10 @@
 
                 <!-- SCHEME -->
                 <div v-show="isVisible('scheme')">
-                    <select id="sc_service_id">
-                        <option v-for="service in rev_services">{{ service.getID() }}</option>
-                    </select>
-
-                    <table class="alt">
+                    <table class="alt" v-for="service in rev_services">
                         <thead>
                             <tr>
+                                <th>{{ dict.c_service_id }}</th>
                                 <th>active</th> <!-- FIXME -->
                                 <th>{{ dict.t_trip_id }}</th>
                                 <th></th>
@@ -402,12 +399,16 @@
                         <tbody>
                             <tr v-for="trip in rev_trips">
                                 <td>
-                                    <input type="checkbox"></input>
+                                    {{ service.getID() }}
+                                </td>
+                                <td>
+                                    <input @change="changeScheme($event, service.getID(), trip.getID())" name="sc_trip_cb"
+                                           type="checkbox" :checked="isActiveTrip(service.getID(), trip.getID())">{{trip.getID()}}</input>
+                                    <!-- <label for="label_id_todo">Label</label><br> -->
                                 </td>
                                 <td>
                                     {{ trip.getID() }}
                                 </td>
-                                <td><button @click="saveScheme">add</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -439,7 +440,6 @@
         <script src="js/streetElementAgency.js"></script>      <!-- Agency   class -->
         <script src="js/streetElementRoute.js"></script>       <!-- Route    class -->
         <script src="js/streetElementCalendar.js"></script>    <!-- Calendar class -->
-        <script src="js/streetElementScheme.js"></script>      <!-- Scheme   class -->
         <script src="js/streetElementShape.js"></script>       <!-- Shape    class -->
         <script src="js/streetElementTrip.js"></script>        <!-- Trip     class -->
         <script src="js/streetElementStopTime.js"></script>    <!-- StopTime class -->

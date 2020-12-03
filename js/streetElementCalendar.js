@@ -25,6 +25,23 @@ class streetElementCalendar {
             ];
         };
         this.getID = () => service_info.service_id;
+
+        this.addTrip = (trip_id) => {
+            service_info["trips"].push(trip_id);
+        };
+
+        this.removeTrip = (trip_id) => {
+            service_info["trips"] = service_info["trips"].filter(
+                i_trip_id => i_trip_id != trip_id
+            );
+        };
+
+        this.isActiveTrip = (trip_id) => {
+            // Verify if the trip is in the calendar
+            return service_info["trips"].some(i_trip_id => i_trip_id == trip_id);
+        };
+
+        service_info["trips"] = [];
     }
 
     static get type () {

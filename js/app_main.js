@@ -532,14 +532,23 @@ const editor_gtfs_conf = {
             console.log("remove stoptime: " + trip_id + ' ' + stop_id);
             o_se_group.removeStopTime(trip_id, stop_id);
         },
-        saveScheme(){
-            o_se_group.addScheme(
-                document.getElementById("sc_service_id").value,
-                document.getElementById("sc_trip_id").value
-            );
+        changeScheme(event, service_id, trip_id){
+            if (event.target.checked){
+                o_se_group.addScheme(
+                    service_id,
+                    trip_id
+                );
+            } else {
+                o_se_group.removeScheme(
+                    service_id,
+                    trip_id
+                );
+            }
         },
-        removeScheme (service_id, trip_id){ // TODO
-            console.log("remove scheme: " + service_id + " " + trip_id);
+        isActiveTrip(service_id, trip_id){
+            return this.services.array.filter(
+                service => service.getID() == service_id
+            )[0].isActiveTrip(trip_id);
         }
     },
     computed: {
