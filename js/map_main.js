@@ -312,25 +312,25 @@ map.on('click', (event)=> {
 //     }
 // });
 
-// Shortcuts
-document.addEventListener('keypress', function(event) {
-    switch(event.key) {
-    case "q":
-        set_node_type(streetElementNode.type.SHAPE);
-        break;
-    case "s":
-        set_node_type(streetElementNode.type.STOP);
-        break;
-    case "e":
-        set_node_type(streetElementNode.type.ENDPOINT);
-        break;
-    case "f":
-        set_node_type(streetElementNode.type.FORK);
-        break;
-    default:
-        console.log("no action");
-    }
-});
+// // Shortcuts
+// document.addEventListener('keypress', function(event) {
+//     switch(event.key) {
+//     case "q":
+//         set_node_type(streetElementNode.type.SHAPE);
+//         break;
+//     case "s":
+//         set_node_type(streetElementNode.type.STOP);
+//         break;
+//     case "e":
+//         set_node_type(streetElementNode.type.ENDPOINT);
+//         break;
+//     case "f":
+//         set_node_type(streetElementNode.type.FORK);
+//         break;
+//     default:
+//         console.log("no action");
+//     }
+// });
 
 //////////////////// Download as text/plain /////////////////////
 

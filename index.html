@@ -362,7 +362,8 @@
                             </td>
                             <td>
                                 <select @change="goToNodeOnMap(in_st_stop_id)" id="st_stop_id" v-model="in_st_stop_id">
-                                    <option v-for="stop in stopsWhenTrip" :value="stop.getID()">{{stop.getID()}}: {{stop.getStopInfo().name ? stop.getStopInfo().name : "no name"}}</option>
+                                    <!-- It saves the node ID instead the stop id, the node ID is unmutable -->
+                                    <option v-for="stopnode in stopsWhenTrip" :value="stopnode.getID()">{{stopnode.getStopInfo().id}}: {{stopnode.getStopInfo().name ? stopnode.getStopInfo().name : "no name"}}</option>
                                 </select>
                             </td>
                             <td>
@@ -375,7 +376,7 @@
                         </tr>
                         <tr v-for="stoptime in rev_stoptimes">
                             <td>{{stoptime.getInfo().trip_id}}</td>
-                            <td>{{stoptime.getID()}}: {{nodes[stoptime.getID()].getStopInfo().name}}</td>
+                            <td>{{nodes[stoptime.getID()].getStopInfo().id}}: {{nodes[stoptime.getID()].getStopInfo().name}}</td> <!-- FIXME: dont use stop id as node id -->
                             <td>{{stoptime.getInfo().arrival_time}}</td>
                             <td>{{stoptime.getInfo().departure_time}}</td>
                             <td><button class="button error" @click="removeStopTime(stoptime.getInfo().trip_id, stoptime.getID())">remove</button></td>
@@ -385,35 +386,37 @@
                 <!-- END STOPTIMES -->
 
                 <!-- SCHEME -->
-                <table v-show="isVisible('scheme')" class="alt">
-                    <thead>
-                        <tr>
-                            <th>{{ dict.c_service_id }}</th>
-                            <th>{{ dict.t_trip_id }}</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <select id="sc_service_id">
-                                    <option v-for="service in rev_services">{{ service.getID() }}</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select id="sc_trip_id">
-                                    <option v-for="trip in rev_trips">{{ trip.getID() }}</option>
-                                </select>
-                            </td>
-                            <td><button @click="saveScheme">add</button></td>
-                        </tr>
-                        <tr v-for="scheme in rev_schemes">
-                            <td>{{ scheme.getInfo().service_id }}</td>
-                            <td>{{ scheme.getInfo().trip_id }}</td>
-                            <td><button @click="removeScheme(scheme.getID())">remove</button></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div v-show="isVisible('scheme')">
+                    <select id="sc_service_id">
+                        <option v-for="service in rev_services">{{ service.getID() }}</option>
+                    </select>
+
+                    <table class="alt">
+                        <thead>
+                            <tr>
+                                <th>active</th> <!-- FIXME -->
+                                <th>{{ dict.t_trip_id }}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="trip in rev_trips">
+                                <td>
+                                    <input type="checkbox"></input>
+                                </td>
+                                <td>
+                                    {{ trip.getID() }}
+                                </td>
+                                <td><button @click="saveScheme">add</button></td>
+                            </tr>
+                            <!-- <tr v-for="scheme in rev_schemes"> <!-- for trip in trips, consult schemes -->
+                            <!--  <td>{{ scheme.getInfo().service_id }}</td>  -->
+                            <!-- <td>{{ scheme.getInfo().trip_id }}</td>  -->
+                            <!-- <td><button @click="removeScheme(scheme.getID())">remove</button></td> -->
+                            <!-- </tr> -->
+                        </tbody>
+                    </table>
+                </div>
                 <!-- END SCHEME -->
 
             </div>

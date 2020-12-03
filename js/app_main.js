@@ -418,7 +418,6 @@ const editor_gtfs_conf = {
         goToNodeOnMap (node_id) { // TODO needs testing
             view.setCenter(this.nodes[node_id].getCoordinates());
             view.setZoom(17.9); // TODO use a config file
-            console.log(node_id);
         },
         isVisible(value) { // Return a bool
             return ( value == this.showList );

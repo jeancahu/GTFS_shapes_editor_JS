@@ -611,8 +611,6 @@ class streetElementGroup {
             agency_email
         ]);
 
-        console.log(agency);
-
         this.agencies.array.push(agency);
 
         return true; // TODO
@@ -690,8 +688,6 @@ class streetElementGroup {
             route_type
         ]);
 
-        console.log(route);
-
         this.routes.array.push(route);
 
         return true; // TODO
@@ -726,8 +722,6 @@ class streetElementGroup {
             shape_id  // Shape object
         ]);
 
-        console.log(trip);
-
         this.trips.array.push(trip);
 
         return true; // TODO
@@ -760,8 +754,6 @@ class streetElementGroup {
             departure_time,
             stop_id  // Stop object
         ]);
-
-        console.log(stoptime);
 
         this.stopTimes.array.push(stoptime);
 
