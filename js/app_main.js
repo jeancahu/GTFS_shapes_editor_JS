@@ -156,6 +156,7 @@ const editor_gtfs_conf = {
             popup_content: popup_content, // Gobal object
 
             nodes: o_se_group.nodes, // contains stops too FIXME
+            stops: [], // contains stops too FIXME
 
             agencies: o_se_group.agencies,
             shapes: o_se_group.shapes,
@@ -244,6 +245,9 @@ const editor_gtfs_conf = {
         };
     },
     watch:{
+        nodes () {
+            this.stops = this.nodes.filter(filterValidNode).filter(filterStopNode);
+        },
         map_action (new_state, old_state) {
             switch(new_state) { // TODO
             case "select":
@@ -321,6 +325,7 @@ const editor_gtfs_conf = {
             );
             // Update popup
             popup_content.stop_info = o_se_group.nodes[node_id].getStopInfo();
+            this.stops = this.nodes.filter(filterValidNode).filter(filterStopNode); // FIXME // hotfix
             alert("Success: edit data"); // FIXME : remove
         },
         changeNodeInfoFromStopSection(node_id){
@@ -613,10 +618,7 @@ const editor_gtfs_conf = {
             return result;
         },
         rev_stops () { // TODO
-            var result = this.nodes.slice().reverse();
-            result = result.filter(filterValidNode);
-            result = result.filter(filterStopNode);
-            return result;
+            return this.stops.slice().reverse();
         },
         rev_agencies () {
             return this.agencies.array.slice().reverse();
@@ -648,3 +650,6 @@ const editor_gtfs_conf = {
 // VUE 2
 editor_gtfs_conf['el'] = '#editor_gtfs';
 const app = new Vue(editor_gtfs_conf);
+
+// Start
+app.stops = app.nodes.filter(filterValidNode).filter(filterStopNode); // FIXME
