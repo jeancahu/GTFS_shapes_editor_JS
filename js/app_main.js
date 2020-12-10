@@ -364,6 +364,8 @@ const editor_gtfs_conf = {
 
                     this.ns_allowed_links =
                         this.nodes[element_id].getConnections();
+                    console.log("Allowed links when node:");
+                    console.log(this.ns_allowed_links);
                 }
             } else {
                 console.log("link ID: "+element_id);
@@ -381,7 +383,7 @@ const editor_gtfs_conf = {
                             [
                                 this.ns_head_node_id,
                                 Number(element_id),
-                                result[result.length -1].getID
+                                result[result.length -1].getID()
                             ]
 
                         );
@@ -395,9 +397,14 @@ const editor_gtfs_conf = {
                         result[result.length -2]
                     );
 
+                    console.log("Excluded links: ");
+                    console.log(excluded_link);
+                    console.log(this.ns_allowed_links);
+
                     // Hide direction
                     this.ns_allowed_links.forEach((link) => {
                         link.hideDirection();
+                        console.log("Hide direction link:"+link.getID());
                         link.oneshot = undefined;
                     });
 
@@ -406,9 +413,15 @@ const editor_gtfs_conf = {
                             result[result.length -1],
                             [excluded_link]
                         );
+                    console.log("Allowed links when node: getLinksFromNode");
+                    console.log(this.ns_allowed_links);
 
                     // Show direction and set oneshot function
                     this.ns_allowed_links.forEach((link) => {
+                        console.log("Links in allowed array");
+                        console.log(link.getID());
+                        console.log(result[result.length -1].getConnections().forEach(
+                            link => console.log(link.getID())));
                         link.setDirectionFromNode(
                             result[result.length -1]);
                         link.oneshot = (link_id) => {

@@ -62,27 +62,13 @@ class streetElementLink { // Link between two nodes
         };
 
         this.setDirectionFromNode = (node) => {
+            this.hideDirection();
             if (node == this.nodeA){
                 console.log("set_direction 0");
                 direction_layer.getSource().addFeature(feature);
-
-                if (
-                    direction_layer.getSource().getFeatures().some(
-                        (feature) => {return feature.ol_uid == rev_feature.ol_uid;}
-                    )
-                ){
-                    direction_layer.getSource().removeFeature(rev_feature);
-                }
             } else if (node == this.nodeB){
                 console.log("set_direction 1");
                 direction_layer.getSource().addFeature(rev_feature);
-                if (
-                    direction_layer.getSource().getFeatures().some(
-                        (feature) => {return feature.ol_uid == feature.ol_uid;}
-                    )
-                ){
-                    direction_layer.getSource().removeFeature(feature);
-                }
             } else {
                 console.log("Error: node is not in the link");
             }
@@ -91,14 +77,14 @@ class streetElementLink { // Link between two nodes
         this.hideDirection = () => {
             if (
                 direction_layer.getSource().getFeatures().some(
-                    (feature) => {return feature.ol_uid == rev_feature.ol_uid;}
+                    (i_feature) => {return i_feature.ol_uid == rev_feature.ol_uid;}
                 )
             ){
                 direction_layer.getSource().removeFeature(rev_feature);
             }
             if (
                 direction_layer.getSource().getFeatures().some(
-                    (feature) => {return feature.ol_uid == feature.ol_uid;}
+                    (i_feature) => {return i_feature.ol_uid == feature.ol_uid;}
                 )
             ){
                 direction_layer.getSource().removeFeature(feature);

@@ -347,6 +347,10 @@ function downloadString(text, fileName) {
     setTimeout(function() { URL.revokeObjectURL(a.href); }, 1500);
 }
 
+function downloadShapesCSV () {
+    console.log("TODO"); // TODO
+}
+
 //////////////////// Axios post /////////////////////////////////
 
 function postHistoryWithAxios (){
