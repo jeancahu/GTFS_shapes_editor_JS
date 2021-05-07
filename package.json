@@ -9,12 +9,19 @@
     "sqlite3": "^5.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.14.0",
+    "@babel/preset-env": "^7.14.1",
+    "babelify": "^10.0.0",
     "browserify": "^17.0.0",
-    "tinyify": "^3.0.0"
+    "esmify": "^2.1.1",
+    "tinyify": "^3.0.0",
+    "watchify": "^4.0.0"
   },
   "scripts": {
-    "build": "browserify index.js --plugin tinyify --outfile lib/bundle.js",
-    "test": "echo 'no tests yet' && exit 1",
+      "debug": "browserify -t babelify --plugin esmify ./js/main.js -d --outfile ./dist/bundle.js",
+      "dist":  "browserify -t babelify --plugin esmify --plugin tinyify ./js/main.js --outfile ./dist/bundle.js",
+      "watch": "watchify -p esmify ./js/main.js -o ./dist/bundle.js -d -v",
+      "test": "echo 'no tests yet' && exit 1",
     "serve": "node -v && node index.js && exit 0"
   },
   "repository": {

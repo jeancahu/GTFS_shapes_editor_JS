@@ -46,3 +46,5 @@ class streetElementAgency {
     }
 
 }
+
+module.exports = streetElementAgency;

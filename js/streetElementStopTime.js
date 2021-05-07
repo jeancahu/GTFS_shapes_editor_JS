@@ -38,3 +38,5 @@ class streetElementStopTime {
     }
 
 }
+
+module.exports = streetElementStopTime;

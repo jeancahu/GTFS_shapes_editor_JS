@@ -1,3 +1,13 @@
+const streetElementLink   = require('./streetElementLink.js');
+const streetElementNode   = require('./streetElementNode.js');
+const streetElementAgency = require('./streetElementAgency.js');
+const streetElementRoute  = require('./streetElementRoute.js');
+const streetElementShape  = require('./streetElementShape.js');
+const streetElementCalendar = require('./streetElementCalendar.js');
+const streetElementTrip = require('./streetElementTrip.js');
+const streetElementStopTime = require('./streetElementStopTime.js');
+
+
 //////////////// GTFS streetElements ///////////////////
 ////                                                ////
 ////  This library tries to encapsulate some of the ////
@@ -848,3 +858,4 @@ class streetElementGroup {
     }
 }
 
+module.exports = streetElementGroup;

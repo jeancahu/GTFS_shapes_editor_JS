@@ -39,3 +39,5 @@ class streetElementTrip {
     }
 
 }
+
+module.exports = streetElementTrip;

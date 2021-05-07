@@ -64,3 +64,5 @@ class streetElementCalendar {
     }
 
 }
+
+module.exports = streetElementCalendar;

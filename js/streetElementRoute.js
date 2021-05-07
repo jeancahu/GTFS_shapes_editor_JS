@@ -49,3 +49,5 @@ class streetElementRoute {
     }
 
 }
+
+module.exports = streetElementRoute;

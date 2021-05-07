@@ -99,7 +99,6 @@ class streetElementNode {
 
             // Terminate links:
             connections.forEach((value, index)=>{
-                console.log(value);
                 value.terminate(); // Terminate link
             });
 
@@ -153,3 +152,5 @@ class streetElementNode {
         }
     }
 }
+
+module.exports = streetElementNode;

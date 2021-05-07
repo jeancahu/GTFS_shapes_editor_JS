@@ -161,3 +161,5 @@ class streetElementLink { // Link between two nodes
     }
 
 }
+
+module.exports = streetElementLink;

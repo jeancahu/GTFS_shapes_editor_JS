@@ -119,3 +119,5 @@ class streetElementShape {
         }
     }
 }
+
+module.exports = streetElementShape;
