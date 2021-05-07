@@ -1,6 +1,6 @@
 {
   "name": "gtfs_shape_editor",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Webapp to edit shapes in a GTFS format table",
   "main": "index.js",
   "dependencies": {

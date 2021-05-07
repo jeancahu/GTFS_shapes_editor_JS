@@ -348,7 +348,8 @@ function downloadString(text, fileName) {
 }
 
 function downloadShapesCSV () {
-    console.log("TODO"); // TODO
+    // TODO
+    downloadString(o_se_group.shapesToGTFS(),'shapes.txt');
 }
 
 //////////////////// Axios post /////////////////////////////////

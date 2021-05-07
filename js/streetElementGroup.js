@@ -469,6 +469,45 @@ class streetElementGroup {
             }
         };
 
+        this.shapesToGTFS = () => {
+            var shape_CSV = "shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence,shape_dist_traveled\n";
+            this.shapes.array.forEach(
+                shape => {
+                    //console.log(shape.getID());
+                    var result_nodes_array = [];
+
+                    shape.getSegments().forEach(
+                        segment => {
+                            if (result_nodes_array.length){
+                                var tmp_array = streetElementShape.routeSegment(
+                                    this.nodes[segment[0]], // node
+                                    this.links[segment[1]]  // link
+                                ).reverse();
+                                tmp_array.pop(); // drop first element TODO
+                                result_nodes_array.push(
+                                    tmp_array.reverse()
+                                );
+                            }else{
+                                result_nodes_array.push(
+                                    streetElementShape.routeSegment(
+                                        this.nodes[segment[0]], // node
+                                        this.links[segment[1]]  // link
+                                    )
+                                );
+                            }
+                        }
+                    );
+                    result_nodes_array.flat().forEach(
+                        (node, key) => {
+                            var coor = ol.proj.toLonLat(node.getCoordinates()); // WARN FIXME ol.dependecy
+                            shape_CSV += String(shape.getID())+','+String(coor[1])+','+String(coor[0])+','+key+','+'\n';
+                        }
+                    );
+                }
+            );
+            return shape_CSV; // return a string object with GTFS table in
+        };
+
         this.toJSON = () => { // Create a static data JSON with the whole info needed
             var result = {};
             result.agencies = [];
