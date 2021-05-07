@@ -1,3 +1,6 @@
+import Feature from 'ol/Feature';
+import LineString from 'ol/geom/LineString';
+
 //////////////// GTFS streetElements ///////////////////
 ////                                                ////
 ////  This library tries to encapsulate some of the ////
@@ -29,12 +32,12 @@ class streetElementLink { // Link between two nodes
         this.nodeA = nodeA;
         this.nodeB = nodeB;
 
-        const feature = new ol.Feature({
-            geometry: new ol.geom.LineString(coordinates),
+        const feature = new Feature({
+            geometry: new LineString(coordinates),
             name: 'Line'
         });
-        const rev_feature = new ol.Feature({
-            geometry: new ol.geom.LineString(rev_coordinates),
+        const rev_feature = new Feature({
+            geometry: new LineString(rev_coordinates),
             name: 'Line'
         });
 

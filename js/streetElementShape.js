@@ -1,3 +1,5 @@
+const streetElementNode = require('./streetElementNode.js');
+
 //////////////// GTFS streetElements ///////////////////
 ////                                                ////
 ////  This library tries to encapsulate some of the ////

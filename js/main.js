@@ -1,6 +1,17 @@
 const streetElementGroup = require('./streetElementGroup.js');
 const streetElementNode = require('./streetElementNode.js'); // FIXME remove
 const streetElementLink = require('./streetElementLink.js'); // FIXME remove
+const streetElementShape = require('./streetElementShape.js'); // FIXME remove
+
+import Map from 'ol/Map';
+import View from 'ol/View';
+import Overlay from 'ol/Overlay';
+import OSM from 'ol/source/OSM';
+import Tile from 'ol/layer/Tile';
+
+import {fromLonLat, toLonLat} from 'ol/proj';
+import {defaults} from 'ol/control';
+
 
 ///////////// utils functions ///////////////////
 
@@ -88,7 +99,7 @@ var popup_content = {
 //       +       +
 // --->  @++++++++
 var extent_area =
-    ol.proj.fromLonLat([-84.43669241118701,9.726525930153954]
+    fromLonLat([-84.43669241118701,9.726525930153954]
 
 );
 
@@ -98,13 +109,13 @@ var extent_area =
 // +       +
 // +++++++++
 extent_area = extent_area.concat(
-    ol.proj.fromLonLat([-83.72894500499169,9.99625455768836]
+    fromLonLat([-83.72894500499169,9.99625455768836]
 
 ));
 
 //// Constrained map in the work area
-var view = new ol.View({
-    center: ol.proj.fromLonLat([-84.1027104, 9.865107]),
+var view = new View({
+    center: fromLonLat([-84.1027104, 9.865107]),
     zoom: 12,
     // [minx,miny,max,may]
     extent: extent_area,
@@ -113,12 +124,12 @@ var view = new ol.View({
 // Map need a layers group, we're
 // adding only base layer, streetElementNodes will be next
 // base layer mainly has routes and buildings.
-var map = new ol.Map({
-    controls: ol.control.defaults(
+var map = new Map({
+    controls: defaults(
         {attribution: false}),
     layers: [
-	      new ol.layer.Tile({
-	          source: new ol.source.OSM(),
+	      new Tile({
+	          source: new OSM(),
 	      }),
 	      //vectorLayer,
     ],
@@ -166,7 +177,7 @@ if ( typeof(_streetElementGroupHistory) !== 'undefined' ){
 var coord2;
 
 map.on('click', (event)=> {
-    var coordinate = ol.proj.toLonLat(event.coordinate);
+    var coordinate = toLonLat(event.coordinate);
     var action = document.getElementById('action').value;
     var feature_onHover = map.forEachFeatureAtPixel(
         event.pixel,
@@ -289,7 +300,7 @@ map.on('click', (event)=> {
                 popup_content.stop_info =
                     feature_onHover.parent.getStopInfo();
                 overlay_node_info.setPosition(
-                    //ol.proj.fromLonLat(
+                    //fromLonLat(
                     feature_onHover.parent.getCoordinates()
                     //)
                 ); // TODO
@@ -1061,7 +1072,7 @@ map.setTarget(
 //// Popups/overlay
 var content = document.getElementById('popup-content');
 var closer = document.getElementById('popup-closer');
-var overlay_node_info = new ol.Overlay({
+var overlay_node_info = new Overlay({
     element: document.getElementById(
         'popup_node_info'),
     autoPan: true,

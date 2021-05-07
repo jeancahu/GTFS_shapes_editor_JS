@@ -1,3 +1,7 @@
+import {fromLonLat } from 'ol/proj';
+import Point from 'ol/geom/Point';
+import Feature from 'ol/Feature';
+
 //////////////// GTFS streetElements ///////////////////
 ////                                                ////
 ////  This library tries to encapsulate some of the ////
@@ -17,8 +21,8 @@ class streetElementNode {
         // Public elements
         this.valid = true;
 
-        const feature = new ol.Feature({ // The feature
-	          geometry: new ol.geom.Point(ol.proj.fromLonLat([
+        const feature = new Feature({ // The feature
+	          geometry: new Point(fromLonLat([
 	              coordenate[0],
                 coordenate[1]
 	          ]))
@@ -44,7 +48,7 @@ class streetElementNode {
 
         this.setCoordinates = ( coordenate ) => {
             feature.getGeometry().setCoordinates(
-                ol.proj.fromLonLat([
+                fromLonLat([
 	                  coordenate[0],
                     coordenate[1]
 	              ]));

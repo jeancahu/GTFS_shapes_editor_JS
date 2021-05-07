@@ -7,6 +7,15 @@ const streetElementCalendar = require('./streetElementCalendar.js');
 const streetElementTrip = require('./streetElementTrip.js');
 const streetElementStopTime = require('./streetElementStopTime.js');
 
+import { toLonLat } from 'ol/proj';
+import Style from 'ol/style/Style';
+import Fill from 'ol/style/Fill';
+import Circle from 'ol/style/Circle';
+import Stroke from 'ol/style/Stroke';
+import Icon from 'ol/style/Icon';
+import Vector from 'ol/layer/Vector';
+import SourceVector from 'ol/source/Vector';
+import Point from 'ol/geom/Point';
 
 //////////////// GTFS streetElements ///////////////////
 ////                                                ////
@@ -72,53 +81,53 @@ class streetElementGroup {
             switch (type) {
             case streetElementNode.type.SHAPE: // Shape element, blue
                 radius = 5;
-                style =  new ol.style.Style({
-	                  image: new ol.style.Circle({
+                style =  new Style({
+	                  image: new Circle({
 	                      radius: radius, // 5 default
-	                      fill: new ol.style.Fill({color: color})
+	                      fill: new Fill({color: color})
 	                  })
                 });
                 break;
             case streetElementNode.type.STOP: // Stop element, red
                 radius = 7;
-                style =  new ol.style.Style({
-	                  image: new ol.style.Circle({
+                style =  new Style({
+	                  image: new Circle({
 	                      radius: radius, // 5 default
-	                      fill: new ol.style.Fill({color: color})
+	                      fill: new Fill({color: color})
 	                  })
                 });
                 break;
             case streetElementNode.type.FORK: // Intersec. violet
                 radius = 5;
-                style =  new ol.style.Style({
-	                  image: new ol.style.Circle({
+                style =  new Style({
+	                  image: new Circle({
 	                      radius: radius, // 5 default
-	                      fill: new ol.style.Fill({color: color})
+	                      fill: new Fill({color: color})
 	                  })
                 });
                 break;
             case streetElementNode.type.ENDPOINT: // Terminals, green
                 radius = 5;
-                style =  new ol.style.Style({
-	                  image: new ol.style.Circle({
+                style =  new Style({
+	                  image: new Circle({
 	                      radius: radius, // 5 default
-	                      fill: new ol.style.Fill({color: color})
+	                      fill: new Fill({color: color})
 	                  })
                 });
                 break;
             case 'select': // Terminals, green
                 radius = 3;
-                style =  new ol.style.Style({
-	                  image: new ol.style.Circle({
+                style =  new Style({
+	                  image: new Circle({
 	                      radius: radius, // 5 default
-	                      fill: new ol.style.Fill({color: color})
+	                      fill: new Fill({color: color})
 	                  })
                 });
                 break;
             case streetElementLink.type.LINK: // FIXME link, blue
                 radius = 2;
-                style =  new ol.style.Style({
-                    stroke: new ol.style.Stroke({
+                style = new Style({
+                    stroke: new Stroke({
                         color: color,
                         // width: 10, // TODO
                         width: 4.5,
@@ -134,9 +143,9 @@ class streetElementGroup {
                         var dy = end[1] - start[1];
                         var rotation = Math.atan2(dy, dx);
                         style.push(
-                            new ol.style.Style({
-                                geometry: new ol.geom.Point(start),
-                                image: new ol.style.Icon({
+                            new Style({
+                                geometry: new Point(start),
+                                image: new Icon({
                                     src: 'assets/img/arrow.png',
                                     anchor: [-0.15, 0.5],
                                     rotateWithView: true,
@@ -152,8 +161,8 @@ class streetElementGroup {
                 console.log('Type: '+ type +' not found');
             }
 
-            const vectorLayer = new ol.layer.Vector({
-                source: new ol.source.Vector(),
+            const vectorLayer = new Vector({
+                source: new SourceVector(),
                 style: style
             });
             vectorLayer.name = type; // Name the layer
@@ -509,7 +518,7 @@ class streetElementGroup {
                     );
                     result_nodes_array.flat().forEach(
                         (node, key) => {
-                            var coor = ol.proj.toLonLat(node.getCoordinates()); // WARN FIXME ol.dependecy
+                            var coor = toLonLat(node.getCoordinates()); // WARN FIXME OpenLayers dependecy
                             shape_CSV += String(shape.getID())+','+String(coor[1])+','+String(coor[0])+','+key+','+'\n';
                         }
                     );
