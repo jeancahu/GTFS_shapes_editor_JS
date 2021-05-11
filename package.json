@@ -20,9 +20,9 @@
     "watchify": "^4.0.0"
   },
   "scripts": {
-    "debug": "browserify -t babelify --plugin esmify ./js/main.js -d --outfile ./dist/bundle.js",
+    "debug": "browserify -t babelify --plugin esmify --standalone bundle ./js/main.js -d --outfile ./dist/bundle.js",
     "dist": "browserify -t babelify --plugin esmify --plugin tinyify ./js/main.js --outfile ./dist/bundle.js",
-    "watch": "watchify -p esmify ./js/main.js -o ./dist/bundle.js -d -v",
+    "watch": "watchify -p esmify --standalone bundle ./js/main.js -o ./dist/bundle.js -d -v",
     "test": "echo 'no tests yet' && exit 1",
     "serve": "node -v && node index.js && exit 0"
   },

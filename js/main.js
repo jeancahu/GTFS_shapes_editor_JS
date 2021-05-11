@@ -364,7 +364,14 @@ function downloadString(text, fileName) {
 
 function downloadShapesCSV () {
     // TODO
-    downloadString(o_se_group.shapesToGTFS(),'shapes.txt');
+    downloadString(o_se_group.shapesToGTFS(), 'shapes.txt');
+}
+
+
+function downloadHistoryArray () {
+    // TODO
+    console.log("downloadHistoryArray");
+    downloadString(o_se_group.historyString(), 'street_element_group_history.txt');
 }
 
 //////////////////// Axios post /////////////////////////////////
@@ -1092,3 +1099,9 @@ map.once('postrender', async function(event) {
     await sleep(2000); // wait for two seconds
     document.getElementById("loading_screen").remove();
 });
+
+///////////////// exports (bundle.something in console) ////////////
+// these method and data is accesible from outside the bundle
+module.exports = {
+    'downloadHistoryArray': downloadHistoryArray
+};
