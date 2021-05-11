@@ -1,7 +1,7 @@
-const streetElementGroup = require('./streetElementGroup.js');
-const streetElementNode = require('./streetElementNode.js'); // FIXME remove
-const streetElementLink = require('./streetElementLink.js'); // FIXME remove
-const streetElementShape = require('./streetElementShape.js'); // FIXME remove
+const { streetElementGroup } = require('streetelement');
+const { streetElementNode }  = require('streetelement'); // FIXME remove
+const { streetElementLink }  = require('streetelement'); // FIXME remove
+const { streetElementShape } = require('streetelement'); // FIXME remove
 
 import Map from 'ol/Map';
 import View from 'ol/View';
