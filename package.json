@@ -8,7 +8,8 @@
     "express": "^4.17.1",
     "ol": "^6.5.0",
     "sqlite3": "^5.0.0",
-    "streetelement": "^0.2.1"
+    "streetelement": "^0.2.2",
+    "vue": "^2.6.12"
   },
   "devDependencies": {
     "@babel/core": "^7.14.0",
@@ -19,9 +20,12 @@
     "tinyify": "^3.0.0",
     "watchify": "^4.0.0"
   },
+  "browser": {
+    "vue": "vue/dist/vue.common.js"
+  },
   "scripts": {
     "debug": "browserify -t babelify --plugin esmify --standalone bundle ./js/main.js -d --outfile ./dist/bundle.js",
-    "dist": "browserify -t babelify --plugin esmify --plugin tinyify ./js/main.js --outfile ./dist/bundle.js",
+    "dist": "browserify -t babelify --plugin esmify --standalone bundle --plugin tinyify ./js/main.js --outfile ./dist/bundle.js",
     "watch": "watchify -p esmify --standalone bundle ./js/main.js -o ./dist/bundle.js -d -v",
     "test": "echo 'no tests yet' && exit 1",
     "serve": "node -v && node index.js && exit 0"

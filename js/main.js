@@ -3,14 +3,12 @@ const { streetElementNode }  = require('streetelement'); // FIXME remove
 const { streetElementLink }  = require('streetelement'); // FIXME remove
 const { streetElementShape } = require('streetelement'); // FIXME remove
 
-import Map from 'ol/Map';
-import View from 'ol/View';
-import Overlay from 'ol/Overlay';
-import OSM from 'ol/source/OSM';
-import Tile from 'ol/layer/Tile';
+const { en_US, es_CR } = require('./lang.js');
 
-import {fromLonLat, toLonLat} from 'ol/proj';
-import {defaults} from 'ol/control';
+const vue = require('vue');
+
+import Overlay from 'ol/Overlay';
+import {fromLonLat} from 'ol/proj';
 
 
 ///////////// utils functions ///////////////////
@@ -114,30 +112,9 @@ extent_area = extent_area.concat(
 ));
 
 //// Constrained map in the work area
-var view = new View({
-    center: fromLonLat([-84.1027104, 9.865107]),
-    zoom: 12,
-    // [minx,miny,max,may]
-    extent: extent_area,
-});
-
 // Map need a layers group, we're
 // adding only base layer, streetElementNodes will be next
 // base layer mainly has routes and buildings.
-var map = new Map({
-    controls: defaults(
-        {attribution: false}),
-    layers: [
-	      new Tile({
-	          source: new OSM(),
-	      }),
-	      //vectorLayer,
-    ],
-    keyboardEventTarget: document,
-    //overlays: [overlay_node_info],
-    // target: 'map_container', // It shows coordinates on page
-    view: view,
-});
 
 // Return node type from radio menu
 function get_node_type () {
@@ -166,7 +143,7 @@ function set_node_type (type) {
 ///////////////////////////////////////////////////////////////////////
 // Aqui vamos haciendo la lista con puntos dependiendo de que clase sea
 // se crea una lista con los diferentes puntos a dibujar sobre el mapa
-const o_se_group = new streetElementGroup(map);
+const o_se_group = new streetElementGroup([-84.1027104, 9.865107], extent_area);
 
 // try to load a history
 if ( typeof(_streetElementGroupHistory) !== 'undefined' ){
@@ -176,10 +153,10 @@ if ( typeof(_streetElementGroupHistory) !== 'undefined' ){
 
 var coord2;
 
-map.on('click', (event)=> {
+o_se_group.map.on('click', (event) => {
     var coordinate = toLonLat(event.coordinate);
     var action = document.getElementById('action').value;
-    var feature_onHover = map.forEachFeatureAtPixel(
+    var feature_onHover = o_se_group.map.forEachFeatureAtPixel(
         event.pixel,
         function(feature, layer)
         {
@@ -192,7 +169,6 @@ map.on('click', (event)=> {
         if (streetElementLink.isInstance(
             feature_onHover.parent))
         { // if element is a link
-            console.log("oneshot");
             if (feature_onHover.parent.oneshot){
                 feature_onHover.parent.oneshot(
                     feature_onHover.parent.getID()
@@ -319,34 +295,6 @@ map.on('click', (event)=> {
     }
 });
 
-// ~~Undo~~ function ( not yet )
-// document.addEventListener('keydown', function(event) {
-//     if (event.ctrlKey && event.key === 'z') {
-//         console.log('Remove last');
-//         o_se_group.deleteLastElement();
-//     }
-// });
-
-// // Shortcuts
-// document.addEventListener('keypress', function(event) {
-//     switch(event.key) {
-//     case "q":
-//         set_node_type(streetElementNode.type.SHAPE);
-//         break;
-//     case "s":
-//         set_node_type(streetElementNode.type.STOP);
-//         break;
-//     case "e":
-//         set_node_type(streetElementNode.type.ENDPOINT);
-//         break;
-//     case "f":
-//         set_node_type(streetElementNode.type.FORK);
-//         break;
-//     default:
-//         console.log("no action");
-//     }
-// });
-
 //////////////////// Download as text/plain /////////////////////
 
 function downloadString(text, fileName) {
@@ -400,139 +348,8 @@ function postGTFSWithAxios (){
 
 //////////////////// Vue experiments ////////////////////////////
 
-const en_US = new Proxy(
-{
-    add:             "Add",
-    remove:          "Remove",
-    agency:          "Agency",
-    shapes:          "Shapes",
-    stops:           "Stops",
-    routes:          "Routes",
-    trips:           "Trips",
-    calendar:        "Calendar",
-    stop_times:      "Stop times",
-    scheme:          "Scheme",
-
-    shape_id:        "Shape ID",
-
-    agency_id:       "Agency ID",
-    agency_name:     "Name",
-    agency_url:      "Web-site",
-    agency_timezone: "Time zone",
-    agency_lang:     "Language",
-    agency_phone:    "Phone number",
-    agency_email:    "e-mail",
-
-    stop_id:         "Stop ID",
-    stop_name:       "Name",
-    stop_desc:       "Description",
-    stop_url:        "Information URL",
-
-    r_route_id:         "Route ID",
-    r_route_short_name: "Short name",
-    r_route_long_name:  "Long name",
-    r_route_type:       "Type",
-    r_agency_id:        "Agency",
-
-    c_service_id:    "Service ID",
-    c_monday:        "Monday",
-    c_tuesday:       "Tuesday",
-    c_wednesday:     "Wednesday",
-    c_thursday:      "Thursday",
-    c_friday:        "Friday",
-    c_saturday:      "Saturday",
-    c_sunday:        "Sunday",
-    c_start_day:     "Start day",
-    c_end_day:       "End day",
-
-    t_route_id:      "Route",
-    t_service_id:    "Service",
-    t_trip_id:       "Trip ID",
-    t_direction_id:  "Direction",
-    t_shape_id:      "Shape",
-    inbound_travel:  "Inbound",
-    outbound_travel: "Outbound",
-
-    st_trip_id:        "Trip",
-    st_arrival_time:   "Arrival time",
-    st_departure_time: "Departure time",
-    st_stop_id:        "Stop",
-    st_stop_sequence:  "Sequence"
-},
-    { // handler
-        get: function(target, name) {
-            return target.hasOwnProperty(name) ? target[name] : name;
-        }
-    }
-);
-
-const es_CR = new Proxy(
-    {
-    add:             "Agregar",
-    remove:          "Eliminar",
-    agency:          "Empresa",
-    shapes:          "Recorridos",
-    stops:           "Paradas",
-    routes:          "Rutas",
-    trips:           "Viajes",
-    calendar:        "Servicios",
-    stop_times:      "Horarios",
-    scheme:          "Programa",
-
-    shape_id:        "ID Recor.",
-
-    agency_id:       "ID Empr.",
-    agency_name:     "Nombre",
-    agency_url:      "Sitio web",
-    agency_timezone: "Zona horaria",
-    agency_lang:     "Idioma",
-    agency_phone:    "Telefono",
-    agency_email:    "e-mail",
-
-    stop_id:         "ID Parada",
-    stop_name:       "Nombre",
-    stop_desc:       "Descripción",
-    stop_url:        "URL Información",
-
-    r_route_id:         "ID Ruta",
-    r_route_short_name: "Nombre corto",
-    r_route_long_name:  "Nombre largo",
-    r_route_type:       "Tipo",
-    r_agency_id:        "Empresa",
-
-    c_service_id:    "ID servicio",
-    c_monday:        "Lunes",
-    c_tuesday:       "Martes",
-    c_wednesday:     "Miércoles",
-    c_thursday:      "Jueves",
-    c_friday:        "Viernes",
-    c_saturday:      "Sábado",
-    c_sunday:        "Domingo",
-    c_start_day:     "Día de inicio",
-    c_end_day:       "Día final",
-
-    t_route_id:      "Ruta",
-    t_service_id:    "Servicio",
-    t_trip_id:       "ID viaje",
-    t_direction_id:  "Dirección",
-    t_shape_id:      "Recorrido",
-    inbound_travel:  "Regreso",
-    outbound_travel: "Ida",
-
-    st_trip_id:        "Viaje",
-    st_arrival_time:   "Llegada",
-    st_departure_time: "Salida",
-    st_stop_id:        "Parada",
-    st_stop_sequence:  "Secuencia"
-},
-      { // handler
-          get: function(target, name) {
-              return target.hasOwnProperty(name) ? target[name] : name;
-          }
-      }
-);
-
 const editor_gtfs_conf = {
+    el: '#editor_gtfs',
     data() {
         return {
 
@@ -556,8 +373,7 @@ const editor_gtfs_conf = {
             popup_content: popup_content, // Gobal object
 
             nodes: o_se_group.nodes, // contains stops too FIXME
-            stops: [], // contains stops too FIXME
-
+            stops: o_se_group.nodes.filter(filterValidNode).filter(filterStopNode), // contains stops too FIXME
             agencies: o_se_group.agencies,
             shapes: o_se_group.shapes,
             routes: o_se_group.routes,
@@ -670,7 +486,7 @@ const editor_gtfs_conf = {
         map_hidden (new_state, old_state) {
             document.getElementById("map_container").hidden =
                 new_state;
-            map.updateSize();
+            o_se_group.map.updateSize();
         },
         map_view_nodes (new_state, old_state) {
             if (new_state){
@@ -711,7 +527,7 @@ const editor_gtfs_conf = {
             document.getElementById("map_container").hidden =
                 !document.getElementById("map_container").hidden;
             this.map_hidden = document.getElementById("map_container").hidden;
-            map.updateSize();
+            o_se_group.map.updateSize();
         },
         changeNodeInfoFromPopup(node_id){
             o_se_group.changeNodeInfoByID(
@@ -1061,16 +877,14 @@ const editor_gtfs_conf = {
 // main_app.mount('#editor_gtfs');
 
 // VUE 2
-editor_gtfs_conf['el'] = '#editor_gtfs';
-const app = new Vue(editor_gtfs_conf);
+const app = new vue(editor_gtfs_conf);
 
 // Start
-app.stops = app.nodes.filter(filterValidNode).filter(filterStopNode); // FIXME
 
 //////////////////// overlay_toolbar section ///////////////////////
 
 /////////////////// set map target ////////////
-map.setTarget(
+o_se_group.map.setTarget(
     document.getElementById("map_container")
 );
 
@@ -1092,10 +906,10 @@ closer.onclick = function () {
     closer.blur();
     return false;
 };
-map.addOverlay(overlay_node_info);
+o_se_group.map.addOverlay(overlay_node_info);
 
 ////////// delete the loading screen div //////
-map.once('postrender', async function(event) {
+o_se_group.map.once('postrender', async function(event) {
     await sleep(2000); // wait for two seconds
     document.getElementById("loading_screen").remove();
 });
