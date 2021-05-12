@@ -8,7 +8,8 @@ const { en_US, es_CR } = require('./lang.js');
 const vue = require('vue');
 
 import Overlay from 'ol/Overlay';
-import {fromLonLat} from 'ol/proj';
+
+import {fromLonLat} from 'ol/proj'; // FIXME; remove
 
 
 ///////////// utils functions ///////////////////
@@ -29,19 +30,6 @@ if (!String.prototype.format) {
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
-///////////// initial values ////////////////////
-
-document.getElementById("view_nodes_cb").checked = true;
-document.getElementById("view_links_cb").checked = true;
-document.getElementById("view_stops_cb").checked = true;
-document.getElementsByName("node_type").forEach(
-    checkbox => {
-        checkbox.checked = false;
-        // checkbox.disabled = true; // TODO
-    });
-document.getElementById("nt_shape").checked      = true;
-document.getElementById("action").value          = "select";
 
 //////////////// filters /////////////////////////
 
@@ -77,17 +65,6 @@ function filterValidShapeSegment (shape) {
 }
 
 
-//////////////// global vars /////////////////////
-
-var popup_content = {
-    id: null,
-    type: null,
-    connections: null,
-    geo_lon: '',
-    geo_lat: '',
-    stop_info: {}
-};
-
 /////////////// components ///////////////////////
 
 //////////////////////////////////////////////////
@@ -98,7 +75,6 @@ var popup_content = {
 // --->  @++++++++
 var extent_area =
     fromLonLat([-84.43669241118701,9.726525930153954]
-
 );
 
 // ++++++++@ <---
@@ -108,37 +84,12 @@ var extent_area =
 // +++++++++
 extent_area = extent_area.concat(
     fromLonLat([-83.72894500499169,9.99625455768836]
-
 ));
 
 //// Constrained map in the work area
 // Map need a layers group, we're
 // adding only base layer, streetElementNodes will be next
 // base layer mainly has routes and buildings.
-
-// Return node type from radio menu
-function get_node_type () {
-    const radio_buttons_node_type = document.getElementsByName("node_type");
-
-    var result;
-    radio_buttons_node_type.forEach( (radio_button) => {
-        if (radio_button.checked){
-            result = radio_button.value;
-        }
-    });
-    return result;
-}
-
-function set_node_type (type) {
-    const radio_buttons_node_type = document.getElementsByName("node_type");
-    radio_buttons_node_type.forEach( (radio_button) => {
-        if (radio_button.value == type){
-            radio_button.checked = true;
-        } else {
-            radio_button.checked = false;
-        }
-    });
-}
 
 ///////////////////////////////////////////////////////////////////////
 // Aqui vamos haciendo la lista con puntos dependiendo de que clase sea
@@ -150,150 +101,6 @@ if ( typeof(_streetElementGroupHistory) !== 'undefined' ){
     console.log("There is a history");
     o_se_group.historyLoad(_streetElementGroupHistory);
 }
-
-var coord2;
-
-o_se_group.map.on('click', (event) => {
-    var coordinate = toLonLat(event.coordinate);
-    var action = document.getElementById('action').value;
-    var feature_onHover = o_se_group.map.forEachFeatureAtPixel(
-        event.pixel,
-        function(feature, layer)
-        {
-            return feature;
-        });
-
-    ////////////////////////// create shape ////////////////
-
-    if ( feature_onHover ){
-        if (streetElementLink.isInstance(
-            feature_onHover.parent))
-        { // if element is a link
-            if (feature_onHover.parent.oneshot){
-                feature_onHover.parent.oneshot(
-                    feature_onHover.parent.getID()
-                );
-                feature_onHover.parent.oneshot = undefined;
-                return; // end execution
-            }
-        }
-    }
-
-    /////////////////////  end create shape ////////////////
-
-    switch(action) {
-    case "remove":
-        // Click on element to remove
-        if ( feature_onHover ){
-            if (streetElementNode.isInstance(
-                feature_onHover.parent)
-               ){ // if element is a node
-                o_se_group.deleteNodeByID(
-                    feature_onHover.parent.getID());
-            }
-        }
-        break;
-
-    case "add":
-        if (feature_onHover){
-            if (streetElementNode.isInstance(
-                feature_onHover.parent)
-               ){ // if element is a node
-                // Link a node with other by ID
-                o_se_group.linkNodesByID(
-                    feature_onHover.parent.getID(),
-                    o_se_group.getLastSelectedNode().getID()
-                );
-                o_se_group.selectNodeByID(
-                    feature_onHover.parent.getID()
-                );
-            }
-        } else {
-            o_se_group.addNode(coordinate, get_node_type()); //FIXME
-        }
-        break;
-
-    case "split":
-        console.log("Split a line");
-        if (feature_onHover){
-            if (streetElementLink.isInstance(
-                feature_onHover.parent)
-                ){
-                // It is a Link
-                o_se_group.splitLinkByID(
-                    feature_onHover.parent.getID(),
-                    coordinate,
-                    get_node_type() // TODO
-                );
-            }
-        } else {
-            // does nothing
-            console.log("Nothing to split");
-        }
-        break;
-
-    case "cut":
-        console.log("Remove a link");
-        if (feature_onHover){
-            if (streetElementLink.isInstance(
-                feature_onHover.parent)
-               ){ // if element is a Link
-                o_se_group.deleteLinkByID(
-                    feature_onHover.parent.getID()
-                );
-            }
-        } else {
-            // does nothing
-            console.log("Nothing to split");
-        }
-        break;
-
-    case "move":
-        if (o_se_group.getLastSelectedNode()){
-            o_se_group.setNodeCoordinatesByID(
-                o_se_group.getLastSelectedNode().getID(),
-                coordinate
-            );
-        }
-        break;
-
-    case "select":
-        if (feature_onHover){ // if element exists
-            if (streetElementNode.isInstance(
-                feature_onHover.parent)
-               ){ // if element is a node
-                o_se_group.selectNodeByID(
-                    feature_onHover.parent.getID()
-                );
-                // clear the name input
-                document.getElementById("ol_in_stop_name").value = '';
-                popup_content.id =
-                    feature_onHover.parent.getID();
-                popup_content.type =
-                    feature_onHover.parent.getType();
-                popup_content.connections =
-                    feature_onHover.parent.getConnections().length;
-                popup_content.stop_info =
-                    feature_onHover.parent.getStopInfo();
-                overlay_node_info.setPosition(
-                    //fromLonLat(
-                    feature_onHover.parent.getCoordinates()
-                    //)
-                ); // TODO
-            }
-        }
-        else {
-            overlay_node_info.setPosition(
-                undefined
-            ); // TODO
-        }
-        break;
-
-        defaul: // Could be unselect
-        console.log("undefined action");
-
-    }
-});
 
 //////////////////// Download as text/plain /////////////////////
 
@@ -311,13 +118,12 @@ function downloadString(text, fileName) {
 }
 
 function downloadShapesCSV () {
-    // TODO
+    console.log("downloadShapesCSV");
     downloadString(o_se_group.shapesToGTFS(), 'shapes.txt');
 }
 
 
 function downloadHistoryArray () {
-    // TODO
     console.log("downloadHistoryArray");
     downloadString(o_se_group.historyString(), 'street_element_group_history.txt');
 }
@@ -354,10 +160,9 @@ const editor_gtfs_conf = {
         return {
 
             /////////////////// SIDEBAR
-            map_hidden: false, // TODO
+            map_hidden: false,
             map_action: 'select',
-
-            // map_node_type:, // TODO
+            map_node_type: 'shape',
 
             map_view_nodes: true,
             map_view_links: true,
@@ -370,7 +175,7 @@ const editor_gtfs_conf = {
             showList: "shape", // it shows Shapes by default
 
             // Popup content structures
-            popup_content: popup_content, // Gobal object
+            popup_content: o_se_group.popup_content, // Gobal object
 
             nodes: o_se_group.nodes, // contains stops too FIXME
             stops: o_se_group.nodes.filter(filterValidNode).filter(filterStopNode), // contains stops too FIXME
@@ -465,23 +270,10 @@ const editor_gtfs_conf = {
             this.stops = this.nodes.filter(filterValidNode).filter(filterStopNode);
         },
         map_action (new_state, old_state) {
-            switch(new_state) { // TODO
-            case "select":
-                break;
-            case "add":
-                break;
-            case "split":
-                break;
-            case "move":
-                break;
-            case "remove":
-                break;
-            case "cut":
-                break;
-            default:
-                console.log("unknown action");
-                this.map_action = "select";
-            }
+            o_se_group.selected_action = new_state;
+        },
+        map_node_type (new_state, old_state) {
+            o_se_group.selected_node_type = new_state;
         },
         map_hidden (new_state, old_state) {
             document.getElementById("map_container").hidden =
@@ -540,7 +332,7 @@ const editor_gtfs_conf = {
                 }
             );
             // Update popup
-            popup_content.stop_info = o_se_group.nodes[node_id].getStopInfo();
+            o_se_group.popup_content.stop_info = o_se_group.nodes[node_id].getStopInfo();
             this.stops = this.nodes.filter(filterValidNode).filter(filterStopNode); // FIXME // hotfix
             alert("Success: edit data"); // FIXME : remove
         },
@@ -555,7 +347,7 @@ const editor_gtfs_conf = {
                 }
             );
             // Update popup
-            popup_content.stop_info = o_se_group.nodes[node_id].getStopInfo();
+            o_se_group.popup_content.stop_info = o_se_group.nodes[node_id].getStopInfo();
             alert("Success: edit data"); // FIXME : remove
         },
         newShapeOnChange(event, element) {
@@ -893,20 +685,23 @@ o_se_group.map.setTarget(
 //// Popups/overlay
 var content = document.getElementById('popup-content');
 var closer = document.getElementById('popup-closer');
-var overlay_node_info = new Overlay({
-    element: document.getElementById(
-        'popup_node_info'),
-    autoPan: true,
-    autoPanAnimation: {
-        duration: 250,
-    },
-});
+o_se_group.map.addOverlay(
+    new Overlay({
+        id: 'popup_node_info',
+        element: document.getElementById(
+            'popup_node_info'),
+        autoPan: true,
+        autoPanAnimation: {
+            duration: 250,
+        },
+    })
+);
+
 closer.onclick = function () {
-    overlay_node_info.setPosition(undefined);
+    o_se_group.map.getOverlayById('popup_node_info').setPosition(undefined);
     closer.blur();
     return false;
 };
-o_se_group.map.addOverlay(overlay_node_info);
 
 ////////// delete the loading screen div //////
 o_se_group.map.once('postrender', async function(event) {
@@ -917,5 +712,6 @@ o_se_group.map.once('postrender', async function(event) {
 ///////////////// exports (bundle.something in console) ////////////
 // these method and data is accesible from outside the bundle
 module.exports = {
+    'o_se_group': o_se_group, // FIXME temporal
     'downloadHistoryArray': downloadHistoryArray
 };

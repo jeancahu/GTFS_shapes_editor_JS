@@ -43,13 +43,13 @@
                 </select>
 
                 <label>Type </label><br>
-                <input type="radio" id="nt_shape" name="node_type" value="shape" checked="true">
+                <input type="radio" id="nt_shape" name="node_type" value="shape" v-model="map_node_type" checked="true">
                 <label for="nt_shape">Shape</label><br>
-                <input type="radio" id="nt_endpoint" name="node_type" value="endpoint" checked="false">
+                <input type="radio" id="nt_endpoint" name="node_type" value="endpoint" v-model="map_node_type" checked="false">
                 <label for="nt_endpoint">Endpoint</label><br>
-                <input type="radio" id="nt_stop" name="node_type" value="stop" checked="false">
+                <input type="radio" id="nt_stop" name="node_type" value="stop" v-model="map_node_type" checked="false">
                 <label for="nt_stop">Stop</label><br>
-                <input type="radio" id="nt_fork" name="node_type" value="fork" checked="false">
+                <input type="radio" id="nt_fork" name="node_type" value="fork" v-model="map_node_type" checked="false">
                 <label for="nt_fork">Intersection</label><br>
 
                 <label>View</label><br>
