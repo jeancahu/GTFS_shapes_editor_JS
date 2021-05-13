@@ -206,7 +206,12 @@
                 <!-- END AGENCY -->
 
                 <!-- STOPS -->
-                <table v-show="isVisible('stop')" class="alt">
+                <div v-show="isVisible('stop')">
+                <label for="file_gtfs_input">Upload stops.txt file:</label>
+                <input type="file"
+                       accept="plain/text,.txt"
+                       id="file_gtfs_input" name="file_gtfs_input">
+                <table class="alt">
                     <thead>
                         <tr>
                             <th v-for="field in stopFields">{{ dict[field] }}</th>
@@ -228,6 +233,7 @@
                         </tr>
                     </tbody>
                 </table>
+                </div>
                 <!-- END STOPS -->
 
                 <!-- ROUTES -->

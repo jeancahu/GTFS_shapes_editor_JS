@@ -6,7 +6,8 @@ Easy ingress for GTFS data required to generate a basic zipped file, the same fi
 ## How to use(develop):
 
     $ npm install .
-    $ npm run serve
+    $ npm run debug
+    $ firefox ./index.html
 
 Here some examples:
 [Editor preview](https://jeancahu.github.io/GTFS_shapes_editor_JS/index.html)

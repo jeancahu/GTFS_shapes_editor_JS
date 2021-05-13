@@ -671,10 +671,6 @@ const editor_gtfs_conf = {
 // VUE 2
 const app = new vue(editor_gtfs_conf);
 
-// Start
-
-//////////////////// overlay_toolbar section ///////////////////////
-
 /////////////////// set map target ////////////
 o_se_group.map.setTarget(
     document.getElementById("map_container")
@@ -709,9 +705,43 @@ o_se_group.map.once('postrender', async function(event) {
     document.getElementById("loading_screen").remove();
 });
 
+/////////////////////////// File gtfs input
+var file_content = {};
+document.getElementById("file_gtfs_input").onchange = (change) => {
+    change.target.files[change.target.files.length-1].text().then(
+        (file) => {
+            var content = file.replace(/\r/gm, '').split('\n');
+            var headers = content[0].split(',');
+            content.slice(1).forEach((line) =>{
+                var params = {};
+                line.split(/,(?=(?:(?:[^"]*"){2})*[^\"]*$)/).forEach((line, index) => {
+                    params[headers[index]] = line;
+                });
+                console.log(params);
+                //////////////////////////////// TODO/////////////////////////////////////
+                if ( params.stop_lon && params.stop_lat &&                              //
+                     o_se_group.nodes.every(                                            //
+                         (node) => node.stop_info.id != params.stop_id)                 //
+                   ){                                                                   //
+                    o_se_group.selectNode(null);                                        //
+                    params['stop_description'] = params.stop_desc;                      //
+                    o_se_group.addNode([params.stop_lon, params.stop_lat], 'stop');     //
+                    o_se_group.changeNodeInfoByID(o_se_group.nodes.length -1,           //
+                                                  params                                //
+                                                 );                                     //
+                }                                                                       //
+                //////////////////////////////////////////////////////////////////////////
+
+            });
+            // file_content['content'] = file.replace(/\r/gm, '').split('\n');
+        }
+    );
+};
+
 ///////////////// exports (bundle.something in console) ////////////
 // these method and data is accesible from outside the bundle
 module.exports = {
     'o_se_group': o_se_group, // FIXME temporal
+    // 'file_content': file_content, // FIXME temporal
     'downloadHistoryArray': downloadHistoryArray
 };
