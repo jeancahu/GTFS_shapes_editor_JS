@@ -330,8 +330,8 @@ const editor_gtfs_conf = {
                     stop_name: document.getElementById("ol_in_stop_name").value
                 }
             );
-            this.stops = this.nodes.filter(filterValidNode).filter(filterStopNode); // FIXME // hotfix
-            alert("Success: edit data"); // FIXME : remove
+            this.stops = this.nodes.filter(filterValidNode).filter(filterStopNode); // TODO remove
+            alert("Success: edit data");
         },
         changeNodeInfoFromStopSection(node_id){
             o_se_group.changeNodeInfoByID(
@@ -343,7 +343,7 @@ const editor_gtfs_conf = {
                     stop_url: document.getElementById("stop_url_"+node_id).value,
                 }
             );
-            alert("Success: edit data"); // FIXME : remove
+            alert("Success: edit data");
         },
         newShapeOnChange(event, element) {
             var element_id;
@@ -362,8 +362,8 @@ const editor_gtfs_conf = {
                 if (element_id == 'noselect'){
                     this.ns_allowed_links = [];
                 } else {
-                    view.setCenter(this.nodes[element_id].getCoordinates()); // FIXME remove
-                    view.setZoom(17.9); // FIXME remove
+                    o_se_group.map.getView().setCenter(this.nodes[element_id].getCoordinates()); // TODO remove
+                    o_se_group.map.getView().setZoom(17.9); // TODO remove
 
                     this.ns_allowed_links =
                         this.nodes[element_id].getConnections();
@@ -436,8 +436,8 @@ const editor_gtfs_conf = {
             }
         },
         goToNodeOnMap (node_id) { // TODO needs testing
-            view.setCenter(this.nodes[node_id].getCoordinates());
-            view.setZoom(17.9); // TODO use a config file
+            o_se_group.map.getView().setCenter(this.nodes[node_id].getCoordinates());
+            o_se_group.map.getView().setZoom(17.9); // TODO use a config file
         },
         isVisible(value) { // Return a bool
             return ( value == this.showList );
