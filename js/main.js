@@ -395,7 +395,7 @@ const editor_gtfs_conf = {
                     this.ns_head_node_id =
                         result[result.length -1].getID();
 
-                    excluded_link = streetElementLink.getLinkBetween(
+                    var excluded_link = streetElementLink.getLinkBetween(
                         result[result.length -1],
                         result[result.length -2]
                     );
