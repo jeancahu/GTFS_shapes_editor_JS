@@ -325,14 +325,11 @@ const editor_gtfs_conf = {
             o_se_group.changeNodeInfoByID(
                 node_id,
                 {
-                    node_type: document.getElementById("ol_node_type").value,
+                    type: document.getElementById("ol_node_type").value,
                     stop_id: document.getElementById("ol_in_stop_id").value,
                     stop_name: document.getElementById("ol_in_stop_name").value
-                    //stop_description: document.getElementById("").value,
                 }
             );
-            // Update popup
-            o_se_group.popup_content.stop_info = o_se_group.nodes[node_id].getStopInfo();
             this.stops = this.nodes.filter(filterValidNode).filter(filterStopNode); // FIXME // hotfix
             alert("Success: edit data"); // FIXME : remove
         },
@@ -342,12 +339,10 @@ const editor_gtfs_conf = {
                 {
                     stop_id: document.getElementById("stop_id_"+node_id).value,
                     stop_name: document.getElementById("stop_name_"+node_id).value,
-                    stop_description: document.getElementById("stop_desc_"+node_id).value,
+                    stop_desc: document.getElementById("stop_desc_"+node_id).value,
                     stop_url: document.getElementById("stop_url_"+node_id).value,
                 }
             );
-            // Update popup
-            o_se_group.popup_content.stop_info = o_se_group.nodes[node_id].getStopInfo();
             alert("Success: edit data"); // FIXME : remove
         },
         newShapeOnChange(event, element) {
@@ -533,12 +528,12 @@ const editor_gtfs_conf = {
             o_se_group.removeService(service_id);
         },
         saveTrip(){
-            o_se_group.addTrip(
-                document.getElementById("t_route_id").value, // TODO, try to get the value without getElementById, using vue
-                document.getElementById("t_trip_id").value,
-                document.getElementById("t_direction_id").value,
-                document.getElementById("t_shape_id").value
-            );
+            o_se_group.addTrip({
+                'route_id': document.getElementById("t_route_id").value, // TODO, try to get the value without getElementById, using vue
+                'trip_id': document.getElementById("t_trip_id").value,
+                'direction_id': document.getElementById("t_direction_id").value,
+                'shape_id': document.getElementById("t_shape_id").value
+            });
             console.log("saveTrip");
         },
         removeTrip (trip_id){ // TODO
@@ -707,7 +702,7 @@ o_se_group.map.once('postrender', async function(event) {
 
 /////////////////////////// File gtfs input
 var file_content = {};
-document.getElementById("file_gtfs_input").onchange = (change) => {
+document.getElementById("file_gtfs_stops_input").onchange = (change) => {
     change.target.files[change.target.files.length-1].text().then(
         (file) => {
             var content = file.replace(/\r/gm, '').split('\n');
@@ -717,23 +712,12 @@ document.getElementById("file_gtfs_input").onchange = (change) => {
                 line.split(/,(?=(?:(?:[^"]*"){2})*[^\"]*$)/).forEach((line, index) => {
                     params[headers[index]] = line;
                 });
-                console.log(params);
-                //////////////////////////////// TODO/////////////////////////////////////
-                if ( params.stop_lon && params.stop_lat &&                              //
-                     o_se_group.nodes.every(                                            //
-                         (node) => node.stop_info.id != params.stop_id)                 //
-                   ){                                                                   //
-                    o_se_group.selectNode(null);                                        //
-                    params['stop_description'] = params.stop_desc;                      //
-                    o_se_group.addNode([params.stop_lon, params.stop_lat], 'stop');     //
-                    o_se_group.changeNodeInfoByID(o_se_group.nodes.length -1,           //
-                                                  params                                //
-                                                 );                                     //
-                }                                                                       //
-                //////////////////////////////////////////////////////////////////////////
-
+                params['nolink'] = true; // doesn't link with another node
+                params['stop_description'] = params.stop_desc;
+                params['coordinate'] = [params.stop_lon, params.stop_lat];
+                params['type'] = 'stop';
+                o_se_group.addNode(params);
             });
-            // file_content['content'] = file.replace(/\r/gm, '').split('\n');
         }
     );
 };
@@ -742,6 +726,6 @@ document.getElementById("file_gtfs_input").onchange = (change) => {
 // these method and data is accesible from outside the bundle
 module.exports = {
     'o_se_group': o_se_group, // FIXME temporal
-    // 'file_content': file_content, // FIXME temporal
-    'downloadHistoryArray': downloadHistoryArray
+    'downloadHistoryArray': downloadHistoryArray,
+    'downloadShapesCSV': downloadShapesCSV
 };

@@ -34,23 +34,25 @@
             <div class="toolbar">
                 <label>Action </label><br>
                 <select id="action" v-model="map_action">
-                    <option class="orange_text" value="select">select</option>
-                    <option value="add">add</option>
-                    <option value="split">split</option> <!-- RENAME TODO -->
-                    <option value="move">move</option>
-                    <option value="remove">remove</option> <!-- RENAME TODO -->
-                    <option value="cut">cut</option> <!-- RENAME TODO -->
+                    <option class="orange_text" value="select">Select node</option>
+                    <option value="add">Add node</option>
+                    <option value="split">Split link</option> <!-- RENAME TODO -->
+                    <option value="move">Move node</option>
+                    <option value="remove">Remove-node</option> <!-- RENAME TODO -->
+                    <option value="cut">Delete-link</option> <!-- RENAME TODO -->
                 </select>
 
-                <label>Type </label><br>
-                <input type="radio" id="nt_shape" name="node_type" value="shape" v-model="map_node_type" checked="true">
-                <label for="nt_shape">Shape</label><br>
-                <input type="radio" id="nt_endpoint" name="node_type" value="endpoint" v-model="map_node_type" checked="false">
-                <label for="nt_endpoint">Endpoint</label><br>
-                <input type="radio" id="nt_stop" name="node_type" value="stop" v-model="map_node_type" checked="false">
-                <label for="nt_stop">Stop</label><br>
-                <input type="radio" id="nt_fork" name="node_type" value="fork" v-model="map_node_type" checked="false">
-                <label for="nt_fork">Intersection</label><br>
+                <div v-show="map_action=='add'">
+                <label>Node type</label><br>
+                    <input type="radio" id="nt_shape" name="node_type" value="shape" v-model="map_node_type" checked="true">
+                    <label for="nt_shape">Shape</label><br>
+                    <input type="radio" id="nt_endpoint" name="node_type" value="endpoint" v-model="map_node_type" checked="false">
+                    <label for="nt_endpoint">Endpoint</label><br>
+                    <input type="radio" id="nt_stop" name="node_type" value="stop" v-model="map_node_type" checked="false">
+                    <label for="nt_stop">Stop</label><br>
+                    <input type="radio" id="nt_fork" name="node_type" value="fork" v-model="map_node_type" checked="false">
+                    <label for="nt_fork">Intersection</label><br>
+                </div>
 
                 <label>View</label><br>
                 <input type="checkbox" id="view_nodes_cb" value="Nodes" checked="true" v-model="map_view_nodes">
@@ -92,9 +94,9 @@
 
                         <div v-show="popup_node_type_is_stop">
                             <label for="ol_in_stop_id">Stop ID: </label>
-                            <input type="text" id="ol_in_stop_id" name="ol_in_stop_id" placeholder="Stop ID" :value="popup_content.stop_info.id"/>
+                            <input type="text" id="ol_in_stop_id" name="ol_in_stop_id" placeholder="Stop ID" :value="popup_content.stop_info.stop_id"/>
                             <label for="ol_in_stop_name">Stop name: </label>
-                            <input type="text" id="ol_in_stop_name" name="ol_in_stop_name" placeholder="Stop Name" :value="popup_content.stop_info.name"/>
+                            <input type="text" id="ol_in_stop_name" name="ol_in_stop_name" placeholder="Stop Name" :value="popup_content.stop_info.stop_name"/>
                         </div>
 
                         <button @click="changeNodeInfoFromPopup(popup_content.id)">save</button>
@@ -207,10 +209,10 @@
 
                 <!-- STOPS -->
                 <div v-show="isVisible('stop')">
-                <label for="file_gtfs_input">Upload stops.txt file:</label>
-                <input type="file"
-                       accept="plain/text,.txt"
-                       id="file_gtfs_input" name="file_gtfs_input">
+                    <label for="file_gtfs_stops_input">Upload stops.txt file:</label>
+                    <input type="file"
+                           accept="plain/text,.txt"
+                           id="file_gtfs_stops_input" name="file_gtfs_stops_input">
                 <table class="alt">
                     <thead>
                         <tr>
@@ -221,14 +223,14 @@
                     </thead>
                     <tbody>
                         <tr v-for="stop in rev_stops">
-                            <td><input type="text" :id="'stop_id_'+stop.getID()"   :value="stop.getStopInfo().id" placeholder="Stop ID"></td>
+                            <td><input type="text" :id="'stop_id_'+stop.getID()"   :value="stop.getStopInfo().stop_id" placeholder="Stop ID"></td>
 
                             <!-- Page 1 -->
-                            <td><input type="text" :id="'stop_name_'+stop.getID()" :value="stop.getStopInfo().name" placeholder="Name"></td>
-                            <td><input type="text" :id="'stop_desc_'+stop.getID()" :value="stop.getStopInfo().description" placeholder="Description"></td>
+                            <td><input type="text" :id="'stop_name_'+stop.getID()" :value="stop.getStopInfo().stop_name" placeholder="Name"></td>
+                            <td><input type="text" :id="'stop_desc_'+stop.getID()" :value="stop.getStopInfo().stop_desc" placeholder="Description"></td>
 
                             <!-- Page 2 -->
-                            <td><input type="text" :id="'stop_url_'+stop.getID()" placeholder="Info URL"></td>
+                            <td><input type="text" :id="'stop_url_'+stop.getID()" :value="stop.getStopInfo().stop_url" placeholder="Info URL"></td>
                             <td><button @click="changeNodeInfoFromStopSection(stop.getID())">save</button></td>
                         </tr>
                     </tbody>
