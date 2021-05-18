@@ -16,15 +16,15 @@
     "babelify": "^10.0.0",
     "browserify": "^17.0.0",
     "esmify": "^2.1.1",
-    "tinyify": "^3.0.0",
+    "uglify-js": "^3.13.6",
     "watchify": "^4.0.0"
   },
   "browser": {
     "vue": "vue/dist/vue.common.js"
   },
   "scripts": {
-    "debug": "browserify -t babelify --plugin esmify --standalone bundle ./js/main.js -d --outfile ./dist/bundle.js",
-    "dist": "browserify -t babelify --plugin esmify --standalone bundle --plugin tinyify ./js/main.js --outfile ./dist/bundle.js",
+    "debug": "browserify -t babelify --plugin esmify --standalone bundle ./js/main.js --debug | uglifyjs -cm --in-source-map inline --source-map-inline --output ./dist/bundle.js",
+    "dist": "browserify -t babelify --plugin esmify --standalone bundle ./js/main.js | uglifyjs -cm --output ./dist/bundle.js",
     "watch": "watchify -p esmify --standalone bundle ./js/main.js -o ./dist/bundle.js -d -v",
     "test": "echo 'no tests yet' && exit 1",
     "serve": "node -v && node index.js && exit 0"
