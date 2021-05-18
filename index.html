@@ -25,46 +25,63 @@
 
         <div id="editor_gtfs">
             <div class="toolbar">
-                <button class="btn btn-primary" onclick="bundle.downloadHistoryArray()">
-                    Save
-                </button>
-                <button class="btn btn-primary" @click="toggleHideMap()">Map</button>
+                <ul class="nav justify-content-center">
+                    <li class="nav-item">
+                        <button class="btn btn-primary" onclick="bundle.downloadHistoryArray()">
+                            Save
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-primary" @click="toggleHideMap()">
+                            Map
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" @click="map_view_nodes=!map_view_nodes"
+                                    :class="['btn', { 'btn-primary': !map_view_nodes }, { 'btn-success': map_view_nodes }]"
+                            >{{map_view_nodes? 'Hide': 'Show'}} nodes</button>
 
-                <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" @click="map_view_nodes=!map_view_nodes"
-                            :class="['btn', { 'btn-primary': !map_view_nodes }, { 'btn-success': map_view_nodes }]"
-                    >{{map_view_nodes? 'Hide': 'Show'}} nodes</button>
+                            <button type="button" @click="map_view_links=!map_view_links"
+                                    :class="['btn', { 'btn-primary': !map_view_links }, { 'btn-success': map_view_links }]"
+                            >{{map_view_links? 'Hide': 'Show'}} links</button>
 
-                    <button type="button" @click="map_view_links=!map_view_links"
-                            :class="['btn', { 'btn-primary': !map_view_links }, { 'btn-success': map_view_links }]"
-                    >{{map_view_links? 'Hide': 'Show'}} links</button>
-
-                    <button type="button" @click="map_view_stops=!map_view_stops"
-                            :class="['btn', { 'btn-primary': !map_view_stops }, { 'btn-success': map_view_stops }]"
-                    >{{map_view_stops? 'Hide': 'Show'}} stops</button>
-                </div>
-
-                <label>Action </label>
-                <select id="action" v-model="map_action">
-                    <option class="orange_text" value="select">Select node</option>
-                    <option value="add">Add node</option>
-                    <option value="split">Split link</option>
-                    <option value="move">Move node</option>
-                    <option value="remove">Remove-node</option>
-                    <option value="cut">Delete-link</option>
-                </select>
-
-                <label>Node type</label>
-                <input type="radio" id="nt_shape" name="node_type" value="shape" v-model="map_node_type" checked="true">
-                <label for="nt_shape">Shape</label>
-                <input type="radio" id="nt_endpoint" name="node_type" value="endpoint" v-model="map_node_type" checked="false">
-                <label for="nt_endpoint">Endpoint</label>
-                <input type="radio" id="nt_stop" name="node_type" value="stop" v-model="map_node_type" checked="false">
-                <label for="nt_stop">Stop</label>
-                <input type="radio" id="nt_fork" name="node_type" value="fork" v-model="map_node_type" checked="false">
-                <label for="nt_fork">Intersection</label>
-
-                >> map: OpenStreetMap
+                            <button type="button" @click="map_view_stops=!map_view_stops"
+                                    :class="['btn', { 'btn-primary': !map_view_stops }, { 'btn-success': map_view_stops }]"
+                            >{{map_view_stops? 'Hide': 'Show'}} stops</button>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle"
+                                    type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
+                                Map interaction
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton3">
+                                <li><a @click="map_action='select'" :class="['dropdown-item', {'active': map_action=='select'}]" href="#">Select node</a></li>
+                                <li><a @click="map_action='add'" :class="['dropdown-item', {'active': map_action=='add'}]" href="#">Add node</a></li>
+                                <li><a @click="map_action='split'" :class="['dropdown-item', {'active': map_action=='split'}]" href="#">Split link</a></li>
+                                <li><a @click="map_action='move'" :class="['dropdown-item', {'active': map_action=='move'}]" href="#">Move node</a></li>
+                                <li><a @click="map_action='remove'" :class="['dropdown-item', {'active': map_action=='remove'}]" href="#">Remove node</a></li>
+                                <li><a @click="map_action='cut'" :class="['dropdown-item', {'active': map_action=='cut'}]" href="#">Delete link</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle"
+                                    type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                                Node type
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                                <li><a @click="map_node_type='shape'" :class="['dropdown-item', {'active': map_node_type=='shape'}]" href="#">Shape</a></li>
+                                <li><a @click="map_node_type='endpoint'" :class="['dropdown-item', {'active': map_node_type=='endpoint'}]" href="#">Endpoint</a></li>
+                                <li><a @click="map_node_type='stop'" :class="['dropdown-item', {'active': map_node_type=='stop'}]" href="#">Stop</a></li>
+                                <li><a @click="map_node_type='fork'" :class="['dropdown-item', {'active': map_node_type=='fork'}]" href="#">Intersection</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
             </div>
         <div class="body-container">
 
@@ -454,8 +471,9 @@
         </div></div>
     </body>
     <footer>
-        <!-- Axios to post data -->
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script> <!-- TODO Remove, it's not used -->
+        <!-- Axios to post data
+             <script src="https://unpkg.com/axios/dist/axios.min.js"></script> TODO Remove, it's not used
+        -->
 
         <!-- editor history / file loaded FIXME remove-->
         <script src="js/street_element_group_history.js"></script>

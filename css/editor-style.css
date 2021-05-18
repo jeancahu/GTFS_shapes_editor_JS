@@ -16,6 +16,7 @@ body {
     height: calc(100% - 50px);
     width: 100%;
     top: 50px;
+    z-index: 20;
 }
 
 .map_container {
@@ -28,13 +29,21 @@ body {
     height: 50px; /* Full-height: remove this if you want "auto" height */
     width: 100%; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-    z-index: 90; /* Stay on top */
+    z-index: 30; /* Stay on top */
     top: 0; /* Stay at the top */
     left: 0;
     background-color: #11101d; /* Black */
-    overflow: hidden; /* Disable scroll */
     color: white;
     padding: 6px 14px;
+}
+
+.toolbar li div { /* FIXME */
+    left: 20px;
+}
+
+.toolbar .dropdown { /* FIXME */
+    left: 50px;
+    z-index: 30;
 }
 
 .loading_screen {
