@@ -172,8 +172,6 @@ const editor_gtfs_conf = {
             language: "en_US",
             dict: en_US,
 
-            showList: "shape", // it shows Shapes by default
-
             // Popup content structures
             popup_content: o_se_group.popup_content, // Gobal object
 
@@ -438,9 +436,6 @@ const editor_gtfs_conf = {
         goToNodeOnMap (node_id) { // TODO needs testing
             o_se_group.map.getView().setCenter(this.nodes[node_id].getCoordinates());
             o_se_group.map.getView().setZoom(17.9); // TODO use a config file
-        },
-        isVisible(value) { // Return a bool
-            return ( value == this.showList );
         },
         saveAgency(){
             this.agencyFields.forEach( (value) => {

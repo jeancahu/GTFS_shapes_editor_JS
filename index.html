@@ -7,8 +7,9 @@
         <meta name="description" content="" />
         <meta name="keywords" content="" />
 
-        <!-- Chota CSS -->
-        <link rel="stylesheet" href="https://unpkg.com/chota@latest">
+        <!-- CSS only Bootstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
         <link rel="stylesheet" href="css/editor-style.css" />
 
         <!-- OpenLayers style lib -->
@@ -16,53 +17,53 @@
         <link rel="stylesheet" href="css/ol_popup.css" type="text/css">
 
     </head>
-    <body style="padding: 0;"> <!-------- FIXME -------->
+    <body>
 
         <div id="loading_screen"  class="loading_screen">
             <img alt="loading_gif" src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/ab79a231234507.564a1d23814ef.gif"/> <!-- FIXME -->
         </div>
 
-        <div id="editor_gtfs"><div class="sidetools">
-            <div class="button_grid">
-                <button class="button primary icon" onclick="bundle.downloadHistoryArray()">
-                    Save
-                    <img src="https://icongr.am/feather/file.svg?size=16&amp;color=ffffff" alt="icon">
-                </button>
-                <button @click="toggleHideMap()">Map</button> <!-- Change to use VUE TODO -->
-            </div><br>
+        <div id="editor_gtfs">
+            <div class="sidetools">
+                <div class="button_grid">
+                    <button class="button primary icon" onclick="bundle.downloadHistoryArray()">
+                        Save
+                    </button>
+                    <button @click="toggleHideMap()">Map</button> <!-- Change to use VUE TODO -->
+                </div><br>
 
-            <div class="toolbar">
-                <label>Action </label><br>
-                <select id="action" v-model="map_action">
-                    <option class="orange_text" value="select">Select node</option>
-                    <option value="add">Add node</option>
-                    <option value="split">Split link</option> <!-- RENAME TODO -->
-                    <option value="move">Move node</option>
-                    <option value="remove">Remove-node</option> <!-- RENAME TODO -->
-                    <option value="cut">Delete-link</option> <!-- RENAME TODO -->
-                </select>
+                <div class="toolbar">
+                    <label>Action </label><br>
+                    <select id="action" v-model="map_action">
+                        <option class="orange_text" value="select">Select node</option>
+                        <option value="add">Add node</option>
+                        <option value="split">Split link</option>
+                        <option value="move">Move node</option>
+                        <option value="remove">Remove-node</option>
+                        <option value="cut">Delete-link</option>
+                    </select>
 
-                <div v-show="map_action=='add'">
-                <label>Node type</label><br>
-                    <input type="radio" id="nt_shape" name="node_type" value="shape" v-model="map_node_type" checked="true">
-                    <label for="nt_shape">Shape</label><br>
-                    <input type="radio" id="nt_endpoint" name="node_type" value="endpoint" v-model="map_node_type" checked="false">
-                    <label for="nt_endpoint">Endpoint</label><br>
-                    <input type="radio" id="nt_stop" name="node_type" value="stop" v-model="map_node_type" checked="false">
-                    <label for="nt_stop">Stop</label><br>
-                    <input type="radio" id="nt_fork" name="node_type" value="fork" v-model="map_node_type" checked="false">
-                    <label for="nt_fork">Intersection</label><br>
+                    <div v-show="map_action=='add'">
+                    <label>Node type</label><br>
+                        <input type="radio" id="nt_shape" name="node_type" value="shape" v-model="map_node_type" checked="true">
+                        <label for="nt_shape">Shape</label><br>
+                        <input type="radio" id="nt_endpoint" name="node_type" value="endpoint" v-model="map_node_type" checked="false">
+                        <label for="nt_endpoint">Endpoint</label><br>
+                        <input type="radio" id="nt_stop" name="node_type" value="stop" v-model="map_node_type" checked="false">
+                        <label for="nt_stop">Stop</label><br>
+                        <input type="radio" id="nt_fork" name="node_type" value="fork" v-model="map_node_type" checked="false">
+                        <label for="nt_fork">Intersection</label><br>
+                    </div>
+
+                    <label>View</label><br>
+                    <input type="checkbox" id="view_nodes_cb" value="Nodes" checked="true" v-model="map_view_nodes">
+                    <label for="view_nodes_cb">Show Nodes</label><br>
+                    <input type="checkbox" id="view_links_cb" value="Links" checked="true" v-model="map_view_links">
+                    <label for="view_links_cb">Show Links</label><br>
+                    <input type="checkbox" id="view_stops_cb" value="Stops" checked="true" v-model="map_view_stops">
+                    <label for="view_stops_cb">Show Stops</label>
                 </div>
-
-                <label>View</label><br>
-                <input type="checkbox" id="view_nodes_cb" value="Nodes" checked="true" v-model="map_view_nodes">
-                <label for="view_nodes_cb">Show Nodes</label><br>
-                <input type="checkbox" id="view_links_cb" value="Links" checked="true" v-model="map_view_links">
-                <label for="view_links_cb">Show Links</label><br>
-                <input type="checkbox" id="view_stops_cb" value="Stops" checked="true" v-model="map_view_stops">
-                <label for="view_stops_cb">Show Stops</label>
             </div>
-        </div>
         <div class="body-container">
 
             <!-- Openstreet map -->
@@ -100,328 +101,337 @@
                         </div>
 
                         <button @click="changeNodeInfoFromPopup(popup_content.id)">save</button>
-
                     </div>
                 </div>
 
-                <div class="horizontaltoolbar">
-                    <div class="col"><button class="button primary" @click="showList = 'agency'"  >{{ dict.agency     }}</button></div>
-                    <div class="col"><button class="button primary" @click="showList = 'shape'"   >{{ dict.shapes     }}</button></div>
-                    <div class="col"><button class="button primary" @click="showList = 'stop'"    >{{ dict.stops      }}</button></div>
-                    <div class="col"><button class="button primary" @click="showList = 'route'"   >{{ dict.routes     }}</button></div>
-                    <div class="col"><button class="button primary" @click="showList = 'trip'"    >{{ dict.trips      }}</button></div>
-                    <div class="col"><button class="button primary" @click="showList = 'stoptime'">{{ dict.stop_times }}</button></div>
-                    <div class="col"><button class="button primary" @click="showList = 'calendar'">{{ dict.calendar   }}</button></div>
-                    <div class="col"><button class="button primary" @click="showList = 'scheme'"  >{{ dict.scheme     }}</button></div>
-                </div>
+                <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                    <li v-for="element in [ 'agency', 'shapes', 'stops', 'routes', 'trips', 'stop_times', 'calendar', 'scheme' ]"
+                        class="nav-item" role="presentation">
+                        <button class="nav-link" :id="'nav-'+element+'-tab'"
+                                data-bs-toggle="tab" :data-bs-target="'#nav-'+element"
+                                type="button" role="tab" :aria-controls="'nav-'+element"
+                                aria-selected="true">{{dict[element]}}</button>
+                  </li>
+                </ul>
 
-                <!-- SHAPES -->
-                <div v-show="isVisible('shape')">
-                    Add a new shape:<br>
-                    <table class="alt"><tr>
-                        <th><input id="new_shape_id" name="new_shape_id" type="text" placeholder="Shape ID" /></th>
-                        <th>
-                            {{new_shape_sequence}}
-                        </th>
+                <div class="tab-content" id="myTabContent">
+                    <!-- SHAPES -->
+                    <div class="tab-pane fade" id="nav-shapes" role="tabpanel" aria-labelledby="nav-shapes-tab">
+                        Add a new shape:<br>
+                        <table class="alt"><tr>
+                            <th><input id="new_shape_id" name="new_shape_id" type="text" placeholder="Shape ID" /></th>
+                            <th>
+                                {{new_shape_sequence}}
+                            </th>
 
-                        <!-- new segment (a node and a link for direction)-->
-                        <th v-show="!ns_segments.length">
-                            <select @change="newShapeOnChange($event, 'node')">
-                            <option value="noselect"> - </option>
-                            <option v-for="node in new_shape_allowed_nodes" :value="node.getID()">E{{node.getID()}}</option>
-                            </select>
-                        </th>
+                            <!-- new segment (a node and a link for direction)-->
+                            <th v-show="!ns_segments.length">
+                                <select @change="newShapeOnChange($event, 'node')">
+                                <option value="noselect"> - </option>
+                                <option v-for="node in new_shape_allowed_nodes" :value="node.getID()">E{{node.getID()}}</option>
+                                </select>
+                            </th>
 
-                        <!-- allowed links -->
-                        <th v-show="ns_allowed_links.length">
-                            <select id="ns_shape_link_select" @change="newShapeOnChange($event, 'link')">
-                               <option value="noselect"> - </option>
-                               <option v-for="link in ns_allowed_links" :value="link.getID()">L{{link.getID()}}</option>
-                            </select>
-                        </th>
+                            <!-- allowed links -->
+                            <th v-show="ns_allowed_links.length">
+                                <select id="ns_shape_link_select" @change="newShapeOnChange($event, 'link')">
+                                   <option value="noselect"> - </option>
+                                   <option v-for="link in ns_allowed_links" :value="link.getID()">L{{link.getID()}}</option>
+                                </select>
+                            </th>
 
-                        <!-- element to add new segments in shape? -->
-                        <th><button @click="saveShapeStop()" v-show="ns_segments.length">abort</button></th>
-                        <th><button @click="saveShape()">add</button></th>
-                    </tr></table>
-                    <br>
+                            <!-- element to add new segments in shape? -->
+                            <th><button @click="saveShapeStop()" v-show="ns_segments.length">abort</button></th>
+                            <th><button @click="saveShape()">add</button></th>
+                        </tr></table>
+                        <br>
+                        <table class="alt">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        {{ dict.shape_id }}
+                                    </th>
+                                    <th>{{ dict.shape_sequence }}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="shape in rev_shapes" :key="shape.getID()">
+                                    <td>
+                                        <input type="radio" :id="'shapeOnMap_' + shape.getID()" name="shapeOnMap" :value="shape.getID()" checked="false">
+                                        <label :for="'shapeOnMap_' + shape.getID()">
+                                            {{ shape.getID() }}
+                                        </label>
+                                    </td>
+                                    <!-- <td>{{shape.getSequenceText()}}</td> // REMOVE method -->
+                                    <td>
+                                        <a class="black_text" v-for="segment in shape.getSegments()" @click="goToNodeOnMap(segment[0])">
+                                            <span class="orange_text">n{{segment[0]}}</span><span class="green_text">l{{segment[1]}}</span>,
+                                        </a>
+                                        <a class="orange_text" @click="goToNodeOnMap(shape.getSegments()[shape.getSegments().length -1][2])">
+                                            n{{shape.getSegments()[shape.getSegments().length -1][2]}}
+                                        </a>
+                                    </td>
+                                    <td><button class="button error" @click="removeShape(shape.getID())">remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END SHAPES -->
+
+                    <!-- AGENCY -->
+                    <div class="tab-pane fade" id="nav-agency" role="tabpanel" aria-labelledby="nav-agency-tab">
+                        <table class="alt" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+                            <thead>
+                                <tr>
+                                    <th v-for="field in agencyFields">{{ dict[field] }}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" id="agency_id"       placeholder="ID" required></td> <!-- required TODO -->
+                                    <td><input type="text" id="agency_name"     placeholder="Name" required></td>
+                                    <td><input type="text" id="agency_url"      placeholder="URL" required></td>
+                                    <td><input type="text" id="agency_timezone" placeholder="Continent/Region" required></td>
+                                    <td><input type="text" id="agency_lang"     placeholder="Language"></td>
+                                    <td><input type="text" id="agency_phone"    placeholder="+0 8888 8888"></td>
+                                    <td><input type="text" id="agency_email"    placeholder="example@corp.com"></td>
+                                    <td><button @click="saveAgency">add</button></td>
+                                </tr>
+                                <tr v-for="agency in rev_agencies">
+                                    <td v-for="field in agencyFields" >{{agency.getInfo()[field.substring(7)]}}</td>
+                                    <td><button class="button error" @click="removeAgency(agency.getID())">remove</button></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END AGENCY -->
+
+                    <!-- STOPS -->
+                    <div class="tab-pane fade" id="nav-stops" role="tabpanel" aria-labelledby="nav-stops-tab">
+                        <label for="file_gtfs_stops_input">Upload stops.txt file:</label>
+                        <input type="file"
+                               accept="plain/text,.txt"
+                               id="file_gtfs_stops_input" name="file_gtfs_stops_input">
                     <table class="alt">
                         <thead>
                             <tr>
-                                <th>
-                                    {{ dict.shape_id }}
-                                </th>
-                                <th>{{ dict.shape_sequence }}</th>
+                                <th v-for="field in stopFields">{{ dict[field] }}</th>
+
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="shape in rev_shapes" :key="shape.getID()">
-                                <td>
-                                    <input type="radio" :id="'shapeOnMap_' + shape.getID()" name="shapeOnMap" :value="shape.getID()" checked="false">
-                                    <label :for="'shapeOnMap_' + shape.getID()">
-                                        {{ shape.getID() }}
-                                    </label>
-                                </td>
-                                <!-- <td>{{shape.getSequenceText()}}</td> // REMOVE method -->
-                                <td>
-                                    <a class="black_text" v-for="segment in shape.getSegments()" @click="goToNodeOnMap(segment[0])">
-                                        <span class="orange_text">n{{segment[0]}}</span><span class="green_text">l{{segment[1]}}</span>,
-                                    </a>
-                                    <a class="orange_text" @click="goToNodeOnMap(shape.getSegments()[shape.getSegments().length -1][2])">
-                                        n{{shape.getSegments()[shape.getSegments().length -1][2]}}
-                                    </a>
-                                </td>
-                                <td><button class="button error" @click="removeShape(shape.getID())">remove</button></td>
+                            <tr v-for="stop in rev_stops">
+                                <td><input type="text" :id="'stop_id_'+stop.getID()"   :value="stop.getStopInfo().stop_id" placeholder="Stop ID"></td>
+
+                                <!-- Page 1 -->
+                                <td><input type="text" :id="'stop_name_'+stop.getID()" :value="stop.getStopInfo().stop_name" placeholder="Name"></td>
+                                <td><input type="text" :id="'stop_desc_'+stop.getID()" :value="stop.getStopInfo().stop_desc" placeholder="Description"></td>
+
+                                <!-- Page 2 -->
+                                <td><input type="text" :id="'stop_url_'+stop.getID()" :value="stop.getStopInfo().stop_url" placeholder="Info URL"></td>
+                                <td><button @click="changeNodeInfoFromStopSection(stop.getID())">save</button></td>
                             </tr>
                         </tbody>
                     </table>
+                    </div>
+                    <!-- END STOPS -->
+
+                    <!-- ROUTES -->
+                    <div class="tab-pane fade" id="nav-routes" role="tabpanel" aria-labelledby="nav-routes-tab">
+                        <table class="alt">
+                            <thead>
+                                <tr>
+                                    <th v-for="field in routeFields">{{ dict[field] }}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <!-- <th v-for="field in routeFields"><input type="text" :id="field"></th> -->
+                                    <td><input type="text" id="r_route_id" placeholder="Route ID"></td>
+                                    <td><select id="r_agency_id">
+                                        <option v-for="agency in rev_agencies" :value="agency.getID()">{{agency.getID()}}</option>
+                                    </select></td>
+                                    <td><input type="text" id="r_route_short_name" placeholder="Short name"></td>
+                                    <td><input type="text" id="r_route_long_name" placeholder="Long name"></td>
+                                    <td><select id="r_route_type">
+                                        <option v-for="routeType in r_routeType" :value="routeType.value">{{routeType.name}}</option>
+                                    </select></td>
+                                    <td><button @click="saveRoute">add</button></td>
+                                </tr>
+                                <tr v-for="route in rev_routes">
+                                    <td >{{route.getID()}}</td>
+                                    <td >{{route.getInfo().agency_id}}</td>
+                                    <td >{{route.getInfo().short_name}}</td>
+                                    <td >{{route.getInfo().long_name}}</td>
+                                    <td >{{route.typeToText()}}</td>
+                                    <td><button class="button error" @click="removeRoute(route.getID())">remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END ROUTES -->
+
+                    <!-- CALENDAR -->
+                    <div class="tab-pane fade" id="nav-calendar" role="tabpanel" aria-labelledby="nav-calendar-tab">
+                        <table class="alt">
+                            <thead>
+                                <tr>
+                                    <th v-for="field in calendarFields">{{ dict[field] }}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" id="c_service_id"></td>
+                                    <td v-for="field in calendarCheckboxFields">
+                                        <input type="checkbox" :id="field" checked="true">
+                                        <!-- <label for="view_nodes_cb">{{field}}</label><br> -->
+                                    </td>
+                                    <td><input type="date" id="c_start_day"></td>
+                                    <td><input type="date" id="c_end_day"></td>
+                                    <td><button @click="saveCalendar">add</button></td>
+                                </tr>
+                                <tr v-for="service in rev_services">
+                                    <td>{{ service.getID() }}</td>
+                                    <td v-for="status in service.getServiceDays()">
+                                        <div v-if="status" class="green_text">
+                                            active
+                                        </div>
+                                        <div v-if="!status" class="red_text">
+                                            inactive
+                                        </div>
+                                        <!-- status ? "active" : "inactive" -->
+                                    </td>
+                                    <td>
+                                        {{ service.getInfo().start_day }}
+                                    </td>
+                                    <td>
+                                        {{ service.getInfo().end_day }}
+                                    </td>
+                                    <td><button class="button error" @click="removeCalendar(service.getID())">remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END CALENDAR -->
+
+                    <!-- TRIPS -->
+                    <div class="tab-pane fade" id="nav-trips" role="tabpanel" aria-labelledby="nav-trips-tab">
+                        <table class="alt">
+                            <thead>
+                                <tr>
+                                    <th v-for="field in tripFields">{{ dict[field] }}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <select id="t_route_id">
+                                            <option v-for="route in rev_routes" :value="route.getID()">{{route.getID()}}</option>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" id="t_trip_id"></td>
+                                    <td><select id="t_direction_id">
+                                        <option value="0">{{ dict["outbound_travel"] }}</option>
+                                        <option value="1">{{ dict["inbound_travel"] }}</option>
+                                    </select></td>
+                                    <td><select id="t_shape_id">
+                                        <option v-for="shape in rev_shapes" :value="shape.getID()">{{shape.getID()}}</option>
+                                    </select></td>
+                                    <td><button @click="saveTrip">add</button></td>
+                                </tr>
+                                <tr v-for="trip in rev_trips">
+
+                                    <td>{{trip.getInfo().route_id        }}</td>
+                                    <td>{{trip.getID()                   }}</td>
+                                    <td>{{trip.getInfo().direction_id == "0" ? dict["outbound_travel"] : dict["inbound_travel"] }}</td>
+                                    <td>{{trip.getInfo().shape_id        }}</td>
+
+                                    <td><button class="button error" @click="removeTrip(trip.getID())">remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END TRIPS -->
+
+                    <!-- STOPTIMES -->
+                    <div class="tab-pane fade" id="nav-stop_times" role="tabpanel" aria-labelledby="nav-stop_times-tab">
+                        <table class="alt">
+                            <thead>
+                                <tr>
+                                    <th v-for="field in stopTimeFields">{{ dict[field] }}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <select id="st_trip_id">
+                                            <option v-for="trip in rev_trips" :value="trip.getID()">{{trip.getID()}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select @change="goToNodeOnMap(in_st_stop_id)" id="st_stop_id" v-model="in_st_stop_id">
+                                            <!-- It saves the node ID instead the stop id, the node ID is unmutable -->
+                                            <option v-for="stopnode in stopsWhenTrip" :value="stopnode.getID()">{{stopnode.getStopInfo().id}}: {{stopnode.getStopInfo().name ? stopnode.getStopInfo().name : "no name"}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="time" id="st_arrival_time" placeholder="HH:MM AM">
+                                    </td>
+                                    <td>
+                                        <input type="time" id="st_departure_time" placeholder="HH:MM PM">
+                                    </td>
+                                    <td><button @click="saveStopTime">add</button></td>
+                                </tr>
+                                <tr v-for="stoptime in rev_stoptimes">
+                                    <td>{{stoptime.getInfo().trip_id}}</td>
+                                    <td>{{nodes[stoptime.getID()].getStopInfo().id}}: {{nodes[stoptime.getID()].getStopInfo().name}}</td> <!-- FIXME: dont use stop id as node id -->
+                                    <td>{{stoptime.getInfo().arrival_time}}</td>
+                                    <td>{{stoptime.getInfo().departure_time}}</td>
+                                    <td><button class="button error" @click="removeStopTime(stoptime.getInfo().trip_id, stoptime.getID())">remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END STOPTIMES -->
+
+                    <!-- SCHEME -->
+                    <div class="tab-pane fade" id="nav-scheme" role="tabpanel" aria-labelledby="nav-scheme-tab">
+                        <table class="alt" v-for="service in rev_services">
+                            <thead>
+                                <tr>
+                                    <th>{{ dict.c_service_id }}</th>
+                                    <th>active</th> <!-- FIXME -->
+                                    <th>{{ dict.t_trip_id }}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="trip in rev_trips">
+                                    <td>
+                                        {{ service.getID() }}
+                                    </td>
+                                    <td>
+                                        <input @change="changeScheme($event, service.getID(), trip.getID())" name="sc_trip_cb"
+                                               type="checkbox" :checked="isActiveTrip(service.getID(), trip.getID())">{{trip.getID()}}</input>
+                                        <!-- <label for="label_id_todo">Label</label><br> -->
+                                    </td>
+                                    <td>
+                                        {{ trip.getID() }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END SCHEME -->
                 </div>
-                <!-- END SHAPES -->
-
-                <!-- AGENCY -->
-                <table v-show="isVisible('agency')" class="alt" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
-                    <thead>
-                        <tr>
-                            <th v-for="field in agencyFields">{{ dict[field] }}</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="text" id="agency_id"       placeholder="ID" required></td> <!-- required TODO -->
-                            <td><input type="text" id="agency_name"     placeholder="Name" required></td>
-                            <td><input type="text" id="agency_url"      placeholder="URL" required></td>
-                            <td><input type="text" id="agency_timezone" placeholder="Continent/Region" required></td>
-                            <td><input type="text" id="agency_lang"     placeholder="Language"></td>
-                            <td><input type="text" id="agency_phone"    placeholder="+0 8888 8888"></td>
-                            <td><input type="text" id="agency_email"    placeholder="example@corp.com"></td>
-                            <td><button @click="saveAgency">add</button></td>
-                        </tr>
-                        <tr v-for="agency in rev_agencies">
-                            <td v-for="field in agencyFields" >{{agency.getInfo()[field.substring(7)]}}</td>
-                            <td><button class="button error" @click="removeAgency(agency.getID())">remove</button></td>
-                        </tr>
-
-                    </tbody>
-                </table>
-                <!-- END AGENCY -->
-
-                <!-- STOPS -->
-                <div v-show="isVisible('stop')">
-                    <label for="file_gtfs_stops_input">Upload stops.txt file:</label>
-                    <input type="file"
-                           accept="plain/text,.txt"
-                           id="file_gtfs_stops_input" name="file_gtfs_stops_input">
-                <table class="alt">
-                    <thead>
-                        <tr>
-                            <th v-for="field in stopFields">{{ dict[field] }}</th>
-
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="stop in rev_stops">
-                            <td><input type="text" :id="'stop_id_'+stop.getID()"   :value="stop.getStopInfo().stop_id" placeholder="Stop ID"></td>
-
-                            <!-- Page 1 -->
-                            <td><input type="text" :id="'stop_name_'+stop.getID()" :value="stop.getStopInfo().stop_name" placeholder="Name"></td>
-                            <td><input type="text" :id="'stop_desc_'+stop.getID()" :value="stop.getStopInfo().stop_desc" placeholder="Description"></td>
-
-                            <!-- Page 2 -->
-                            <td><input type="text" :id="'stop_url_'+stop.getID()" :value="stop.getStopInfo().stop_url" placeholder="Info URL"></td>
-                            <td><button @click="changeNodeInfoFromStopSection(stop.getID())">save</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-                </div>
-                <!-- END STOPS -->
-
-                <!-- ROUTES -->
-                <table v-show="isVisible('route')" class="alt">
-                    <thead>
-                        <tr>
-                            <th v-for="field in routeFields">{{ dict[field] }}</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <!-- <th v-for="field in routeFields"><input type="text" :id="field"></th> -->
-                            <td><input type="text" id="r_route_id" placeholder="Route ID"></td>
-                            <td><select id="r_agency_id">
-                                <option v-for="agency in rev_agencies" :value="agency.getID()">{{agency.getID()}}</option>
-                            </select></td>
-                            <td><input type="text" id="r_route_short_name" placeholder="Short name"></td>
-                            <td><input type="text" id="r_route_long_name" placeholder="Long name"></td>
-                            <td><select id="r_route_type">
-                                <option v-for="routeType in r_routeType" :value="routeType.value">{{routeType.name}}</option>
-                            </select></td>
-                            <td><button @click="saveRoute">add</button></td>
-                        </tr>
-                        <tr v-for="route in rev_routes">
-                            <td >{{route.getID()}}</td>
-                            <td >{{route.getInfo().agency_id}}</td>
-                            <td >{{route.getInfo().short_name}}</td>
-                            <td >{{route.getInfo().long_name}}</td>
-                            <td >{{route.typeToText()}}</td>
-                            <td><button class="button error" @click="removeRoute(route.getID())">remove</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!-- END ROUTES -->
-
-                <!-- CALENDAR -->
-                <table v-show="isVisible('calendar')" class="alt">
-                    <thead>
-                        <tr>
-                            <th v-for="field in calendarFields">{{ dict[field] }}</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="text" id="c_service_id"></td>
-                            <td v-for="field in calendarCheckboxFields">
-                                <input type="checkbox" :id="field" checked="true">
-                                <!-- <label for="view_nodes_cb">{{field}}</label><br> -->
-                            </td>
-                            <td><input type="date" id="c_start_day"></td>
-                            <td><input type="date" id="c_end_day"></td>
-                            <td><button @click="saveCalendar">add</button></td>
-                        </tr>
-                        <tr v-for="service in rev_services">
-                            <td>{{ service.getID() }}</td>
-                            <td v-for="status in service.getServiceDays()">
-                                <div v-if="status" class="green_text">
-                                    active
-                                </div>
-                                <div v-if="!status" class="red_text">
-                                    inactive
-                                </div>
-                                <!-- status ? "active" : "inactive" -->
-                            </td>
-                            <td>
-                                {{ service.getInfo().start_day }}
-                            </td>
-                            <td>
-                                {{ service.getInfo().end_day }}
-                            </td>
-                            <td><button class="button error" @click="removeCalendar(service.getID())">remove</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!-- END CALENDAR -->
-
-                <!-- TRIPS -->
-                <table v-show="isVisible('trip')" class="alt">
-                    <thead>
-                        <tr>
-                            <th v-for="field in tripFields">{{ dict[field] }}</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <select id="t_route_id">
-                                    <option v-for="route in rev_routes" :value="route.getID()">{{route.getID()}}</option>
-                                </select>
-                            </td>
-                            <td><input type="text" id="t_trip_id"></td>
-                            <td><select id="t_direction_id">
-                                <option value="0">{{ dict["outbound_travel"] }}</option>
-                                <option value="1">{{ dict["inbound_travel"] }}</option>
-                            </select></td>
-                            <td><select id="t_shape_id">
-                                <option v-for="shape in rev_shapes" :value="shape.getID()">{{shape.getID()}}</option>
-                            </select></td>
-                            <td><button @click="saveTrip">add</button></td>
-                        </tr>
-                        <tr v-for="trip in rev_trips">
-
-                            <td>{{trip.getInfo().route_id        }}</td>
-                            <td>{{trip.getID()                   }}</td>
-                            <td>{{trip.getInfo().direction_id == "0" ? dict["outbound_travel"] : dict["inbound_travel"] }}</td>
-                            <td>{{trip.getInfo().shape_id        }}</td>
-
-                            <td><button class="button error" @click="removeTrip(trip.getID())">remove</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!-- END TRIPS -->
-
-                <!-- STOPTIMES -->
-                <table v-show="isVisible('stoptime')" class="alt">
-                    <thead>
-                        <tr>
-                            <th v-for="field in stopTimeFields">{{ dict[field] }}</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <select id="st_trip_id">
-                                    <option v-for="trip in rev_trips" :value="trip.getID()">{{trip.getID()}}</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select @change="goToNodeOnMap(in_st_stop_id)" id="st_stop_id" v-model="in_st_stop_id">
-                                    <!-- It saves the node ID instead the stop id, the node ID is unmutable -->
-                                    <option v-for="stopnode in stopsWhenTrip" :value="stopnode.getID()">{{stopnode.getStopInfo().id}}: {{stopnode.getStopInfo().name ? stopnode.getStopInfo().name : "no name"}}</option>
-                                </select>
-                            </td>
-                            <td>
-                                <input type="time" id="st_arrival_time" placeholder="HH:MM AM">
-                            </td>
-                            <td>
-                                <input type="time" id="st_departure_time" placeholder="HH:MM PM">
-                            </td>
-                            <td><button @click="saveStopTime">add</button></td>
-                        </tr>
-                        <tr v-for="stoptime in rev_stoptimes">
-                            <td>{{stoptime.getInfo().trip_id}}</td>
-                            <td>{{nodes[stoptime.getID()].getStopInfo().id}}: {{nodes[stoptime.getID()].getStopInfo().name}}</td> <!-- FIXME: dont use stop id as node id -->
-                            <td>{{stoptime.getInfo().arrival_time}}</td>
-                            <td>{{stoptime.getInfo().departure_time}}</td>
-                            <td><button class="button error" @click="removeStopTime(stoptime.getInfo().trip_id, stoptime.getID())">remove</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!-- END STOPTIMES -->
-
-                <!-- SCHEME -->
-                <div v-show="isVisible('scheme')">
-                    <table class="alt" v-for="service in rev_services">
-                        <thead>
-                            <tr>
-                                <th>{{ dict.c_service_id }}</th>
-                                <th>active</th> <!-- FIXME -->
-                                <th>{{ dict.t_trip_id }}</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="trip in rev_trips">
-                                <td>
-                                    {{ service.getID() }}
-                                </td>
-                                <td>
-                                    <input @change="changeScheme($event, service.getID(), trip.getID())" name="sc_trip_cb"
-                                           type="checkbox" :checked="isActiveTrip(service.getID(), trip.getID())">{{trip.getID()}}</input>
-                                    <!-- <label for="label_id_todo">Label</label><br> -->
-                                </td>
-                                <td>
-                                    {{ trip.getID() }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- END SCHEME -->
-
             </div>
 
             <!-- --------------  END key command board  --------------------- -->
@@ -437,6 +447,9 @@
 
         <!-- Map GTFS elements -->
         <script src="dist/bundle.js"></script>
+
+        <!-- JavaScript Bundle for Bootstrap -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 
     </body>
 </html>

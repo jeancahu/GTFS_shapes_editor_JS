@@ -6,6 +6,10 @@
 	font-family: 'Open Sans', sans-serif;
 }
 
+body {
+    padding: 0;
+}
+
 .body-container {
     /*background: e2efef;*/
     margin-left: 165px; /* Same as the width of the sidebar */
