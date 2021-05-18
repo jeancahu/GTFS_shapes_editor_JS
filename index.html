@@ -24,45 +24,47 @@
         </div>
 
         <div id="editor_gtfs">
-            <div class="sidetools">
-                <div class="button_grid">
-                    <button class="button primary icon" onclick="bundle.downloadHistoryArray()">
-                        Save
-                    </button>
-                    <button @click="toggleHideMap()">Map</button> <!-- Change to use VUE TODO -->
-                </div><br>
+            <div class="toolbar">
+                <button class="btn btn-primary" onclick="bundle.downloadHistoryArray()">
+                    Save
+                </button>
+                <button class="btn btn-primary" @click="toggleHideMap()">Map</button>
 
-                <div class="toolbar">
-                    <label>Action </label><br>
-                    <select id="action" v-model="map_action">
-                        <option class="orange_text" value="select">Select node</option>
-                        <option value="add">Add node</option>
-                        <option value="split">Split link</option>
-                        <option value="move">Move node</option>
-                        <option value="remove">Remove-node</option>
-                        <option value="cut">Delete-link</option>
-                    </select>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" @click="map_view_nodes=!map_view_nodes"
+                            :class="['btn', { 'btn-primary': !map_view_nodes }, { 'btn-success': map_view_nodes }]"
+                    >{{map_view_nodes? 'Hide': 'Show'}} nodes</button>
 
-                    <div v-show="map_action=='add'">
-                    <label>Node type</label><br>
-                        <input type="radio" id="nt_shape" name="node_type" value="shape" v-model="map_node_type" checked="true">
-                        <label for="nt_shape">Shape</label><br>
-                        <input type="radio" id="nt_endpoint" name="node_type" value="endpoint" v-model="map_node_type" checked="false">
-                        <label for="nt_endpoint">Endpoint</label><br>
-                        <input type="radio" id="nt_stop" name="node_type" value="stop" v-model="map_node_type" checked="false">
-                        <label for="nt_stop">Stop</label><br>
-                        <input type="radio" id="nt_fork" name="node_type" value="fork" v-model="map_node_type" checked="false">
-                        <label for="nt_fork">Intersection</label><br>
-                    </div>
+                    <button type="button" @click="map_view_links=!map_view_links"
+                            :class="['btn', { 'btn-primary': !map_view_links }, { 'btn-success': map_view_links }]"
+                    >{{map_view_links? 'Hide': 'Show'}} links</button>
 
-                    <label>View</label><br>
-                    <input type="checkbox" id="view_nodes_cb" value="Nodes" checked="true" v-model="map_view_nodes">
-                    <label for="view_nodes_cb">Show Nodes</label><br>
-                    <input type="checkbox" id="view_links_cb" value="Links" checked="true" v-model="map_view_links">
-                    <label for="view_links_cb">Show Links</label><br>
-                    <input type="checkbox" id="view_stops_cb" value="Stops" checked="true" v-model="map_view_stops">
-                    <label for="view_stops_cb">Show Stops</label>
+                    <button type="button" @click="map_view_stops=!map_view_stops"
+                            :class="['btn', { 'btn-primary': !map_view_stops }, { 'btn-success': map_view_stops }]"
+                    >{{map_view_stops? 'Hide': 'Show'}} stops</button>
                 </div>
+
+                <label>Action </label>
+                <select id="action" v-model="map_action">
+                    <option class="orange_text" value="select">Select node</option>
+                    <option value="add">Add node</option>
+                    <option value="split">Split link</option>
+                    <option value="move">Move node</option>
+                    <option value="remove">Remove-node</option>
+                    <option value="cut">Delete-link</option>
+                </select>
+
+                <label>Node type</label>
+                <input type="radio" id="nt_shape" name="node_type" value="shape" v-model="map_node_type" checked="true">
+                <label for="nt_shape">Shape</label>
+                <input type="radio" id="nt_endpoint" name="node_type" value="endpoint" v-model="map_node_type" checked="false">
+                <label for="nt_endpoint">Endpoint</label>
+                <input type="radio" id="nt_stop" name="node_type" value="stop" v-model="map_node_type" checked="false">
+                <label for="nt_stop">Stop</label>
+                <input type="radio" id="nt_fork" name="node_type" value="fork" v-model="map_node_type" checked="false">
+                <label for="nt_fork">Intersection</label>
+
+                >> map: OpenStreetMap
             </div>
         <div class="body-container">
 
@@ -104,7 +106,7 @@
                     </div>
                 </div>
 
-                <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                <ul class="nav nav-tabs nav-fill h_menu" id="h_menu" role="tablist">
                     <li v-for="element in [ 'agency', 'shapes', 'stops', 'routes', 'trips', 'stop_times', 'calendar', 'scheme' ]"
                         class="nav-item" role="presentation">
                         <button class="nav-link" :id="'nav-'+element+'-tab'"
@@ -118,7 +120,7 @@
                     <!-- SHAPES -->
                     <div class="tab-pane fade" id="nav-shapes" role="tabpanel" aria-labelledby="nav-shapes-tab">
                         Add a new shape:<br>
-                        <table class="alt"><tr>
+                        <table class="table"><tr>
                             <th><input id="new_shape_id" name="new_shape_id" type="text" placeholder="Shape ID" /></th>
                             <th>
                                 {{new_shape_sequence}}
@@ -145,7 +147,7 @@
                             <th><button @click="saveShape()">add</button></th>
                         </tr></table>
                         <br>
-                        <table class="alt">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th>
@@ -181,7 +183,7 @@
 
                     <!-- AGENCY -->
                     <div class="tab-pane fade" id="nav-agency" role="tabpanel" aria-labelledby="nav-agency-tab">
-                        <table class="alt" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+                        <table class="table" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
                             <thead>
                                 <tr>
                                     <th v-for="field in agencyFields">{{ dict[field] }}</th>
@@ -211,38 +213,52 @@
 
                     <!-- STOPS -->
                     <div class="tab-pane fade" id="nav-stops" role="tabpanel" aria-labelledby="nav-stops-tab">
-                        <label for="file_gtfs_stops_input">Upload stops.txt file:</label>
-                        <input type="file"
+
+                        <label class="form-label" for="file_gtfs_stops_input">Upload stops.txt file:</label><br>
+                        <input type="file" class="form-control"
                                accept="plain/text,.txt"
                                id="file_gtfs_stops_input" name="file_gtfs_stops_input">
-                    <table class="alt">
-                        <thead>
-                            <tr>
-                                <th v-for="field in stopFields">{{ dict[field] }}</th>
 
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="stop in rev_stops">
-                                <td><input type="text" :id="'stop_id_'+stop.getID()"   :value="stop.getStopInfo().stop_id" placeholder="Stop ID"></td>
-
-                                <!-- Page 1 -->
-                                <td><input type="text" :id="'stop_name_'+stop.getID()" :value="stop.getStopInfo().stop_name" placeholder="Name"></td>
-                                <td><input type="text" :id="'stop_desc_'+stop.getID()" :value="stop.getStopInfo().stop_desc" placeholder="Description"></td>
-
-                                <!-- Page 2 -->
-                                <td><input type="text" :id="'stop_url_'+stop.getID()" :value="stop.getStopInfo().stop_url" placeholder="Info URL"></td>
-                                <td><button @click="changeNodeInfoFromStopSection(stop.getID())">save</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        <div class="accordion" id="accordionExample">
+                            <div v-for="stop in rev_stops" class="accordion-item">
+                                <h2 class="accordion-header" :id="'heading'+stop.getID()">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                            :data-bs-target="'#collapse'+stop.getID()" aria-expanded="false" :aria-controls="'collapseTwo'+stop.getID()">
+                                        <strong>Stop ID>> </strong>  {{ stop.getStopInfo().stop_id }}
+                                    </button>
+                                </h2>
+                                <div :id="'collapse'+stop.getID()" class="accordion-collapse collapse"
+                                     :aria-labelledby="'heading'+stop.getID()" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th v-for="field in stopFields">{{ dict[field] }}</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><input type="text" :id="'stop_id_'+stop.getID()"   :value="stop.getStopInfo().stop_id" placeholder="Stop ID"></td>
+                                                    <!-- Page 1 -->
+                                                    <td><input type="text" :id="'stop_name_'+stop.getID()" :value="stop.getStopInfo().stop_name" placeholder="Name"></td>
+                                                    <td><input type="text" :id="'stop_desc_'+stop.getID()" :value="stop.getStopInfo().stop_desc" placeholder="Description"></td>
+                                                    <!-- Page 2 -->
+                                                    <td><input type="text" :id="'stop_url_'+stop.getID()" :value="stop.getStopInfo().stop_url" placeholder="Info URL"></td>
+                                                    <td><button @click="changeNodeInfoFromStopSection(stop.getID())">save</button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- END STOPS -->
 
                     <!-- ROUTES -->
                     <div class="tab-pane fade" id="nav-routes" role="tabpanel" aria-labelledby="nav-routes-tab">
-                        <table class="alt">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th v-for="field in routeFields">{{ dict[field] }}</th>
@@ -278,7 +294,7 @@
 
                     <!-- CALENDAR -->
                     <div class="tab-pane fade" id="nav-calendar" role="tabpanel" aria-labelledby="nav-calendar-tab">
-                        <table class="alt">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th v-for="field in calendarFields">{{ dict[field] }}</th>
@@ -322,7 +338,7 @@
 
                     <!-- TRIPS -->
                     <div class="tab-pane fade" id="nav-trips" role="tabpanel" aria-labelledby="nav-trips-tab">
-                        <table class="alt">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th v-for="field in tripFields">{{ dict[field] }}</th>
@@ -362,7 +378,7 @@
 
                     <!-- STOPTIMES -->
                     <div class="tab-pane fade" id="nav-stop_times" role="tabpanel" aria-labelledby="nav-stop_times-tab">
-                        <table class="alt">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th v-for="field in stopTimeFields">{{ dict[field] }}</th>
@@ -404,7 +420,7 @@
 
                     <!-- SCHEME -->
                     <div class="tab-pane fade" id="nav-scheme" role="tabpanel" aria-labelledby="nav-scheme-tab">
-                        <table class="alt" v-for="service in rev_services">
+                        <table class="table" v-for="service in rev_services">
                             <thead>
                                 <tr>
                                     <th>{{ dict.c_service_id }}</th>
@@ -435,12 +451,11 @@
             </div>
 
             <!-- --------------  END key command board  --------------------- -->
-
-            map: OpenStreetMap
         </div></div>
-
+    </body>
+    <footer>
         <!-- Axios to post data -->
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script> <!-- TODO Remove, it's not used -->
 
         <!-- editor history / file loaded FIXME remove-->
         <script src="js/street_element_group_history.js"></script>
@@ -450,6 +465,5 @@
 
         <!-- JavaScript Bundle for Bootstrap -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-
-    </body>
+    </footer>
 </html>

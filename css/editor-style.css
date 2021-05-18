@@ -1,20 +1,21 @@
-
-/* Google fonts */
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@1,200&display=swap');
 
 * {
-	font-family: 'Open Sans', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
-    padding: 0;
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .body-container {
-    /*background: e2efef;*/
-    margin-left: 165px; /* Same as the width of the sidebar */
-    padding: 0px 0px;
-    width: 100% - 170px;
+    position: absolute;
+    height: calc(100% - 50px);
+    width: 100%;
+    top: 50px;
 }
 
 .map_container {
@@ -23,51 +24,21 @@ body {
     background: #e2efef;
 }
 
-/* The sidebar menu */
-.sidetools {
-    height: 100%; /* Full-height: remove this if you want "auto" height */
-    width: 160px; /* Set the width of the sidebar */
+.toolbar {
+    height: 50px; /* Full-height: remove this if you want "auto" height */
+    width: 100%; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-    z-index: 1; /* Stay on top */
+    z-index: 90; /* Stay on top */
     top: 0; /* Stay at the top */
     left: 0;
-    background-color: #111; /* Black */
-    overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 20px 10px;
+    background-color: #11101d; /* Black */
+    overflow: hidden; /* Disable scroll */
     color: white;
-    font-size: 17px;
-}
-
-/* The navigation menu links */
-.sidetools a {
-    padding: 6px 8px 6px 16px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-}
-
-/* When you mouse over the navigation links, change their color */
-.sidetools a:hover {
-    color: #f1f1f1;
-}
-
-.sidetools form {
-    padding: 0px 10px;
-    margin: 10px;
-    font-size: 16px;
-    /* background-color: white; */
-}
-
-.sidetools form selection{
-    padding: 0px 10px;
-    margin: 10px;
-    font-size: 16px;
-    /* background-color: white; */
+    padding: 6px 14px;
 }
 
 .loading_screen {
-    z-index: 2;
+    z-index: 99;
     position: fixed;
     height: 100%;
     width: 100%;
@@ -83,6 +54,7 @@ body {
     text-align: center;
 }
 
+/* Colors for Shapes section */
 .orange_text{
     color: orange;
 }
@@ -99,40 +71,6 @@ body {
     color: black;
 }
 
-.button_grid{
-    text-align: center;
-    margin-top: 20 px;
+.h_menu {
+    margin-top: 12px;
 }
-
-.sidetools button {
-    text-align: center;
-    padding: 20px;
-    margin-top: 5px;
-    width: 90%;
-}
-
-.toolbar {
-    padding: 15px;
-}
-
-.horizontaltoolbar {
-    text-align: center;
-    padding: 15px;
-    width: 100%;
-
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-
-    height: 100%;
-}
-
-.horizontaltoolbar button{
-    white-space: nowrap;
-}
-
-
-
-
-
-
