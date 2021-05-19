@@ -254,25 +254,18 @@
                                     <div :id="'collapse'+stop.getID()" class="accordion-collapse collapse"
                                          :aria-labelledby="'heading'+stop.getID()" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th v-for="field in stopFields">{{ dict[field] }}</th>
-                                                        <th></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td><input type="text" :id="'stop_id_'+stop.getID()"   :value="stop.getStopInfo().stop_id" placeholder="Stop ID"></td>
-                                                        <!-- Page 1 -->
-                                                        <td><input type="text" :id="'stop_name_'+stop.getID()" :value="stop.getStopInfo().stop_name" placeholder="Name"></td>
-                                                        <td><input type="text" :id="'stop_desc_'+stop.getID()" :value="stop.getStopInfo().stop_desc" placeholder="Description"></td>
-                                                        <!-- Page 2 -->
-                                                        <td><input type="text" :id="'stop_url_'+stop.getID()" :value="stop.getStopInfo().stop_url" placeholder="Info URL"></td>
-                                                        <td><button @click="changeNodeInfoFromStopSection(stop.getID())">save</button></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            <ul class="list-group">
+                                                <li class="list-group-item">
+                                                    <button class="btn btn-success" @click="changeNodeInfoFromStopSection(stop.getID())">save</button>
+                                                </li>
+                                                <li v-for="field in stopFields" class="list-group-item">
+                                                    <label :for="'stop_section_'+field+stop.getID()" class="form-label">{{dict[field]}}</label>
+                                                    <td><input class="form-control" type="text" :id="'stop_section_'+field+stop.getID()" :value="stop.getStopInfo()[field]" :placeholder="dict[field]"></td>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <button class="btn btn-success" @click="changeNodeInfoFromStopSection(stop.getID())">save</button>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>

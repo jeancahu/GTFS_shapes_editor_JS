@@ -213,9 +213,17 @@ const editor_gtfs_conf = {
             ],
             stopFields: [
                 "stop_id",
+                "stop_code",
                 "stop_name",
                 "stop_desc",
-                "stop_url"  // page with a photo and info about
+                "stop_lat",
+                "stop_lon",
+                "zone_id",
+                "stop_url",  // page with a photo and info about TODO
+                "location_type",
+                "parent_station",
+                "stop_timezone",
+                "wheelchair_boarding"
             ],
             stopTimeFields: [
                 "st_trip_id",
@@ -357,14 +365,16 @@ const editor_gtfs_conf = {
             alert("Success: edit data");
         },
         changeNodeInfoFromStopSection(node_id){
+            var new_stop_info = {};
+
+            this.stopFields.forEach(
+                field => {
+                    new_stop_info[field] = document.getElementById("stop_section_"+field+node_id).value;
+                }
+            );
             o_se_group.changeNodeInfoByID(
                 node_id,
-                {
-                    stop_id: document.getElementById("stop_id_"+node_id).value,
-                    stop_name: document.getElementById("stop_name_"+node_id).value,
-                    stop_desc: document.getElementById("stop_desc_"+node_id).value,
-                    stop_url: document.getElementById("stop_url_"+node_id).value,
-                }
+                new_stop_info
             );
             alert("Success: edit data");
         },
