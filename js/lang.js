@@ -1,5 +1,7 @@
 const en_US = new Proxy(
 {
+    lang:            "en_US",
+
     add:             "Add",
     remove:          "Remove",
     agency:          "Agency",
@@ -65,7 +67,9 @@ const en_US = new Proxy(
 );
 
 const es_CR = new Proxy(
-    {
+{
+    lang:            "es_CR",
+
     add:             "Agregar",
     remove:          "Eliminar",
     agency:          "Empresa",

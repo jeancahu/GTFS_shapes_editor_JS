@@ -5,9 +5,10 @@
   "main": "index.js",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "bootstrap": "^5.0.1",
     "express": "^4.17.1",
     "sqlite3": "^5.0.0",
-    "streetelement": "^0.4.0",
+    "streetelement": "^0.4.1",
     "vue": "^2.6.12"
   },
   "devDependencies": {

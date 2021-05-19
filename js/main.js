@@ -169,7 +169,6 @@ const editor_gtfs_conf = {
             map_view_stops: true,
             ////////////////// END SIDEBAR
 
-            language: "en_US",
             dict: en_US,
 
             // Popup content structures
@@ -184,6 +183,10 @@ const editor_gtfs_conf = {
             trips: o_se_group.trips,
             stopTimes: o_se_group.stopTimes,
 
+            // Stops section
+            page_indicator_stops: Number.parseInt(( o_se_group.nodes.filter(filterValidNode).filter(filterStopNode).length / 10 )+1), // FIXME
+            page_indicator_stops_selected: 0,
+
             // Stop times section
             in_st_stop_id: 0,
 
@@ -192,7 +195,7 @@ const editor_gtfs_conf = {
             ns_segments: [],
             ns_head_node_id: null,
 
-            agencyFields: [
+            agencyFields: [ // TODO These are constants, import as a constant array
                 "agency_id",
 								"agency_name",
 								"agency_url",
@@ -267,6 +270,9 @@ const editor_gtfs_conf = {
         nodes () {
             this.stops = this.nodes.filter(filterValidNode).filter(filterStopNode);
         },
+        stops () {
+            this.page_indicator_stops = Number.parseInt(( this.stops.length / 10 )+1);
+        },
         map_action (new_state, old_state) {
             o_se_group.selected_action = new_state;
         },
@@ -313,6 +319,25 @@ const editor_gtfs_conf = {
         }
     },
     methods: {
+        increaseStopPageSelector() {
+            if ( this.page_indicator_stops_selected < this.page_indicator_stops -1 ){
+                this.page_indicator_stops_selected+=1;
+            }
+        },
+        decreaseStopPageSelector() {
+            if ( this.page_indicator_stops_selected){
+                this.page_indicator_stops_selected-=1;
+            }
+        },
+        toggleDict () {
+            if ( this.dict.lang == 'es_CR' ){
+                // US English
+                this.dict = en_US;
+            } else {
+                // CR Spanish
+                this.dict = es_CR;
+            }
+        },
         toggleHideMap () {
             document.getElementById("map_container").hidden =
                 !document.getElementById("map_container").hidden;
@@ -629,7 +654,9 @@ const editor_gtfs_conf = {
             return result;
         },
         rev_stops () { // TODO
-            return this.stops.slice().reverse();
+            return this.stops.slice().reverse().reduce((rows, key, index) => (
+                index % 10 == 0 ? rows.push([key]) :
+                    rows[rows.length-1].push(key)) && rows, []);
         },
         rev_agencies () {
             return this.agencies.array.slice().reverse();
@@ -645,7 +672,7 @@ const editor_gtfs_conf = {
         },
         rev_stoptimes () { // TODO
             return this.stopTimes.array.slice().reverse();
-        }
+        },
     },
     filters: {
         input_box(value) {
@@ -653,10 +680,6 @@ const editor_gtfs_conf = {
         }
     }
 };
-
-// VUE 3
-// const main_app = Vue.createApp(editor_gtfs_conf);
-// main_app.mount('#editor_gtfs');
 
 // VUE 2
 const app = new vue(editor_gtfs_conf);
@@ -695,7 +718,7 @@ o_se_group.map.once('postrender', async function(event) {
     document.getElementById("loading_screen").remove();
 });
 
-/////////////////////////// File gtfs input
+/////////////////////////// File gtfs stops input
 var file_content = {};
 document.getElementById("file_gtfs_stops_input").onchange = (change) => {
     change.target.files[change.target.files.length-1].text().then(
