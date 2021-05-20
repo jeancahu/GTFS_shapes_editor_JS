@@ -18,81 +18,74 @@
 
     </head>
     <body>
-
         <div id="loading_screen"  class="loading_screen">
             <img alt="loading_gif" src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/ab79a231234507.564a1d23814ef.gif"/> <!-- FIXME -->
         </div>
-
         <div id="editor_gtfs">
-            <div class="toolbar">
-                <ul class="nav justify-content-center">
-                    <li class="nav-item">
-                        <button class="btn btn-primary" onclick="bundle.downloadHistoryArray()">
-                            Save
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="btn btn-primary" @click="toggleHideMap()">
-                            Map
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="btn btn-primary" @click="toggleDict()">
-                            {{ dict.lang == 'es_CR' ? 'en_US' : 'es_CR' }}
-                        </button>
-                    </li>
+            <div class="body-container">
+                <div class="toolbar">
+                    <button class="btn btn-primary" onclick="bundle.downloadHistoryArray()">
+                        Save
+                    </button>
+                    <button class="btn btn-primary" @click="map_hidden=!map_hidden">
+                        Map
+                    </button>
+                    <button class="btn btn-primary" @click="toggleDict()">
+                        {{ dict.lang == 'es_CR' ? 'en_US' : 'es_CR' }}
+                    </button>
+                </div>
+                <div id="fullscreen-view" class="fullscreen">
+                    <!-- OpenLayers + OpenStreetMap -->
+                    <div id="map_container" class="map_container">
+                        <div id="custom_control_interaction" class="custom_control_interaction">
+                            <div class="nav justify-content-left">
+                                <div class="dropdown map-tool-item">
+                                    <button class="btn btn-secondary dropdown-toggle"
+                                            type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Map interaction
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton3">
+                                        <li><a @click="map_action='select'" :class="['dropdown-item', {'active': map_action=='select'}]" href="#">Select node</a></li>
+                                        <li><a @click="map_action='add'" :class="['dropdown-item', {'active': map_action=='add'}]" href="#">Add node</a></li>
+                                        <li><a @click="map_action='split'" :class="['dropdown-item', {'active': map_action=='split'}]" href="#">Split link</a></li>
+                                        <li><a @click="map_action='move'" :class="['dropdown-item', {'active': map_action=='move'}]" href="#">Move node</a></li>
+                                        <li><a @click="map_action='remove'" :class="['dropdown-item', {'active': map_action=='remove'}]" href="#">Remove node</a></li>
+                                        <li><a @click="map_action='cut'" :class="['dropdown-item', {'active': map_action=='cut'}]" href="#">Delete link</a></li>
+                                    </ul>
+                                </div>
 
-                    <li class="nav-item">
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" @click="map_view_nodes=!map_view_nodes"
-                                    :class="['btn', { 'btn-primary': !map_view_nodes }, { 'btn-success': map_view_nodes }]"
-                            >{{map_view_nodes? 'Hide': 'Show'}} nodes</button>
+                                <div class="dropdown map-tool-item">
+                                <button class="btn btn-secondary dropdown-toggle"
+                                        type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Node type
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                                    <li><a @click="map_node_type='shape'" :class="['dropdown-item', {'active': map_node_type=='shape'}]" href="#">Shape</a></li>
+                                    <li><a @click="map_node_type='endpoint'" :class="['dropdown-item', {'active': map_node_type=='endpoint'}]" href="#">Endpoint</a></li>
+                                    <li><a @click="map_node_type='stop'" :class="['dropdown-item', {'active': map_node_type=='stop'}]" href="#">Stop</a></li>
+                                    <li><a @click="map_node_type='fork'" :class="['dropdown-item', {'active': map_node_type=='fork'}]" href="#">Intersection</a></li>
+                                </ul>
+                            </div>
 
-                            <button type="button" @click="map_view_links=!map_view_links"
-                                    :class="['btn', { 'btn-primary': !map_view_links }, { 'btn-success': map_view_links }]"
-                            >{{map_view_links? 'Hide': 'Show'}} links</button>
+                            <div class="btn-group map-tool-item" role="group" aria-label="Basic example">
+                                <button type="button" @click="map_view_nodes=!map_view_nodes"
+                                        :class="['btn', 'map-tool-item-group-btn', { 'btn-primary': !map_view_nodes }, { 'btn-success': map_view_nodes }]"
+                                >{{map_view_nodes? 'Hide': 'Show'}} nodes</button>
 
-                            <button type="button" @click="map_view_stops=!map_view_stops"
-                                    :class="['btn', { 'btn-primary': !map_view_stops }, { 'btn-success': map_view_stops }]"
-                            >{{map_view_stops? 'Hide': 'Show'}} stops</button>
+                                <button type="button" @click="map_view_links=!map_view_links"
+                                        :class="['btn', 'map-tool-item-group-btn', { 'btn-primary': !map_view_links }, { 'btn-success': map_view_links }]"
+                                >{{map_view_links? 'Hide': 'Show'}} links</button>
+
+                                <button type="button" @click="map_view_stops=!map_view_stops"
+                                        :class="['btn', 'map-tool-item-group-btn', { 'btn-primary': !map_view_stops }, { 'btn-success': map_view_stops }]"
+                                >{{map_view_stops? 'Hide': 'Show'}} stops</button>
+                            </div>
+
+
                         </div>
-                    </li>
-                    <li class="nav-item">
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle"
-                                    type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
-                                Map interaction
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton3">
-                                <li><a @click="map_action='select'" :class="['dropdown-item', {'active': map_action=='select'}]" href="#">Select node</a></li>
-                                <li><a @click="map_action='add'" :class="['dropdown-item', {'active': map_action=='add'}]" href="#">Add node</a></li>
-                                <li><a @click="map_action='split'" :class="['dropdown-item', {'active': map_action=='split'}]" href="#">Split link</a></li>
-                                <li><a @click="map_action='move'" :class="['dropdown-item', {'active': map_action=='move'}]" href="#">Move node</a></li>
-                                <li><a @click="map_action='remove'" :class="['dropdown-item', {'active': map_action=='remove'}]" href="#">Remove node</a></li>
-                                <li><a @click="map_action='cut'" :class="['dropdown-item', {'active': map_action=='cut'}]" href="#">Delete link</a></li>
-                            </ul>
                         </div>
-                    </li>
-                    <li class="nav-item">
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle"
-                                    type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-                                Node type
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                                <li><a @click="map_node_type='shape'" :class="['dropdown-item', {'active': map_node_type=='shape'}]" href="#">Shape</a></li>
-                                <li><a @click="map_node_type='endpoint'" :class="['dropdown-item', {'active': map_node_type=='endpoint'}]" href="#">Endpoint</a></li>
-                                <li><a @click="map_node_type='stop'" :class="['dropdown-item', {'active': map_node_type=='stop'}]" href="#">Stop</a></li>
-                                <li><a @click="map_node_type='fork'" :class="['dropdown-item', {'active': map_node_type=='fork'}]" href="#">Intersection</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        <div class="body-container">
-
-            <!-- Openstreet map -->
-            <div id="map_container" class="map_container"></div>
+                    </div>
+                </div>
 
             <!-- ----------------- key command board ------------------------ -->
 
@@ -236,36 +229,61 @@
 
                     <!-- STOPS -->
                     <div class="tab-pane fade" id="nav-stops" role="tabpanel" aria-labelledby="nav-stops-tab">
-
-                        <label class="form-label" for="file_gtfs_stops_input">Upload stops.txt file:</label><br>
-                        <input type="file" class="form-control"
-                               accept="plain/text,.txt"
-                               id="file_gtfs_stops_input" name="file_gtfs_stops_input">
-
-                        <div class="accordion" id="accordionExample">
+                        <div class="container stops-section-menu">
+                            <div class="row">
+                                <div class="col">
+                                    <label class="form-label" for="file_gtfs_stops_input">Upload stops.txt file</label><br>
+                                    <input type="file" class="form-control"
+                                           accept="plain/text,.txt"
+                                           id="file_gtfs_stops_input" name="file_gtfs_stops_input">
+                                </div>
+                                <div class="col">
+                                    <label class="form-label" for="file_gtfs_stops_output">Download stops.txt file</label><br>
+                                    <button class="btn btn-primary form-control"
+                                            id="file_gtfs_stops_output" name="file_gtfs_stops_output"> Save </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion" id="accordion_stops_section">
                             <div v-for="(sub_array, sub_array_index) in rev_stops">
                                 <div v-show="sub_array_index == page_indicator_stops_selected" v-for="stop in sub_array" class="accordion-item">
                                     <h2 class="accordion-header" :id="'heading'+stop.getID()">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                :data-bs-target="'#collapse'+stop.getID()" aria-expanded="false" :aria-controls="'collapseTwo'+stop.getID()">
+                                                :data-bs-target="'#collapse'+stop.getID()" aria-expanded="false"
+                                                :aria-controls="'collapseTwo'+stop.getID()"
+                                                @click="focusNodeOnMapByID(stop.getID())">
                                             <strong>Stop ID>> </strong>  {{ stop.getStopInfo().stop_id }}
                                         </button>
                                     </h2>
                                     <div :id="'collapse'+stop.getID()" class="accordion-collapse collapse"
-                                         :aria-labelledby="'heading'+stop.getID()" data-bs-parent="#accordionExample">
+                                         :aria-labelledby="'heading'+stop.getID()" data-bs-parent="#accordion_stops_section">
                                         <div class="accordion-body">
-                                            <ul class="list-group">
-                                                <li class="list-group-item">
-                                                    <button class="btn btn-success" @click="changeNodeInfoFromStopSection(stop.getID())">save</button>
-                                                </li>
-                                                <li v-for="field in stopFields" class="list-group-item">
-                                                    <label :for="'stop_section_'+field+stop.getID()" class="form-label">{{dict[field]}}</label>
-                                                    <td><input class="form-control" type="text" :id="'stop_section_'+field+stop.getID()" :value="stop.getStopInfo()[field]" :placeholder="dict[field]"></td>
-                                                </li>
-                                                <li class="list-group-item">
-                                                    <button class="btn btn-success" @click="changeNodeInfoFromStopSection(stop.getID())">save</button>
-                                                </li>
-                                            </ul>
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <ul class="list-group">
+                                                            <li class="list-group-item">
+                                                                <button class="btn btn-success" @click="changeNodeInfoFromStopSection(stop.getID())">save</button>
+                                                            </li>
+                                                            <li v-for="field in stopFields.slice(0,6)" class="list-group-item">
+                                                                <label :for="'stop_section_'+field+stop.getID()" class="form-label">{{dict[field]}}</label>
+                                                                <td><input class="form-control" type="text" :id="'stop_section_'+field+stop.getID()" :value="stop.getStopInfo()[field]" :placeholder="dict[field]"></td>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col">
+                                                        <ul class="list-group">
+                                                            <li v-for="field in stopFields.slice(6)" class="list-group-item">
+                                                                <label :for="'stop_section_'+field+stop.getID()" class="form-label">{{dict[field]}}</label>
+                                                                <td><input class="form-control" type="text" :id="'stop_section_'+field+stop.getID()" :value="stop.getStopInfo()[field]" :placeholder="dict[field]"></td>
+                                                            </li>
+                                                            <li class="list-group-item">
+                                                                <button class="btn btn-success" @click="changeNodeInfoFromStopSection(stop.getID())">save</button>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

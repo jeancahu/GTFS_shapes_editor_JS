@@ -288,7 +288,7 @@ const editor_gtfs_conf = {
             o_se_group.selected_node_type = new_state;
         },
         map_hidden (new_state, old_state) {
-            document.getElementById("map_container").hidden =
+            document.getElementById("fullscreen-view").hidden =
                 new_state;
             o_se_group.map.updateSize();
         },
@@ -345,12 +345,6 @@ const editor_gtfs_conf = {
                 // CR Spanish
                 this.dict = es_CR;
             }
-        },
-        toggleHideMap () {
-            document.getElementById("map_container").hidden =
-                !document.getElementById("map_container").hidden;
-            this.map_hidden = document.getElementById("map_container").hidden;
-            o_se_group.map.updateSize();
         },
         changeNodeInfoFromPopup(node_id){
             o_se_group.changeNodeInfoByID(
@@ -424,7 +418,7 @@ const editor_gtfs_conf = {
 
                         );
                     }
-                    this.goToNodeOnMap(result[result.length -1].getID());
+                    o_se_group.focusNodeOnMapByID(result[result.length -1].getID());
                     this.ns_head_node_id =
                         result[result.length -1].getID();
 
@@ -468,9 +462,9 @@ const editor_gtfs_conf = {
                 }
             }
         },
-        goToNodeOnMap (node_id) { // TODO needs testing
-            o_se_group.map.getView().setCenter(this.nodes[node_id].getCoordinates());
-            o_se_group.map.getView().setZoom(17.9); // TODO use a config file
+        focusNodeOnMapByID (node_id){ // TODO, check if can we remove this extra function
+            o_se_group.selectNodeByID(node_id);
+            o_se_group.focusNodeOnMapByID(node_id);
         },
         saveAgency(){
             this.agencyFields.forEach( (value) => {
@@ -721,6 +715,11 @@ closer.onclick = function () {
     closer.blur();
     return false;
 };
+
+/// Controls
+o_se_group.addMapControl(
+    document.getElementById('custom_control_interaction')
+);
 
 ////////// delete the loading screen div //////
 o_se_group.map.once('postrender', async function(event) {

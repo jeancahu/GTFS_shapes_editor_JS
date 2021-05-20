@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@1,200&display=swap');
+@font-face {
+    font-family: 'Poppins';
+    src: url("../dist/fonts/Poppins-Regular.ttf") format('truetype');
+}
 
 * {
     font-family: 'Poppins', sans-serif;
@@ -12,17 +15,20 @@ body {
 }
 
 .body-container {
+    top: 50px;
     position: absolute;
     height: calc(100% - 50px);
     width: 100%;
-    top: 50px;
     z-index: 20;
 }
 
 .map_container {
-    height: 70vh;
     width: 100%;
     background: #e2efef;
+
+    width: 100%;
+    height: 100%;
+    float: bottom;
 }
 
 .toolbar {
@@ -46,6 +52,11 @@ body {
     z-index: 30;
 }
 
+.stops-section-menu {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 .loading_screen {
     z-index: 99;
     position: fixed;
@@ -61,6 +72,55 @@ body {
     transform: translateY(60%);
     /* center horizontally */
     text-align: center;
+}
+
+.fullscreen:-webkit-full-screen {
+    height: 100%;
+    margin: 0;
+}
+.fullscreen:-ms-fullscreen {
+    height: 100%;
+}
+
+.fullscreen:fullscreen {
+    height: 100%;
+}
+
+.fullscreen {
+    margin-bottom: 10px;
+    width: 100%;
+    height: 70vh;
+}
+
+.map_container:-webkit-full-screen {
+    top: 50px;
+    width: 10%;
+}
+
+.map_container:-ms-fullscreen {
+    top: 50px;
+    width: 10%;
+}
+
+.map_container:fullscreen {
+    top: 50px;
+    width: 10%;
+}
+
+.custom_control_interaction {
+    position: absolute;
+    width: calc(70% - 30px);
+    left: 60px;
+    top: 18px;
+}
+
+.map-tool-item {
+    position: relative;
+    margin-left: 10px;
+}
+
+.map-tool-item-group-btn {
+	  min-width: 140px;
 }
 
 /* Colors for Shapes section */
@@ -82,4 +142,12 @@ body {
 
 .h_menu {
     margin-top: 12px;
+}
+
+.toolbar > .btn {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 6px;
+    padding-right: 6px;
+    margin-top: 5px;
 }
