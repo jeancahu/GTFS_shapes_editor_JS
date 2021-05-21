@@ -23,6 +23,14 @@
         </div>
         <div id="editor_gtfs">
             <div class="body-container">
+                <!-- <div v-show="alerts.length" id="notification_banner" class="notification_banner">
+                     <div class="alert alert-primary" role="alert">
+                     This is a primary alert—check it out!
+                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                     </button>
+                     </div>
+                     </div> -->
                 <div class="toolbar">
                     <button class="btn btn-primary" onclick="bundle.downloadHistoryArray()">
                         Save
@@ -48,7 +56,6 @@
                                         <li><a @click="map_action='select'" :class="['dropdown-item', {'active': map_action=='select'}]" href="#">Select node</a></li>
                                         <li><a @click="map_action='add'" :class="['dropdown-item', {'active': map_action=='add'}]" href="#">Add node</a></li>
                                         <li><a @click="map_action='split'" :class="['dropdown-item', {'active': map_action=='split'}]" href="#">Split link</a></li>
-                                        <li><a @click="map_action='move'" :class="['dropdown-item', {'active': map_action=='move'}]" href="#">Move node</a></li>
                                         <li><a @click="map_action='remove'" :class="['dropdown-item', {'active': map_action=='remove'}]" href="#">Remove node</a></li>
                                         <li><a @click="map_action='cut'" :class="['dropdown-item', {'active': map_action=='cut'}]" href="#">Delete link</a></li>
                                     </ul>
@@ -135,6 +142,22 @@
                 <div class="tab-content" id="myTabContent">
                     <!-- SHAPES -->
                     <div class="tab-pane fade" id="nav-shapes" role="tabpanel" aria-labelledby="nav-shapes-tab">
+                        <div class="container shapes-section-menu">
+                            <div class="row">
+                                <div class="col">
+                                    <label class="form-label" for="file_gtfs_shapes_input">Upload shapes.txt file</label><br>
+                                    <input type="file" class="form-control disabled"
+                                           accept="plain/text,.txt"
+                                           id="file_gtfs_shapes_input" name="file_gtfs_shapes_input" disabled>
+                                </div>
+                                <div class="col">
+                                    <label class="form-label" for="file_gtfs_shapes_output">Download shapes.txt file</label><br>
+                                    <button class="btn btn-primary form-control disabled"
+                                            id="file_gtfs_shapes_output" name="file_gtfs_shapes_output"> Save </button>
+                                </div>
+                            </div>
+                        </div>
+
                         Add a new shape:<br>
                         <table class="table"><tr>
                             <th><input id="new_shape_id" name="new_shape_id" type="text" placeholder="Shape ID" /></th>
@@ -183,10 +206,10 @@
                                     </td>
                                     <!-- <td>{{shape.getSequenceText()}}</td> // REMOVE method -->
                                     <td>
-                                        <a class="black_text" v-for="segment in shape.getSegments()" @click="goToNodeOnMap(segment[0])">
+                                        <a class="black_text" v-for="segment in shape.getSegments()" @click="focusNodeOnMapByID(segment[0])">
                                             <span class="orange_text">n{{segment[0]}}</span><span class="green_text">l{{segment[1]}}</span>,
                                         </a>
-                                        <a class="orange_text" @click="goToNodeOnMap(shape.getSegments()[shape.getSegments().length -1][2])">
+                                        <a class="orange_text" @click="focusNodeOnMapByID(shape.getSegments()[shape.getSegments().length -1][2])">
                                             n{{shape.getSegments()[shape.getSegments().length -1][2]}}
                                         </a>
                                     </td>
@@ -240,7 +263,9 @@
                                 <div class="col">
                                     <label class="form-label" for="file_gtfs_stops_output">Download stops.txt file</label><br>
                                     <button class="btn btn-primary form-control"
-                                            id="file_gtfs_stops_output" name="file_gtfs_stops_output"> Save </button>
+                                            id="file_gtfs_stops_output" name="file_gtfs_stops_output"
+                                            onclick="bundle.downloadStopsCSV()"
+                                    > Save </button>
                                 </div>
                             </div>
                         </div>
@@ -439,7 +464,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select @change="goToNodeOnMap(in_st_stop_id)" id="st_stop_id" v-model="in_st_stop_id">
+                                        <select @change="focusNodeOnMapByID(in_st_stop_id)" id="st_stop_id" v-model="in_st_stop_id">
                                             <!-- It saves the node ID instead the stop id, the node ID is unmutable -->
                                             <option v-for="stopnode in stopsWhenTrip" :value="stopnode.getID()">{{stopnode.getStopInfo().id}}: {{stopnode.getStopInfo().name ? stopnode.getStopInfo().name : "no name"}}</option>
                                         </select>

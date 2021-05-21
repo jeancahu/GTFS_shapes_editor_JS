@@ -1,7 +1,8 @@
-const { streetElementGroup } = require('streetelement');
-const { streetElementNode }  = require('streetelement'); // FIXME remove
-const { streetElementLink }  = require('streetelement'); // FIXME remove
-const { streetElementShape } = require('streetelement'); // FIXME remove
+import {
+    streetElementGroup,
+    streetElementNode,
+    streetElementLink,
+    streetElementShape } from 'streetelement';
 
 const { en_US, es_CR } = require('./lang.js');
 
@@ -32,11 +33,6 @@ function sleep(ms) {
 }
 
 //////////////// filters /////////////////////////
-
-function filterValidNode (node) {
-    return node.valid;
-}
-
 function filterStopNode (node) {
     // endpoints are stops too
     return node.getType() == streetElementNode.type.STOP |
@@ -60,7 +56,7 @@ function filterNearestNode (coordinate) {
 }
 
 function filterValidShapeSegment (shape) {
-    //return shape.valid(); // TODO
+    //return shape.isValid(); // TODO
     return true; // FIXME
 }
 
@@ -122,6 +118,10 @@ function downloadShapesCSV () {
     downloadString(o_se_group.shapesToGTFS(), 'shapes.txt');
 }
 
+function downloadStopsCSV () {
+    console.log("downloadStopsCSV");
+    downloadString(o_se_group.stopsToGTFS(), 'stops.txt');
+}
 
 function downloadHistoryArray () {
     console.log("downloadHistoryArray");
@@ -175,7 +175,9 @@ const editor_gtfs_conf = {
             popup_content: o_se_group.popup_content, // Gobal object
 
             nodes: o_se_group.nodes, // contains stops too FIXME
-            stops: o_se_group.nodes.filter(filterValidNode).filter(filterStopNode), // contains stops too FIXME
+            stops: o_se_group.nodes
+                .filter(node => node.isValid())
+                .filter(filterStopNode), // contains stops too FIXME
             agencies: o_se_group.agencies,
             shapes: o_se_group.shapes,
             routes: o_se_group.routes,
@@ -184,7 +186,7 @@ const editor_gtfs_conf = {
             stopTimes: o_se_group.stopTimes,
 
             // Stops section
-            page_indicator_stops: Number.parseInt(( o_se_group.nodes.filter(filterValidNode).filter(filterStopNode).length / 10 )+1), // FIXME
+            page_indicator_stops: Number.parseInt(( o_se_group.nodes.filter(node => node.isValid()).filter(filterStopNode).length / 10 )+1), // FIXME
             page_indicator_stops_selected: 0,
 
             // Stop times section
@@ -276,7 +278,7 @@ const editor_gtfs_conf = {
     },
     watch:{
         nodes () {
-            this.stops = this.nodes.filter(filterValidNode).filter(filterStopNode);
+            this.stops = this.nodes.filter(node => node.isValid()).filter(filterStopNode);
         },
         stops () {
             this.page_indicator_stops = Number.parseInt(( this.stops.length / 10 )+1);
@@ -355,7 +357,7 @@ const editor_gtfs_conf = {
                     stop_name: document.getElementById("ol_in_stop_name").value
                 }
             );
-            this.stops = this.nodes.filter(filterValidNode).filter(filterStopNode); // TODO remove
+            this.stops = this.nodes.filter(node => node.isValid()).filter(filterStopNode); // TODO remove
             alert("Success: edit data");
         },
         changeNodeInfoFromStopSection(node_id){
@@ -462,7 +464,7 @@ const editor_gtfs_conf = {
                 }
             }
         },
-        focusNodeOnMapByID (node_id){ // TODO, check if can we remove this extra function
+        focusNodeOnMapByID (node_id){
             o_se_group.selectNodeByID(node_id);
             o_se_group.focusNodeOnMapByID(node_id);
         },
@@ -628,7 +630,7 @@ const editor_gtfs_conf = {
                 // ); // last node in shape
             } else {
                 result = this.nodes.slice().reverse();
-                result = result.filter(filterValidNode);
+                result = result.filter(node => node.isValid());
                 result = result.filter(filterEndpointNode);
             }
             return result;
@@ -641,14 +643,14 @@ const editor_gtfs_conf = {
             // return stops
 
             var result = this.nodes.slice().reverse();
-            result = result.filter(filterValidNode);
+            result = result.filter(node => node.isValid());
             result = result.filter(filterStopNode);
             return result;
         },
         rev_endpoints () {
             // return end valid endpoints
             var result = this.nodes.slice().reverse();
-            result = result.filter(filterValidNode);
+            result = result.filter(node => node.isValid());
             result = result.filter(filterEndpointNode);
             return result;
         },
@@ -724,6 +726,7 @@ o_se_group.addMapControl(
 ////////// delete the loading screen div //////
 o_se_group.map.once('postrender', async function(event) {
     await sleep(2000); // wait for two seconds
+    document.getElementById('nav-agency-tab').click(); // set agency section default
     document.getElementById("loading_screen").remove();
 });
 
@@ -751,8 +754,10 @@ document.getElementById("file_gtfs_stops_input").onchange = (change) => {
 
 ///////////////// exports (bundle.something in console) ////////////
 // these method and data is accesible from outside the bundle
-module.exports = {
-    'o_se_group': o_se_group, // FIXME temporal
-    'downloadHistoryArray': downloadHistoryArray,
-    'downloadShapesCSV': downloadShapesCSV
-};
+export {
+    o_se_group, // FIXME temporal
+    downloadHistoryArray,
+    downloadShapesCSV,
+    downloadStopsCSV,
+    downloadString
+}

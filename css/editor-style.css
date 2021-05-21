@@ -151,3 +151,16 @@ body {
     padding-right: 6px;
     margin-top: 5px;
 }
+
+.notification_banner {
+    position: fixed;
+    top: 60px;
+    height: 210px;
+    width: 100%;
+    z-index: 999;
+    background-color:rgba(0, 0, 0, 0);
+}
+
+.notification_banner > .alert {
+    margin-top: 10px;
+}
