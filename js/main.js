@@ -51,10 +51,6 @@ function filterEndpointNode (node) {
     return node.getType() == streetElementNode.type.ENDPOINT;
 }
 
-function filterNearestNode (coordinate) {
-    // TODO
-}
-
 function filterValidShapeSegment (shape) {
     //return shape.isValid(); // TODO
     return true; // FIXME
@@ -185,6 +181,8 @@ const editor_gtfs_conf = {
             trips: o_se_group.trips,
             stopTimes: o_se_group.stopTimes,
 
+            pointer: o_se_group.pointer,
+
             // Stops section
             page_indicator_stops: Number.parseInt(( o_se_group.nodes.filter(node => node.isValid()).filter(filterStopNode).length / 10 )+1), // FIXME
             page_indicator_stops_selected: 0,
@@ -284,7 +282,8 @@ const editor_gtfs_conf = {
             this.page_indicator_stops = Number.parseInt(( this.stops.length / 10 )+1);
         },
         map_action (new_state, old_state) {
-            o_se_group.selected_action = new_state;
+            // changes o_se_group operation mode
+            o_se_group.setMode(new_state);
         },
         map_node_type (new_state, old_state) {
             o_se_group.selected_node_type = new_state;

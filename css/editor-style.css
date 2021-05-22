@@ -33,7 +33,6 @@ body {
 
 .toolbar {
     height: 50px; /* Full-height: remove this if you want "auto" height */
-    width: 100%; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
     z-index: 30; /* Stay on top */
     top: 0; /* Stay at the top */
@@ -109,7 +108,7 @@ body {
 
 .custom_control_interaction {
     position: absolute;
-    width: calc(70% - 30px);
+    width: max-content;
     left: 60px;
     top: 18px;
 }
@@ -163,4 +162,8 @@ body {
 
 .notification_banner > .alert {
     margin-top: 10px;
+}
+
+.pointer-coor {
+	  min-width: 210px;
 }

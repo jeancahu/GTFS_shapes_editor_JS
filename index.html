@@ -31,22 +31,34 @@
                      </button>
                      </div>
                      </div> -->
-                <div class="toolbar">
-                    <button class="btn btn-primary" onclick="bundle.downloadHistoryArray()">
-                        Save
-                    </button>
-                    <button class="btn btn-primary" @click="map_hidden=!map_hidden">
-                        Map
-                    </button>
-                    <button class="btn btn-primary" @click="toggleDict()">
-                        {{ dict.lang == 'es_CR' ? 'en_US' : 'es_CR' }}
-                    </button>
+                <div class="toolbar container-fluid">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary" onclick="bundle.downloadHistoryArray()">
+                                Save
+                            </button>
+                            <button class="btn btn-primary" @click="map_hidden=!map_hidden">
+                                Map
+                            </button>
+                            <button class="btn btn-primary" @click="toggleDict()">
+                                {{ dict.lang == 'es_CR' ? 'en_US' : 'es_CR' }}
+                            </button>
+                        </div>
+                        <div class="col d-flex justify-content-end">
+                            <div class="d-inline-flex p-2 pointer-coor">
+                                Longitude: {{ pointer.coordinate[0] }}
+                            </div>
+                            <div class="d-inline-flex p-2 pointer-coor">
+                                Latitude: {{ pointer.coordinate[1] }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div id="fullscreen-view" class="fullscreen">
                     <!-- OpenLayers + OpenStreetMap -->
-                    <div id="map_container" class="map_container">
+                    <div tabindex="1" id="map_container" class="map_container">
                         <div id="custom_control_interaction" class="custom_control_interaction">
-                            <div class="nav justify-content-left">
+                            <div class="nav">
                                 <div class="dropdown map-tool-item">
                                     <button class="btn btn-secondary dropdown-toggle"
                                             type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
