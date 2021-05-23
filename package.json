@@ -1,8 +1,8 @@
 {
   "name": "gtfs_shape_editor",
   "version": "1.0.0",
-  "description": "Webapp to edit shapes in a GTFS format table",
-  "main": "index.js",
+  "description": "Edit GTFS Shapes on Webapp",
+  "private": true,
   "dependencies": {
     "body-parser": "^1.19.0",
     "bootstrap": "^5.0.1",
@@ -12,23 +12,19 @@
     "vue": "^2.6.12"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.0",
-    "@babel/preset-env": "^7.14.1",
-    "babelify": "^10.0.0",
-    "browserify": "^17.0.0",
-    "esmify": "^2.1.1",
-    "uglify-js": "^3.13.6",
-    "watchify": "^4.0.0"
+    "source-map-loader": "^3.0.0",
+    "webpack": "^5.37.1",
+    "webpack-cli": "^4.7.0"
   },
   "browser": {
     "vue": "vue/dist/vue.common.js"
   },
   "scripts": {
-    "debug": "browserify -t babelify --plugin esmify --standalone bundle ./js/main.js --debug | uglifyjs -cm --in-source-map inline --source-map-inline --output ./dist/bundle.js",
-    "dist": "browserify -t babelify --plugin esmify --standalone bundle ./js/main.js | uglifyjs -cm --output ./dist/bundle.js",
-    "watch": "watchify -p esmify --standalone bundle ./js/main.js -o ./dist/bundle.js -d -v",
-    "test": "echo 'no tests yet' && exit 1",
-    "serve": "node -v && node index.js && exit 0"
+    "debug": "webpack --mode development --config webpack.config.js",
+    "dist": "webpack --mode production --config webpack.config.js",
+    "watch": "webpack --watch",
+    "test": "echo 'no tests yet'",
+    "serve": "node index.js"
   },
   "repository": {
     "type": "git",
