@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "html-minifier": "^4.0.0",
+    "prettier": "2.3.0",
     "source-map-loader": "^3.0.0",
     "webpack": "^5.37.1",
     "webpack-cli": "^4.7.0"
@@ -21,6 +22,7 @@
     "vue": "vue/dist/vue.common.js"
   },
   "scripts": {
+    "prettier": "prettier index.html --write",
     "dist-html": "html-minifier --collapse-whitespace --remove-comments --remove-optional-tags --remove-redundant-attributes --remove-script-type-attributes --remove-tag-whitespace --use-short-doctype -o ./dist/index.html index.html",
     "debug": "webpack --mode development --config webpack.config.js",
     "dist": "webpack --mode production --config webpack.config.js",
