@@ -26,7 +26,7 @@
     "dist-html": "html-minifier --collapse-whitespace --remove-comments --remove-optional-tags --remove-redundant-attributes --remove-script-type-attributes --remove-tag-whitespace --use-short-doctype -o ./dist/index.html index.html",
     "debug": "webpack --mode development --config webpack.config.js",
     "dist": "webpack --mode production --config webpack.config.js",
-    "watch": "webpack --watch",
+    "watch": "webpack --watch --mode development --config webpack.config.js",
     "test": "echo 'no tests yet'",
     "serve": "node index.js"
   },
