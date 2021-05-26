@@ -167,13 +167,14 @@ const editor_gtfs_conf = {
         .filter((node) => node.isValid())
         .filter(filterStopNode), // contains stops too FIXME
       agencies: o_se_group.agencies,
-      shapes: o_se_group.shapes,
       routes: o_se_group.routes,
       services: o_se_group.services,
       trips: o_se_group.trips,
       stopTimes: o_se_group.stopTimes,
 
-      pointer: o_se_group.pointer,
+        pointer: [0,0],
+        shapes: o_se_group.shapes,
+        shapes_waypoints: [],
 
       // Stops section
       page_indicator_stops: Number.parseInt(
@@ -182,7 +183,7 @@ const editor_gtfs_conf = {
           10 +
           1
       ), // FIXME
-      page_indicator_stops_selected: 0,
+        page_indicator_stops_selected: 0,
 
       // Stop times section
       in_st_stop_id: 0,
@@ -267,6 +268,11 @@ const editor_gtfs_conf = {
       ],
     };
   },
+    mounted() {
+        setInterval(() => {
+            this.pointer = o_se_group.pointer.coordinate;
+        }, 120);
+    },
   watch: {
     nodes() {
       this.stops = this.nodes
@@ -309,8 +315,37 @@ const editor_gtfs_conf = {
       }
     },
   },
-  methods: {
-    increaseStopPageSelector() {
+    methods: {
+        selectShape(event, shape_id){
+            console.log(event);
+            //event.target.scrollIntoView();
+            this.shapes.array.forEach(shape => shape.setVisible(false));
+
+            var classes = new Array(0);
+            event.target.classList.forEach(css_class => classes.push(css_class));
+            if (classes.some(name => name === "collapsed")) {}
+            else this.shapes.array.filter(shape => shape.getID() === shape_id)[0].setVisible(true);
+            console.log(this.shapes.array.filter(shape => shape.getID() === shape_id));
+
+            this.shapes_waypoints = this.shapes.array.filter(shape => shape.getID() === shape_id)[0].getWaypoints();
+            console.log(this.shapes.array.filter(shape => shape.getID() === shape_id)[0].getWaypoints());
+        },
+        updateShapeByID(shape_id){
+            console.log("updateShapeInfo");
+            o_se_group.updateShapeByID(shape_id, {
+                id: document.getElementById("shape_section_shape_id").value,
+                start: document.getElementById("shape_section_start_node_id").value,
+                end: document.getElementById("shape_section_end_node_id").value,
+                waypoints: this.shapes_waypoints.concat(this.shapes.selected_nodes)
+            });
+        },
+        selectStop(event, stop_node_id){
+            console.log(event);
+            //event.target.scrollIntoView();
+            this.focusNodeOnMapByID(stop_node_id);
+        },
+
+        increaseStopPageSelector() {
       if (this.page_indicator_stops_selected < this.page_indicator_stops - 1) {
         this.page_indicator_stops_selected += 1;
       }
@@ -490,8 +525,17 @@ const editor_gtfs_conf = {
       return result;
     },
     rev_shapes() {
-      var result = this.shapes.array.slice().reverse();
-      return result;
+        return this.shapes
+            .array
+            .slice()
+            .reverse();
+            // .reduce(
+            //     (rows, key, index) =>
+            //     (index % 10 == 0
+            //      ? rows.push([key])
+            //      : rows[rows.length - 1].push(key)) && rows,
+            //     []
+            // );
     },
     rev_stops() {
       // TODO
@@ -563,7 +607,7 @@ o_se_group.addMapControl(document.getElementById("custom_control_interaction"));
 
 ////////// delete the loading screen div //////
 o_se_group.map.once("postrender", async function (event) {
-  await sleep(2000); // wait for two seconds
+  await sleep(1000); // wait for two seconds
   document.getElementById("nav-agency-tab").click(); // set agency section default
   document.getElementById("loading_screen").remove();
 });

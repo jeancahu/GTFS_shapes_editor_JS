@@ -56,14 +56,10 @@
             </div>
             <div class="col d-flex justify-content-end">
               <div class="d-inline-flex p-2">
-                <div class="pointer-coor">
-                  Longitude: {{ pointer.coordinate[0] }}
-                </div>
+                <div class="pointer-coor">Longitude: {{ pointer[0] }}</div>
               </div>
               <div class="d-inline-flex p-2">
-                <div class="pointer-coor">
-                  Latitude: {{ pointer.coordinate[1] }}
-                </div>
+                <div class="pointer-coor">Latitude: {{ pointer[1] }}</div>
               </div>
             </div>
           </div>
@@ -231,8 +227,8 @@
                 v-model="popup_content.type"
               >
                 <option value="fork">Intersection</option>
-                <option v-if="popup_content.connections < 3" value="shape">
-                  Shape
+                <option v-if="popup_content.connections < 3" value="waypoint">
+                  Waypoint
                 </option>
                 <option v-if="popup_content.connections < 3" value="stop">
                   Stop
@@ -325,6 +321,146 @@
                   </div>
                 </div>
               </div>
+
+              <div class="accordion" id="accordion_shape_section">
+                <div v-for="shape in rev_shapes">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" :id="'heading'+shape.getID()">
+                      <button
+                        class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        :data-bs-target="'#collapse'+shape.getID()"
+                        aria-expanded="false"
+                        :aria-controls="'collapseTwo'+shape.getID()"
+                        @click="selectShape($event, shape.getID())"
+                      >
+                        <strong>Shape ID>> </strong> {{ shape.getID() }}
+                      </button>
+                    </h2>
+                    <div
+                      :id="'collapse'+shape.getID()"
+                      class="accordion-collapse collapse"
+                      :aria-labelledby="'heading'+shape.getID()"
+                      data-bs-parent="#accordion_shape_section"
+                    >
+                      <div class="accordion-body">
+                        <div class="container">
+                          <div class="row">
+                            <div class="col">
+                              <ul class="list-group">
+                                <li class="list-group-item">
+                                  <button
+                                    class="btn btn-success"
+                                    @click="updateShapeByID(shape.getID())"
+                                  >
+                                    save
+                                  </button>
+                                </li>
+                                <li class="list-group-item">
+                                  <label class="form-label">Shape ID</label>
+                                  <td>
+                                    <input
+                                      class="form-control"
+                                      type="text"
+                                      id="shape_section_shape_id"
+                                      :value="shape.getID()"
+                                    />
+                                  </td>
+                                </li>
+
+                                <li class="list-group-item">
+                                  <label class="form-label"
+                                    >Start Node ID</label
+                                  >
+                                  <td>
+                                    <input
+                                      class="form-control"
+                                      type="number"
+                                      id="shape_section_start_node_id"
+                                      :value="shape.getStart()"
+                                    />
+                                  </td>
+                                </li>
+                                <li class="list-group-item">
+                                  <label class="form-label">End Node ID</label>
+                                  <td>
+                                    <input
+                                      class="form-control"
+                                      type="number"
+                                      id="shape_section_end_node_id"
+                                      :value="shape.getEnd()"
+                                    />
+                                  </td>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="col">
+                              <ul class="list-group">
+                                <li
+                                  v-for="waypoint,index in shapes_waypoints"
+                                  class="list-group-item"
+                                >
+                                  <label class="form-label"
+                                    >Waypoint {{index + 1}}</label
+                                  >
+                                  <td>
+                                    <input
+                                      class="form-control"
+                                      type="text"
+                                      :id="'shape_section_'+shape.getID()"
+                                      :value="waypoint"
+                                    />
+                                    <button class="btn btn-danger">
+                                      remove
+                                    </button>
+                                  </td>
+                                </li>
+                                <li
+                                  v-for="node_id,index in shapes.selected_nodes"
+                                  class="list-group-item"
+                                >
+                                  <label class="form-label"
+                                    >Waypoint {{shapes_waypoints.length + 1 +
+                                    index}}</label
+                                  >
+                                  <td>
+                                    <!-- TODO single line -->
+                                    <input
+                                      class="form-control"
+                                      type="text"
+                                      :id="'shape_section_'+shape.getID()"
+                                      :value="node_id"
+                                    />
+                                    <button class="btn btn-danger">
+                                      remove
+                                    </button>
+                                  </td>
+                                </li>
+
+                                <li class="list-group-item">
+                                  <button
+                                    class="btn btn-success"
+                                    @click="updateShapeByID(shape.getID())"
+                                  >
+                                    save
+                                  </button>
+                                </li>
+                              </ul>
+                              <!-- list-group -->
+                            </div>
+                            <!-- class col -->
+                          </div>
+                          <!-- class row -->
+                        </div>
+                        <!-- container -->
+                      </div>
+                      <!-- accordion body  -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- accordion  -->
             </div>
             <!-- END SHAPES -->
 
@@ -472,7 +608,7 @@
                         :data-bs-target="'#collapse'+stop.getID()"
                         aria-expanded="false"
                         :aria-controls="'collapseTwo'+stop.getID()"
-                        @click="focusNodeOnMapByID(stop.getID())"
+                        @click="selectStop($event, stop.getID())"
                       >
                         <strong>Stop ID>> </strong> {{
                         stop.getStopInfo().stop_id }}
@@ -548,14 +684,21 @@
                                   </button>
                                 </li>
                               </ul>
+                              <!-- list-group -->
                             </div>
+                            <!-- class col -->
                           </div>
+                          <!-- class row -->
                         </div>
+                        <!-- container -->
                       </div>
+                      <!-- accordion body  -->
                     </div>
                   </div>
                 </div>
               </div>
+              <!-- accordion  -->
+
               <nav aria-label="Page navigation example">
                 <!-- TODO -->
                 <ul class="pagination justify-content-center">
