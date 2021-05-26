@@ -172,9 +172,9 @@ const editor_gtfs_conf = {
       trips: o_se_group.trips,
       stopTimes: o_se_group.stopTimes,
 
-        pointer: [0,0],
-        shapes: o_se_group.shapes,
-        shapes_waypoints: [],
+      pointer: [0, 0],
+      shapes: o_se_group.shapes,
+      shapes_waypoints: [],
 
       // Stops section
       page_indicator_stops: Number.parseInt(
@@ -183,7 +183,7 @@ const editor_gtfs_conf = {
           10 +
           1
       ), // FIXME
-        page_indicator_stops_selected: 0,
+      page_indicator_stops_selected: 0,
 
       // Stop times section
       in_st_stop_id: 0,
@@ -268,11 +268,11 @@ const editor_gtfs_conf = {
       ],
     };
   },
-    mounted() {
-        setInterval(() => {
-            this.pointer = o_se_group.pointer.coordinate;
-        }, 120);
-    },
+  mounted() {
+    setInterval(() => {
+      this.pointer = o_se_group.pointer.coordinate;
+    }, 120);
+  },
   watch: {
     nodes() {
       this.stops = this.nodes
@@ -315,37 +315,48 @@ const editor_gtfs_conf = {
       }
     },
   },
-    methods: {
-        selectShape(event, shape_id){
-            console.log(event);
-            //event.target.scrollIntoView();
-            this.shapes.array.forEach(shape => shape.setVisible(false));
+  methods: {
+    selectShape(event, shape_id) {
+      console.log(event);
+      //event.target.scrollIntoView();
+      this.shapes.array.forEach((shape) => shape.setVisible(false));
 
-            var classes = new Array(0);
-            event.target.classList.forEach(css_class => classes.push(css_class));
-            if (classes.some(name => name === "collapsed")) {}
-            else this.shapes.array.filter(shape => shape.getID() === shape_id)[0].setVisible(true);
-            console.log(this.shapes.array.filter(shape => shape.getID() === shape_id));
+      var classes = new Array(0);
+      event.target.classList.forEach((css_class) => classes.push(css_class));
+      if (classes.some((name) => name === "collapsed")) {
+      } else
+        this.shapes.array
+          .filter((shape) => shape.getID() === shape_id)[0]
+          .setVisible(true);
+      console.log(
+        this.shapes.array.filter((shape) => shape.getID() === shape_id)
+      );
 
-            this.shapes_waypoints = this.shapes.array.filter(shape => shape.getID() === shape_id)[0].getWaypoints();
-            console.log(this.shapes.array.filter(shape => shape.getID() === shape_id)[0].getWaypoints());
-        },
-        updateShapeByID(shape_id){
-            console.log("updateShapeInfo");
-            o_se_group.updateShapeByID(shape_id, {
-                id: document.getElementById("shape_section_shape_id").value,
-                start: document.getElementById("shape_section_start_node_id").value,
-                end: document.getElementById("shape_section_end_node_id").value,
-                waypoints: this.shapes_waypoints.concat(this.shapes.selected_nodes)
-            });
-        },
-        selectStop(event, stop_node_id){
-            console.log(event);
-            //event.target.scrollIntoView();
-            this.focusNodeOnMapByID(stop_node_id);
-        },
+      this.shapes_waypoints = this.shapes.array
+        .filter((shape) => shape.getID() === shape_id)[0]
+        .getWaypoints();
+      console.log(
+        this.shapes.array
+          .filter((shape) => shape.getID() === shape_id)[0]
+          .getWaypoints()
+      );
+    },
+    updateShapeByID(shape_id) {
+      console.log("updateShapeInfo");
+      o_se_group.updateShapeByID(shape_id, {
+        id: document.getElementById("shape_section_shape_id").value,
+        start: document.getElementById("shape_section_start_node_id").value,
+        end: document.getElementById("shape_section_end_node_id").value,
+        waypoints: this.shapes_waypoints.concat(this.shapes.selected_nodes),
+      });
+    },
+    selectStop(event, stop_node_id) {
+      console.log(event);
+      //event.target.scrollIntoView();
+      this.focusNodeOnMapByID(stop_node_id);
+    },
 
-        increaseStopPageSelector() {
+    increaseStopPageSelector() {
       if (this.page_indicator_stops_selected < this.page_indicator_stops - 1) {
         this.page_indicator_stops_selected += 1;
       }
@@ -427,9 +438,11 @@ const editor_gtfs_conf = {
       console.log("remove route: " + route_id);
       o_se_group.removeRoute(route_id);
     },
-    saveShape() { // TODO
+    saveShape() {
+      // TODO
     },
-    removeShape(shape_id) { // TODO
+    removeShape(shape_id) {
+      // TODO
     },
     saveCalendar() {
       var service_info = {};
@@ -525,17 +538,14 @@ const editor_gtfs_conf = {
       return result;
     },
     rev_shapes() {
-        return this.shapes
-            .array
-            .slice()
-            .reverse();
-            // .reduce(
-            //     (rows, key, index) =>
-            //     (index % 10 == 0
-            //      ? rows.push([key])
-            //      : rows[rows.length - 1].push(key)) && rows,
-            //     []
-            // );
+      return this.shapes.array.slice().reverse();
+      // .reduce(
+      //     (rows, key, index) =>
+      //     (index % 10 == 0
+      //      ? rows.push([key])
+      //      : rows[rows.length - 1].push(key)) && rows,
+      //     []
+      // );
     },
     rev_stops() {
       // TODO
