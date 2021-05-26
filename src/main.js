@@ -2,7 +2,6 @@ import {
   streetElementGroup,
   streetElementNode,
   streetElementLink,
-  streetElementShape,
 } from "streetelement";
 
 const { en_US, es_CR } = require("./lang.js");
@@ -39,11 +38,6 @@ function filterForkNode(node) {
 
 function filterEndpointNode(node) {
   return node.getType() == streetElementNode.type.ENDPOINT;
-}
-
-function filterValidShapeSegment(shape) {
-  //return shape.isValid(); // TODO
-  return true; // FIXME
 }
 
 /////////////// components ///////////////////////
@@ -357,92 +351,6 @@ const editor_gtfs_conf = {
       o_se_group.changeNodeInfoByID(node_id, new_stop_info);
       alert("Success: edit data");
     },
-    newShapeOnChange(event, element) {
-      var element_id;
-      if (typeof event == "number") {
-        element_id = event;
-      } else {
-        // event object
-        element_id = event.target.value;
-        if (element != "node") {
-          event.target.value = "noselect";
-        }
-      }
-      if (element == "node") {
-        console.log("node ID: " + element_id);
-        this.ns_head_node_id = Number(element_id);
-        if (element_id == "noselect") {
-          this.ns_allowed_links = [];
-        } else {
-          o_se_group.focusNodeOnMapByID(this.nodes[element_id].getID()); // TODO remove
-
-          this.ns_allowed_links = this.nodes[element_id].getConnections();
-          console.log("Allowed links when node:");
-          console.log(this.ns_allowed_links);
-        }
-      } else {
-        console.log("link ID: " + element_id);
-        if (element_id == "noselect") {
-          // TODO
-        } else {
-          var result = streetElementShape.routeSegment(
-            this.nodes[this.ns_head_node_id],
-            o_se_group.links[element_id] // FIXME
-          );
-          console.log("Get route segments " + result.length);
-          if (result) {
-            this.ns_segments.push(
-              // result // FIXME cyclic
-              [
-                this.ns_head_node_id,
-                Number(element_id),
-                result[result.length - 1].getID(),
-              ]
-            );
-          }
-          o_se_group.focusNodeOnMapByID(result[result.length - 1].getID());
-          this.ns_head_node_id = result[result.length - 1].getID();
-
-          var excluded_link = streetElementLink.getLinkBetween(
-            result[result.length - 1],
-            result[result.length - 2]
-          );
-
-          console.log("Excluded links: ");
-          console.log(excluded_link);
-          console.log(this.ns_allowed_links);
-
-          // Hide direction
-          this.ns_allowed_links.forEach((link) => {
-            link.hideDirection();
-            console.log("Hide direction link:" + link.getID());
-            link.oneshot = undefined;
-          });
-
-          this.ns_allowed_links = streetElementLink.getLinksFromNode(
-            result[result.length - 1],
-            [excluded_link]
-          );
-          console.log("Allowed links when node: getLinksFromNode");
-          console.log(this.ns_allowed_links);
-
-          // Show direction and set oneshot function
-          this.ns_allowed_links.forEach((link) => {
-            console.log("Links in allowed array");
-            console.log(link.getID());
-            console.log(
-              result[result.length - 1]
-                .getConnections()
-                .forEach((link) => console.log(link.getID()))
-            );
-            link.setDirectionFromNode(result[result.length - 1]);
-            link.oneshot = (link_id) => {
-              app.newShapeOnChange(link_id, "oneshot");
-            };
-          });
-        }
-      }
-    },
     focusNodeOnMapByID(node_id) {
       o_se_group.selectNodeByID(node_id);
       o_se_group.focusNodeOnMapByID(node_id);
@@ -484,34 +392,9 @@ const editor_gtfs_conf = {
       console.log("remove route: " + route_id);
       o_se_group.removeRoute(route_id);
     },
-    saveShape() {
-      // save shape into streetElementGroup
-      console.log(this.ns_segments);
-      o_se_group.addShape(
-        document.getElementById("new_shape_id").value,
-        this.ns_segments
-      );
-      this.saveShapeStop();
+    saveShape() { // TODO
     },
-    removeShape(shape_id) {
-      // TODO
-      console.log("remove shape: " + shape_id);
-      o_se_group.removeShape(shape_id);
-    },
-    saveShapeStop() {
-      // ends a new shape ingress or abort
-      o_se_group.nodes[
-        // lastnode in shape
-        this.ns_segments[this.ns_segments.length - 1][2]
-      ]
-        .getConnections()
-        .forEach((connection) => {
-          connection.hideDirection(); //
-          connection.oneshot = undefined; //
-        });
-      this.ns_segments = [];
-      this.ns_allowed_links = [];
-      this.ns_head_node_id = null;
+    removeShape(shape_id) { // TODO
     },
     saveCalendar() {
       var service_info = {};
@@ -586,36 +469,6 @@ const editor_gtfs_conf = {
         (this.popup_content.type == streetElementNode.type.ENDPOINT)
       );
     },
-    new_shape_sequence() {
-      if (this.ns_segments.length) {
-        //
-      } else {
-        return "";
-      }
-
-      var result = "b";
-
-      this.ns_segments.forEach((segment) => {
-        result += "n" + String(segment[0]) + "l" + String(segment[1]);
-      });
-
-      result += "en" + String(this.ns_segments[this.ns_segments.length - 1][2]);
-
-      return result;
-    },
-    new_shape_allowed_nodes() {
-      var result = [];
-      if (this.ns_segments.length) {
-        // this.ns_segments(
-        //     this.ns_segments.length -1
-        // ); // last node in shape
-      } else {
-        result = this.nodes.slice().reverse();
-        result = result.filter((node) => node.isValid());
-        result = result.filter(filterEndpointNode);
-      }
-      return result;
-    },
     stopsWhenTrip() {
       // TODO
       // document.getElementById("st_trip_id")
@@ -638,7 +491,6 @@ const editor_gtfs_conf = {
     },
     rev_shapes() {
       var result = this.shapes.array.slice().reverse();
-      result = result.filter(filterValidShapeSegment);
       return result;
     },
     rev_stops() {

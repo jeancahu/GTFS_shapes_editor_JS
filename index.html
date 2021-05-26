@@ -27,6 +27,7 @@
       />
       <!-- FIXME -->
     </div>
+    <!-- {% verbatim %} Add DJANGO:APP support -->
     <div id="editor_gtfs">
       <div class="body-container">
         <!-- <div v-show="alerts.length" id="notification_banner" class="notification_banner">
@@ -42,7 +43,7 @@
             <div class="col">
               <button
                 class="btn btn-primary"
-                onclick="bundle.downloadHistoryArray()"
+                onclick="global_se.downloadHistoryArray()"
               >
                 Save
               </button>
@@ -287,7 +288,7 @@
             </li>
           </ul>
 
-          <div class="tab-content" id="myTabContent">
+          <div class="tab-content" id="tab_content">
             <!-- SHAPES -->
             <div
               class="tab-pane fade"
@@ -324,113 +325,6 @@
                   </div>
                 </div>
               </div>
-
-              Add a new shape:<br />
-              <table class="table">
-                <tr>
-                  <th>
-                    <input
-                      id="new_shape_id"
-                      name="new_shape_id"
-                      type="text"
-                      placeholder="Shape ID"
-                    />
-                  </th>
-                  <th>{{new_shape_sequence}}</th>
-
-                  <!-- new segment (a node and a link for direction)-->
-                  <th v-show="!ns_segments.length">
-                    <select @change="newShapeOnChange($event, 'node')">
-                      <option value="noselect">-</option>
-                      <option
-                        v-for="node in new_shape_allowed_nodes"
-                        :value="node.getID()"
-                      >
-                        E{{node.getID()}}
-                      </option>
-                    </select>
-                  </th>
-
-                  <!-- allowed links -->
-                  <th v-show="ns_allowed_links.length">
-                    <select
-                      id="ns_shape_link_select"
-                      @change="newShapeOnChange($event, 'link')"
-                    >
-                      <option value="noselect">-</option>
-                      <option
-                        v-for="link in ns_allowed_links"
-                        :value="link.getID()"
-                      >
-                        L{{link.getID()}}
-                      </option>
-                    </select>
-                  </th>
-
-                  <!-- element to add new segments in shape? -->
-                  <th>
-                    <button
-                      @click="saveShapeStop()"
-                      v-show="ns_segments.length"
-                    >
-                      abort
-                    </button>
-                  </th>
-                  <th><button @click="saveShape()">add</button></th>
-                </tr>
-              </table>
-              <br />
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>{{ dict.shape_id }}</th>
-                    <th>{{ dict.shape_sequence }}</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="shape in rev_shapes" :key="shape.getID()">
-                    <td>
-                      <input
-                        type="radio"
-                        :id="'shapeOnMap_' + shape.getID()"
-                        name="shapeOnMap"
-                        :value="shape.getID()"
-                        checked="false"
-                      />
-                      <label :for="'shapeOnMap_' + shape.getID()">
-                        {{ shape.getID() }}
-                      </label>
-                    </td>
-                    <!-- <td>{{shape.getSequenceText()}}</td> // REMOVE method -->
-                    <td>
-                      <a
-                        class="black_text"
-                        v-for="segment in shape.getSegments()"
-                        @click="focusNodeOnMapByID(segment[0])"
-                      >
-                        <span class="orange_text">n{{segment[0]}}</span
-                        ><span class="green_text">l{{segment[1]}}</span>,
-                      </a>
-                      <a
-                        class="orange_text"
-                        @click="focusNodeOnMapByID(shape.getSegments()[shape.getSegments().length -1][2])"
-                      >
-                        n{{shape.getSegments()[shape.getSegments().length
-                        -1][2]}}
-                      </a>
-                    </td>
-                    <td>
-                      <button
-                        class="button error"
-                        @click="removeShape(shape.getID())"
-                      >
-                        remove
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
             </div>
             <!-- END SHAPES -->
 
@@ -556,7 +450,7 @@
                       class="btn btn-primary form-control"
                       id="file_gtfs_stops_output"
                       name="file_gtfs_stops_output"
-                      onclick="bundle.downloadStopsCSV()"
+                      onclick="global_se.downloadStopsCSV()"
                     >
                       Save
                     </button>
@@ -1008,6 +902,7 @@
         <!-- --------------  END key command board  --------------------- -->
       </div>
     </div>
+    <!-- {% endverbatim %} DJANGO:APP -->
   </body>
   <footer>
     <!-- Axios to post data
