@@ -4,6 +4,8 @@ static/vue.js
 dist
 build
 *.db
+db.sqlite3
+migrations
 
 *.png
 *.zip
@@ -13,3 +15,6 @@ gtfs
 venv_server
 
 street_element_group*
+__pycache__
+src/shapeeditor/static
+src/shapeeditor/templates
