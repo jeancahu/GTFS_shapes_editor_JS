@@ -343,6 +343,14 @@ const editor_gtfs_conf = {
     },
     updateShapeByID(shape_id) {
       console.log("updateShapeInfo");
+
+      console.log([
+        document.getElementById("shape_section_shape_id").value,
+        document.getElementById("shape_section_start_node_id").value,
+        document.getElementById("shape_section_end_node_id").value,
+        this.shapes_waypoints.concat(this.shapes.selected_nodes),
+      ]);
+
       o_se_group.updateShapeByID(shape_id, {
         id: document.getElementById("shape_section_shape_id").value,
         start: document.getElementById("shape_section_start_node_id").value,
@@ -645,6 +653,7 @@ document.getElementById("file_gtfs_stops_input").onchange = (change) => {
 ///////////////// exports (bundle.something in console) ////////////
 // these method and data is accesible from outside the bundle
 export {
+  app,
   o_se_group, // FIXME temporal
   downloadHistoryArray,
   downloadShapesCSV,

@@ -8,18 +8,14 @@
 }
 
 body {
-    position: relative;
     min-height: 100vh;
     width: 100%;
     overflow-x: hidden;
 }
 
 .body-container {
-    top: 50px;
-    position: absolute;
     height: calc(100% - 50px);
     width: 100%;
-    z-index: 20;
 }
 
 .map_container {
@@ -28,27 +24,16 @@ body {
 
     width: 100%;
     height: 100%;
-    float: bottom;
 }
 
 .toolbar {
     height: 50px; /* Full-height: remove this if you want "auto" height */
-    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-    z-index: 30; /* Stay on top */
+    position: sticky; /* sticky Sidebar (stay in place on scroll) */
+    z-index: 10; /* Stay on top */
     top: 0; /* Stay at the top */
-    left: 0;
     background-color: #11101d; /* Black */
     color: white;
     padding: 6px 14px;
-}
-
-.toolbar li div { /* FIXME */
-    left: 20px;
-}
-
-.toolbar .dropdown { /* FIXME */
-    left: 50px;
-    z-index: 30;
 }
 
 .stops-section-menu {
@@ -57,7 +42,7 @@ body {
 }
 
 .loading_screen {
-    z-index: 99;
+    z-index: 20;
     position: fixed;
     height: 100%;
     width: 100%;
@@ -156,7 +141,7 @@ body {
     top: 60px;
     height: 210px;
     width: 100%;
-    z-index: 999;
+    z-index: 15;
     background-color:rgba(0, 0, 0, 0);
 }
 
