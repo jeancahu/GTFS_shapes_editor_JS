@@ -16,6 +16,5 @@ venv_server
 
 street_element_group*
 __pycache__
-src/shapeeditor/static
-src/shapeeditor/templates
+src/shapeeditor/static/shapeeditor/vendor/
 temp
