@@ -1,10 +1,15 @@
 *~
 node_modules/*
 static/vue.js
-dist/*
+dist
+build
+*.db
 
 *.png
 *.zip
 *.svg
 
-templates/
+gtfs
+venv_server
+
+street_element_group*

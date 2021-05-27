@@ -6,7 +6,7 @@ module.exports = {
     target: 'web',
     entry: {
         main: {
-            import: './src/main.js',
+            import: './js/main.js',
         },
     },
     output: {
