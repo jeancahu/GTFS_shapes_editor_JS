@@ -1,4 +1,4 @@
 include README.md
 include LICENSE
-recursive-include src/gtfs_editor/static 
-recursive-include src/gtfs_editor/templates *
+recursive-include src/shapeeditor/static *
+recursive-include src/shapeeditor/templates *
