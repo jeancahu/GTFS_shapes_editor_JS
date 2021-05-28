@@ -1,0 +1,47 @@
+<!-- {% verbatim %} -->
+<!-- CALENDAR -->
+<div
+  class="tab-pane fade"
+  id="nav-calendar"
+  role="tabpanel"
+  aria-labelledby="nav-calendar-tab"
+>
+  <table class="table">
+    <thead>
+      <tr>
+        <th v-for="field in calendarFields">{{ dict[field] }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="text" id="c_service_id" /></td>
+        <td v-for="field in calendarCheckboxFields">
+          <input type="checkbox" :id="field" checked="true" />
+          <!-- <label for="view_nodes_cb">{{field}}</label><br> -->
+        </td>
+        <td><input type="date" id="c_start_day" /></td>
+        <td><input type="date" id="c_end_day" /></td>
+        <td><button @click="saveCalendar">add</button></td>
+      </tr>
+      <tr v-for="service in rev_services">
+        <td>{{ service.getID() }}</td>
+        <td v-for="status in service.getServiceDays()">
+          <div v-if="status" class="green_text">active</div>
+          <div v-if="!status" class="red_text">inactive</div>
+          <!-- status ? "active" : "inactive" -->
+        </td>
+        <td>{{ service.getInfo().start_day }}</td>
+        <td>{{ service.getInfo().end_day }}</td>
+        <td>
+          <button class="button error" @click="removeCalendar(service.getID())">
+            remove
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- END CALENDAR -->
+
+<!-- {% endverbatim %} -->

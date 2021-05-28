@@ -1,0 +1,60 @@
+<!-- {% verbatim %} -->
+<!-- ROUTES -->
+<div
+  class="tab-pane fade"
+  id="nav-routes"
+  role="tabpanel"
+  aria-labelledby="nav-routes-tab"
+>
+  <table class="table">
+    <thead>
+      <tr>
+        <th v-for="field in routeFields">{{ dict[field] }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <!-- <th v-for="field in routeFields"><input type="text" :id="field"></th> -->
+        <td>
+          <input type="text" id="r_route_id" placeholder="Route ID" />
+        </td>
+        <td>
+          <select id="r_agency_id">
+            <option v-for="agency in rev_agencies" :value="agency.getID()">
+              {{agency.getID()}}
+            </option>
+          </select>
+        </td>
+        <td>
+          <input type="text" id="r_route_short_name" placeholder="Short name" />
+        </td>
+        <td>
+          <input type="text" id="r_route_long_name" placeholder="Long name" />
+        </td>
+        <td>
+          <select id="r_route_type">
+            <option v-for="routeType in r_routeType" :value="routeType.value">
+              {{routeType.name}}
+            </option>
+          </select>
+        </td>
+        <td><button @click="saveRoute">add</button></td>
+      </tr>
+      <tr v-for="route in rev_routes">
+        <td>{{route.getID()}}</td>
+        <td>{{route.getInfo().agency_id}}</td>
+        <td>{{route.getInfo().short_name}}</td>
+        <td>{{route.getInfo().long_name}}</td>
+        <td>{{route.typeToText()}}</td>
+        <td>
+          <button class="button error" @click="removeRoute(route.getID())">
+            remove
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- END ROUTES -->
+<!-- {% endverbatim %} -->

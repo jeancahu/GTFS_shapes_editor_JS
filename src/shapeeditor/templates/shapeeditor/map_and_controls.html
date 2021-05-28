@@ -1,0 +1,146 @@
+<!-- {% verbatim %} -->
+<div id="fullscreen-view" class="fullscreen">
+  <!-- OpenLayers + OpenStreetMap -->
+  <div tabindex="1" id="map_container" class="map_container">
+    <div id="custom_control_interaction" class="custom_control_interaction">
+      <div class="nav">
+        <div class="dropdown map-tool-item">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton3"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Map interaction
+          </button>
+          <ul
+            class="dropdown-menu dropdown-menu-dark"
+            aria-labelledby="dropdownMenuButton3"
+          >
+            <li>
+              <a
+                @click="map_action='select'"
+                :class="['dropdown-item', {'active': map_action=='select'}]"
+                href="#"
+                >Select node</a
+              >
+            </li>
+            <li>
+              <a
+                @click="map_action='add'"
+                :class="['dropdown-item', {'active': map_action=='add'}]"
+                href="#"
+                >Add node</a
+              >
+            </li>
+            <li>
+              <a
+                @click="map_action='split'"
+                :class="['dropdown-item', {'active': map_action=='split'}]"
+                href="#"
+                >Split link</a
+              >
+            </li>
+            <li>
+              <a
+                @click="map_action='remove'"
+                :class="['dropdown-item', {'active': map_action=='remove'}]"
+                href="#"
+                >Remove node</a
+              >
+            </li>
+            <li>
+              <a
+                @click="map_action='cut'"
+                :class="['dropdown-item', {'active': map_action=='cut'}]"
+                href="#"
+                >Delete link</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="dropdown map-tool-item">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton2"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Node type
+          </button>
+          <ul
+            class="dropdown-menu dropdown-menu-dark"
+            aria-labelledby="dropdownMenuButton2"
+          >
+            <li>
+              <a
+                @click="map_node_type='waypoint'"
+                :class="['dropdown-item', {'active': map_node_type=='waypoint'}]"
+                href="#"
+                >Waypoint</a
+              >
+            </li>
+            <li>
+              <a
+                @click="map_node_type='endpoint'"
+                :class="['dropdown-item', {'active': map_node_type=='endpoint'}]"
+                href="#"
+                >Endpoint</a
+              >
+            </li>
+            <li>
+              <a
+                @click="map_node_type='stop'"
+                :class="['dropdown-item', {'active': map_node_type=='stop'}]"
+                href="#"
+                >Stop</a
+              >
+            </li>
+            <li>
+              <a
+                @click="map_node_type='fork'"
+                :class="['dropdown-item', {'active': map_node_type=='fork'}]"
+                href="#"
+                >Intersection</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div
+          class="btn-group map-tool-item"
+          role="group"
+          aria-label="Basic example"
+        >
+          <button
+            type="button"
+            @click="map_view_nodes=!map_view_nodes"
+            :class="['btn', 'map-tool-item-group-btn', { 'btn-primary': !map_view_nodes }, { 'btn-success': map_view_nodes }]"
+          >
+            {{map_view_nodes? 'Hide': 'Show'}} nodes
+          </button>
+
+          <button
+            type="button"
+            @click="map_view_links=!map_view_links"
+            :class="['btn', 'map-tool-item-group-btn', { 'btn-primary': !map_view_links }, { 'btn-success': map_view_links }]"
+          >
+            {{map_view_links? 'Hide': 'Show'}} links
+          </button>
+
+          <button
+            type="button"
+            @click="map_view_stops=!map_view_stops"
+            :class="['btn', 'map-tool-item-group-btn', { 'btn-primary': !map_view_stops }, { 'btn-success': map_view_stops }]"
+          >
+            {{map_view_stops? 'Hide': 'Show'}} stops
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- {% endverbatim %} -->

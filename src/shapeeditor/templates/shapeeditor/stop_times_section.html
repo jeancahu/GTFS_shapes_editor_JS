@@ -1,0 +1,68 @@
+<!-- {% verbatim %} -->
+<!-- STOPTIMES -->
+<div
+  class="tab-pane fade"
+  id="nav-stop_times"
+  role="tabpanel"
+  aria-labelledby="nav-stop_times-tab"
+>
+  <table class="table">
+    <thead>
+      <tr>
+        <th v-for="field in stopTimeFields">{{ dict[field] }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <select id="st_trip_id">
+            <option v-for="trip in rev_trips" :value="trip.getID()">
+              {{trip.getID()}}
+            </option>
+          </select>
+        </td>
+        <td>
+          <select
+            @change="focusNodeOnMapByID(in_st_stop_id)"
+            id="st_stop_id"
+            v-model="in_st_stop_id"
+          >
+            <!-- It saves the node ID instead the stop id, the node ID is unmutable -->
+            <option v-for="stopnode in stopsWhenTrip" :value="stopnode.getID()">
+              {{stopnode.getStopInfo().id}}: {{stopnode.getStopInfo().name ?
+              stopnode.getStopInfo().name : "no name"}}
+            </option>
+          </select>
+        </td>
+        <td>
+          <input type="time" id="st_arrival_time" placeholder="HH:MM AM" />
+        </td>
+        <td>
+          <input type="time" id="st_departure_time" placeholder="HH:MM PM" />
+        </td>
+        <td><button @click="saveStopTime">add</button></td>
+      </tr>
+      <tr v-for="stoptime in rev_stoptimes">
+        <td>{{stoptime.getInfo().trip_id}}</td>
+        <td>
+          {{nodes[stoptime.getID()].getStopInfo().id}}:
+          {{nodes[stoptime.getID()].getStopInfo().name}}
+        </td>
+        <!-- FIXME: dont use stop id as node id -->
+        <td>{{stoptime.getInfo().arrival_time}}</td>
+        <td>{{stoptime.getInfo().departure_time}}</td>
+        <td>
+          <button
+            class="button error"
+            @click="removeStopTime(stoptime.getInfo().trip_id, stoptime.getID())"
+          >
+            remove
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- END STOPTIMES -->
+<!-- {% endverbatim %} -->

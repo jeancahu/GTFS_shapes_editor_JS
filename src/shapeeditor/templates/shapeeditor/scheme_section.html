@@ -1,0 +1,37 @@
+<!-- {% verbatim %} -->
+<!-- SCHEME -->
+<div
+  class="tab-pane fade"
+  id="nav-scheme"
+  role="tabpanel"
+  aria-labelledby="nav-scheme-tab"
+>
+  <table class="table" v-for="service in rev_services">
+    <thead>
+      <tr>
+        <th>{{ dict.c_service_id }}</th>
+        <th>active</th>
+        <!-- FIXME -->
+        <th>{{ dict.t_trip_id }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="trip in rev_trips">
+        <td>{{ service.getID() }}</td>
+        <td>
+          <input
+            @change="changeScheme($event, service.getID(), trip.getID())"
+            name="sc_trip_cb"
+            type="checkbox"
+            :checked="isActiveTrip(service.getID(), trip.getID())"
+          />{{trip.getID()}}>
+          <!-- <label for="label_id_todo">Label</label><br> -->
+        </td>
+        <td>{{ trip.getID() }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- END SCHEME -->
+<!-- {% endverbatim %} -->

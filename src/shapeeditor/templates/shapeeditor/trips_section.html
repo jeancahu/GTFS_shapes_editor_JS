@@ -1,0 +1,60 @@
+<!-- {% verbatim %} -->
+<!-- TRIPS -->
+<div
+  class="tab-pane fade"
+  id="nav-trips"
+  role="tabpanel"
+  aria-labelledby="nav-trips-tab"
+>
+  <table class="table">
+    <thead>
+      <tr>
+        <th v-for="field in tripFields">{{ dict[field] }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <select id="t_route_id">
+            <option v-for="route in rev_routes" :value="route.getID()">
+              {{route.getID()}}
+            </option>
+          </select>
+        </td>
+        <td><input type="text" id="t_trip_id" /></td>
+        <td>
+          <select id="t_direction_id">
+            <option value="0">{{ dict["outbound_travel"] }}</option>
+            <option value="1">{{ dict["inbound_travel"] }}</option>
+          </select>
+        </td>
+        <td>
+          <select id="t_shape_id">
+            <option v-for="shape in rev_shapes" :value="shape.getID()">
+              {{shape.getID()}}
+            </option>
+          </select>
+        </td>
+        <td><button @click="saveTrip">add</button></td>
+      </tr>
+      <tr v-for="trip in rev_trips">
+        <td>{{trip.getInfo().route_id }}</td>
+        <td>{{trip.getID() }}</td>
+        <td>
+          {{trip.getInfo().direction_id == "0" ? dict["outbound_travel"] :
+          dict["inbound_travel"] }}
+        </td>
+        <td>{{trip.getInfo().shape_id }}</td>
+
+        <td>
+          <button class="button error" @click="removeTrip(trip.getID())">
+            remove
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- END TRIPS -->
+<!-- {% endverbatim %} -->

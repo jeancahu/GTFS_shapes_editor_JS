@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- {% load i18n static %} -->
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="shortcut icon" type="image/x-icon" href="{% static '/shapeeditor/favicon.ico' %}" />
+    <title>Shape Editor - Alpha</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+
+    <!-- CSS only Bootstrap -->
+    <link
+      href="{% static '/shapeeditor/vendor/css/bt/bootstrap.min.css' %}"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{% static '/shapeeditor/css/editor-style.css' %}"
+    />
+
+    <!-- OpenLayers style lib -->
+    <link
+      rel="stylesheet"
+      href="{% static '/shapeeditor/vendor/css/ol/ol.css' %}"
+      type="text/css"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static '/shapeeditor/css/ol_popup.css' %}"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <div id="loading_screen" class="loading_screen">
+      <img
+        alt="loading_gif"
+        src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/ab79a231234507.564a1d23814ef.gif"
+      />
+      <!-- FIXME -->
+    </div>
+
+{% block content %}{% endblock %}
+
+  </body>
+  <footer>
+    <!-- Axios to post data
+         <script src="https://unpkg.com/axios/dist/axios.min.js"></script> TODO Remove, it's not used anymore
+    -->
+
+    <!-- editor history / file loaded FIXME remove-->
+    <script src="{% static '/shapeeditor/js//street_element_group_history.js' %}"></script>
+
+    <!-- Map GTFS elements -->
+    <script src="{% static '/shapeeditor/js/main.bundle.js' %}"></script>
+
+    <!-- JavaScript Bundle for Bootstrap -->
+    <script src="{% static '/shapeeditor/vendor/js/bt/bootstrap.bundle.min.js' %}"></script>
+  </footer>
+</html>

@@ -1,0 +1,166 @@
+<!-- {% verbatim %} -->
+<!-- STOPS -->
+<div
+  class="tab-pane fade"
+  id="nav-stops"
+  role="tabpanel"
+  aria-labelledby="nav-stops-tab"
+>
+  <div class="container stops-section-menu">
+    <div class="row">
+      <div class="col">
+        <label class="form-label" for="file_gtfs_stops_input"
+          >Upload stops.txt file</label
+        ><br />
+        <input
+          type="file"
+          class="form-control"
+          accept="plain/text,.txt"
+          id="file_gtfs_stops_input"
+          name="file_gtfs_stops_input"
+        />
+      </div>
+      <div class="col">
+        <label class="form-label" for="file_gtfs_stops_output"
+          >Download stops.txt file</label
+        ><br />
+        <button
+          class="btn btn-primary form-control"
+          id="file_gtfs_stops_output"
+          name="file_gtfs_stops_output"
+          onclick="global_se.downloadStopsCSV()"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="accordion" id="accordion_stops_section">
+    <div v-for="(sub_array, sub_array_index) in rev_stops">
+      <div
+        v-show="sub_array_index == page_indicator_stops_selected"
+        v-for="stop in sub_array"
+        class="accordion-item"
+      >
+        <h2 class="accordion-header" :id="'heading'+stop.getID()">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            :data-bs-target="'#collapse'+stop.getID()"
+            aria-expanded="false"
+            :aria-controls="'collapseTwo'+stop.getID()"
+            @click="selectStop($event, stop.getID())"
+          >
+            <strong>Stop ID>> </strong> {{ stop.getStopInfo().stop_id }}
+          </button>
+        </h2>
+        <div
+          :id="'collapse'+stop.getID()"
+          class="accordion-collapse collapse"
+          :aria-labelledby="'heading'+stop.getID()"
+          data-bs-parent="#accordion_stops_section"
+        >
+          <div class="accordion-body">
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <ul class="list-group">
+                    <li class="list-group-item">
+                      <button
+                        class="btn btn-success"
+                        @click="changeNodeInfoFromStopSection(stop.getID())"
+                      >
+                        save
+                      </button>
+                    </li>
+                    <li
+                      v-for="field in stopFields.slice(0,6)"
+                      class="list-group-item"
+                    >
+                      <label
+                        :for="'stop_section_'+field+stop.getID()"
+                        class="form-label"
+                        >{{dict[field]}}</label
+                      >
+                      <td>
+                        <input
+                          class="form-control"
+                          type="text"
+                          :id="'stop_section_'+field+stop.getID()"
+                          :value="stop.getStopInfo()[field]"
+                          :placeholder="dict[field]"
+                        />
+                      </td>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col">
+                  <ul class="list-group">
+                    <li
+                      v-for="field in stopFields.slice(6)"
+                      class="list-group-item"
+                    >
+                      <label
+                        :for="'stop_section_'+field+stop.getID()"
+                        class="form-label"
+                        >{{dict[field]}}</label
+                      >
+                      <td>
+                        <input
+                          class="form-control"
+                          type="text"
+                          :id="'stop_section_'+field+stop.getID()"
+                          :value="stop.getStopInfo()[field]"
+                          :placeholder="dict[field]"
+                        />
+                      </td>
+                    </li>
+                    <li class="list-group-item">
+                      <button
+                        class="btn btn-success"
+                        @click="changeNodeInfoFromStopSection(stop.getID())"
+                      >
+                        save
+                      </button>
+                    </li>
+                  </ul>
+                  <!-- list-group -->
+                </div>
+                <!-- class col -->
+              </div>
+              <!-- class row -->
+            </div>
+            <!-- container -->
+          </div>
+          <!-- accordion body  -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- accordion  -->
+
+  <nav aria-label="Page navigation example">
+    <!-- TODO -->
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        <a class="page-link" @click="decreaseStopPageSelector()">Previous</a>
+      </li>
+
+      <li
+        v-for="number in page_indicator_stops"
+        :class="['page-item', {'active': (number - 1) == page_indicator_stops_selected }]"
+      >
+        <a class="page-link" @click="page_indicator_stops_selected = number -1"
+          >{{number}}</a
+        >
+      </li>
+
+      <li class="page-item">
+        <a class="page-link" @click="increaseStopPageSelector()">Next</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+<!-- END STOPS -->
+<!-- {% endverbatim %} -->

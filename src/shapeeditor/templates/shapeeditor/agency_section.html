@@ -1,0 +1,64 @@
+<!-- {% verbatim %} -->
+<!-- AGENCY -->
+<div
+  class="tab-pane fade"
+  id="nav-agency"
+  role="tabpanel"
+  aria-labelledby="nav-agency-tab"
+>
+  <table
+    class="table"
+    style="table-layout: fixed; width: 100%; word-wrap: break-word"
+  >
+    <thead>
+      <tr>
+        <th v-for="field in agencyFields">{{ dict[field] }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <input type="text" id="agency_id" placeholder="ID" required />
+        </td>
+        <!-- required TODO -->
+        <td>
+          <input type="text" id="agency_name" placeholder="Name" required />
+        </td>
+        <td>
+          <input type="text" id="agency_url" placeholder="URL" required />
+        </td>
+        <td>
+          <input
+            type="text"
+            id="agency_timezone"
+            placeholder="Continent/Region"
+            required
+          />
+        </td>
+        <td>
+          <input type="text" id="agency_lang" placeholder="Language" />
+        </td>
+        <td>
+          <input type="text" id="agency_phone" placeholder="+0 8888 8888" />
+        </td>
+        <td>
+          <input type="text" id="agency_email" placeholder="example@corp.com" />
+        </td>
+        <td><button @click="saveAgency">add</button></td>
+      </tr>
+      <tr v-for="agency in rev_agencies">
+        <td v-for="field in agencyFields">
+          {{agency.getInfo()[field.substring(7)]}}
+        </td>
+        <td>
+          <button class="button error" @click="removeAgency(agency.getID())">
+            remove
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- END AGENCY -->
+<!-- {% endverbatim %} -->

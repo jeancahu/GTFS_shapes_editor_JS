@@ -1,0 +1,22 @@
+<!-- {% verbatim %} -->
+<ul class="nav nav-tabs nav-fill h_menu" id="h_menu" role="tablist">
+  <li
+    v-for="element in [ 'agency', 'shapes', 'stops', 'routes', 'trips', 'stop_times', 'calendar', 'scheme' ]"
+    class="nav-item"
+    role="presentation"
+  >
+    <button
+      class="nav-link"
+      :id="'nav-'+element+'-tab'"
+      data-bs-toggle="tab"
+      :data-bs-target="'#nav-'+element"
+      type="button"
+      role="tab"
+      :aria-controls="'nav-'+element"
+      aria-selected="true"
+    >
+      {{dict[element]}}
+    </button>
+  </li>
+</ul>
+<!-- {% endverbatim %} -->
