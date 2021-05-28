@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-#   $ pipenv install twine --dev
+# $ pip install twine setuptools wheel
 
 import io
-import os
+from os import system as bash, path
 import sys
 from shutil import rmtree
 from setuptools import find_packages, setup, Command
@@ -12,22 +10,18 @@ from setuptools import find_packages, setup, Command
 # Package meta-data.
 VERSION = '0.1.0'
 
-# What packages are required for this module to be executed?
 REQUIRED = [
-    # 'django', 'maya', 'records',
 ]
 
-# What packages are optional?
 EXTRAS = {
-    # 'fancy feature': ['django'],
 }
 
-here = os.path.abspath(os.path.dirname(__file__))
+here = path.abspath(path.dirname(__file__))
 
 # Import the README and use it as the long-description.
 # Note: this will only work if 'README.md' is present in your MANIFEST.in file!
 try:
-    with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+    with io.open(path.join(here, 'README.md'), encoding='utf-8') as f:
         long_description = '\n' + f.read()
 except FileNotFoundError:
     long_description = DESCRIPTION
@@ -36,7 +30,7 @@ except FileNotFoundError:
 about = {}
 if not VERSION:
     project_slug = NAME.lower().replace("-", "_").replace(" ", "_")
-    with open(os.path.join(here, project_slug, '__version__.py')) as f:
+    with open(path.join(here, project_slug, '__version__.py')) as f:
         exec(f.read(), about)
 else:
     about['__version__'] = VERSION
@@ -62,19 +56,19 @@ class UploadCommand(Command):
     def run(self):
         try:
             self.status('Removing previous builds…')
-            rmtree(os.path.join(here, 'dist'))
+            rmtree(path.join(here, 'dist'))
         except OSError:
             pass
 
         self.status('Building Source and Wheel (universal) distribution…')
-        os.system('echo {0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
+        bash('echo {0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
 
         self.status('Uploading the package to PyPI via Twine…')
-        os.system('echo twine upload dist/*')
+        bash('echo twine upload dist/*')
 
         self.status('Pushing git tags…')
-        os.system('echo git tag v{0}'.format(about['__version__']))
-        os.system('echo git push --tags')
+        bash('echo git tag v{0}'.format(about['__version__']))
+        bash('echo git push --tags')
 
         sys.exit()
 
@@ -98,21 +92,19 @@ class BuildCommand(Command):
     def run(self):
         try:
             self.status('Removing previous builds…')
-            rmtree(os.path.join(here, 'dist'))
+            rmtree(path.join(here, 'dist'))
         except OSError:
             pass
 
         self.status('Building Source and Wheel (universal) distribution…')
-        os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
+        bash('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
 
         sys.exit()
 
-
-# Where the magic happens:
 setup(
     name='shapeeditor',
     version=about['__version__'],
-    description='GTFS app for django',
+    description='GTFS Editor app for Django [Alpha]',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Jeancarlo Hidalgo',
@@ -132,7 +124,6 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
