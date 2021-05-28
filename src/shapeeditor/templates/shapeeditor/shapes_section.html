@@ -1,3 +1,11 @@
+{% comment %}
+<!--
+     Shapes section just below the map there is a nav bar tab style, the
+     shapes button shows this template code, an accordion with each shape ID
+     contains the shape info: shape ID, start node, end node, and the waypoints
+     (if those exists)
+-->
+{% endcomment %}
 <!-- {% verbatim %} -->
 <!-- SHAPES -->
 <div
@@ -6,6 +14,12 @@
   role="tabpanel"
   aria-labelledby="nav-shapes-tab"
 >
+  <!-- TODO endpoints list -->
+  <!-- <datalist id="endpoints_list">
+         <option value="12">
+         <option value="24">
+         </datalist>
+    -->
   <div class="container shapes-section-menu">
     <div class="row">
       <div class="col">
@@ -77,7 +91,7 @@
                         <input
                           class="form-control"
                           type="text"
-                          id="shape_section_shape_id"
+                          :id="'shape_section_shape_id_'+shape.getID()"
                           :value="shape.getID()"
                         />
                       </td>
@@ -89,7 +103,8 @@
                         <input
                           class="form-control"
                           type="number"
-                          id="shape_section_start_node_id"
+                          list="endpoints_list"
+                          :id="'shape_section_start_node_id_'+shape.getID()"
                           :value="shape.getStart()"
                         />
                       </td>
@@ -100,7 +115,7 @@
                         <input
                           class="form-control"
                           type="number"
-                          id="shape_section_end_node_id"
+                          :id="'shape_section_end_node_id_'+shape.getID()"
                           :value="shape.getEnd()"
                         />
                       </td>
@@ -110,7 +125,7 @@
                 <div class="col">
                   <ul class="list-group">
                     <li
-                      v-for="waypoint,index in shapes_waypoints"
+                      v-for="waypoint,index in shape_valid_waypoints_list"
                       class="list-group-item"
                     >
                       <label class="form-label">Waypoint {{index + 1}}</label>
@@ -120,27 +135,14 @@
                           type="number"
                           :value="waypoint"
                         />
-                        <button class="btn btn-danger">remove</button>
+                        <button
+                          class="btn btn-danger"
+                          @click="deleteShapeWaypoint(waypoint)"
+                        >
+                          remove
+                        </button>
                       </td>
                     </li>
-                    <li
-                      v-for="node_id,index in shapes.selected_nodes"
-                      class="list-group-item"
-                    >
-                      <label class="form-label"
-                        >Waypoint {{shapes_waypoints.length + 1 + index}}</label
-                      >
-                      <td>
-                        <!-- TODO single line -->
-                        <input
-                          class="form-control"
-                          type="number"
-                          :value="node_id"
-                        />
-                        <button class="btn btn-danger">remove</button>
-                      </td>
-                    </li>
-
                     <li class="list-group-item">
                       <button
                         class="btn btn-success"

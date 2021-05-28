@@ -44,6 +44,7 @@ function filterEndpointNode(node) {
 
 //////////////////////////////////////////////////
 var extent_area = [
+  // TEMP // just a example // TODO // remove
   //       +++++++++
   //       +       +
   //       +  Map  +
@@ -70,7 +71,7 @@ const o_se_group = new streetElementGroup({
   lonLatExtent: extent_area,
 });
 
-// try to load a history
+// try to load a history from the static url
 if (typeof _streetElementGroupHistory !== "undefined") {
   console.log("There is a history");
   o_se_group.historyLoad(_streetElementGroupHistory);
@@ -111,36 +112,6 @@ function downloadHistoryArray() {
   );
 }
 
-//////////////////// Axios post /////////////////////////////////
-
-function postHistoryWithAxios() {
-  axios
-    .post(
-      "/input_path_history",
-      o_se_group.historyJSON() // FIXME
-    )
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-}
-
-function postGTFSWithAxios() {
-  axios
-    .post(
-      "/input_path_gtfs",
-      o_se_group.toJSON() // FIXME
-    )
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-}
-
 //////////////////// Vue experiments ////////////////////////////
 
 const editor_gtfs_conf = {
@@ -174,7 +145,6 @@ const editor_gtfs_conf = {
 
       pointer: [0, 0],
       shapes: o_se_group.shapes,
-      shapes_waypoints: [],
 
       // Stops section
       page_indicator_stops: Number.parseInt(
@@ -189,9 +159,7 @@ const editor_gtfs_conf = {
       in_st_stop_id: 0,
 
       // Shapes section:
-      ns_allowed_links: [],
-      ns_segments: [],
-      ns_head_node_id: null,
+      shape_valid_waypoints: [],
 
       agencyFields: [
         // TODO These are constants, import as a constant array
@@ -317,7 +285,6 @@ const editor_gtfs_conf = {
   },
   methods: {
     selectShape(event, shape_id) {
-      console.log(event);
       //event.target.scrollIntoView();
       this.shapes.array.forEach((shape) => shape.setVisible(false));
 
@@ -328,35 +295,45 @@ const editor_gtfs_conf = {
         this.shapes.array
           .filter((shape) => shape.getID() === shape_id)[0]
           .setVisible(true);
-      console.log(
-        this.shapes.array.filter((shape) => shape.getID() === shape_id)
-      );
 
-      this.shapes_waypoints = this.shapes.array
+      this.shape_valid_waypoints = this.shapes.array
         .filter((shape) => shape.getID() === shape_id)[0]
         .getWaypoints();
-      console.log(
-        this.shapes.array
-          .filter((shape) => shape.getID() === shape_id)[0]
-          .getWaypoints()
+    },
+    deleteShapeWaypoint(node_id) {
+      // TODO improve in streetelement package
+      console.log("delete node " + node_id);
+      this.shape_valid_waypoints = this.shape_valid_waypoints.filter(
+        (i_node_id) => i_node_id != node_id
       );
+      this.shapes.selected_nodes = this.shapes.selected_nodes.filter(
+        (i_node_id) => i_node_id != node_id
+      ); // TODO remove
     },
     updateShapeByID(shape_id) {
-      console.log("updateShapeInfo");
-
-      console.log([
-        document.getElementById("shape_section_shape_id").value,
-        document.getElementById("shape_section_start_node_id").value,
-        document.getElementById("shape_section_end_node_id").value,
-        this.shapes_waypoints.concat(this.shapes.selected_nodes),
-      ]);
+      var valid_waypoints = this.shape_valid_waypoints.slice();
+      this.shapes.selected_nodes.forEach((node_id) => {
+        if (valid_waypoints.some((previous_id) => node_id === previous_id)) {
+        } else valid_waypoints.push(node_id); // add the node to the result
+      });
 
       o_se_group.updateShapeByID(shape_id, {
-        id: document.getElementById("shape_section_shape_id").value,
-        start: document.getElementById("shape_section_start_node_id").value,
-        end: document.getElementById("shape_section_end_node_id").value,
-        waypoints: this.shapes_waypoints.concat(this.shapes.selected_nodes),
+        id: document.getElementById("shape_section_shape_id_" + shape_id).value,
+        start: document.getElementById(
+          "shape_section_start_node_id_" + shape_id
+        ).value,
+        end: document.getElementById("shape_section_end_node_id_" + shape_id)
+          .value,
+        waypoints: valid_waypoints,
       });
+
+      this.shape_valid_waypoints = this.shapes.array // TODO improve inside streetelement
+        .filter(
+          (shape) =>
+            shape.getID() ===
+            document.getElementById("shape_section_shape_id_" + shape_id).value
+        )[0]
+        .getWaypoints();
     },
     selectStop(event, stop_node_id) {
       console.log(event);
@@ -519,6 +496,14 @@ const editor_gtfs_conf = {
     },
   },
   computed: {
+    shape_valid_waypoints_list() {
+      var result = this.shape_valid_waypoints.slice();
+      this.shapes.selected_nodes.forEach((node_id) => {
+        if (result.some((previous_id) => node_id === previous_id)) {
+        } else result.push(node_id); // add the node to the result
+      });
+      return result;
+    },
     popup_node_type_is_stop() {
       return (
         (this.popup_content.type == streetElementNode.type.STOP) |

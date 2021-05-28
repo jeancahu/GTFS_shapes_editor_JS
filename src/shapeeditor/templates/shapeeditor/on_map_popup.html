@@ -1,10 +1,22 @@
+{% comment %}
+<!--
+     On map Overlay renders as a little popop who shows information about the node selected by a click,
+     closes with a click outside the popup but still in the map area, or it is possible close by clicking
+     the "X" top-right corner
+-->
+{% endcomment %}
 <!-- {% verbatim %} -->
 <div id="popup_node_info" class="ol-popup">
   <a href="#" id="popup-closer" class="ol-popup-closer"></a>
   <div id="popup-content">
     Node ID: {{ popup_content.id }}<br />
     <label for="ol_node_type">Node type: </label>
-    <select id="ol_node_type" name="ol_node_type" v-model="popup_content.type">
+    <select
+      id="ol_node_type"
+      name="ol_node_type"
+      v-model="popup_content.type"
+      disabled
+    >
       <option value="fork">Intersection</option>
       <option v-if="popup_content.connections < 3" value="waypoint">
         Waypoint
@@ -23,6 +35,7 @@
         name="ol_in_stop_id"
         placeholder="Stop ID"
         :value="popup_content.stop_info.stop_id"
+        disabled
       />
       <label for="ol_in_stop_name">Stop name: </label>
       <input
@@ -31,10 +44,13 @@
         name="ol_in_stop_name"
         placeholder="Stop Name"
         :value="popup_content.stop_info.stop_name"
+        disabled
       />
     </div>
 
-    <button @click="changeNodeInfoFromPopup(popup_content.id)">save</button>
+    <button @click="changeNodeInfoFromPopup(popup_content.id)" disabled>
+      save
+    </button>
   </div>
 </div>
 <!-- {% endverbatim %} -->
