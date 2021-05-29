@@ -9,20 +9,22 @@
 <div id="popup_node_info" class="ol-popup">
   <a href="#" id="popup-closer" class="ol-popup-closer"></a>
   <div id="popup-content">
-    Node ID: {{ popup_content.id }}<br />
+    Node ID: {{ o_se_group.popup_content.id }}<br />
     <label for="ol_node_type">Node type: </label>
     <select
       id="ol_node_type"
       name="ol_node_type"
-      v-model="popup_content.type"
+      v-model="o_se_group.popup_content.type"
       disabled
     >
       <option value="fork">Intersection</option>
-      <option v-if="popup_content.connections < 3" value="waypoint">
+      <option v-if="o_se_group.popup_content.connections < 3" value="waypoint">
         Waypoint
       </option>
-      <option v-if="popup_content.connections < 3" value="stop">Stop</option>
-      <option v-if="popup_content.connections < 3" value="endpoint">
+      <option v-if="o_se_group.popup_content.connections < 3" value="stop">
+        Stop
+      </option>
+      <option v-if="o_se_group.popup_content.connections < 3" value="endpoint">
         Endpoint
       </option>
     </select>
@@ -34,7 +36,7 @@
         id="ol_in_stop_id"
         name="ol_in_stop_id"
         placeholder="Stop ID"
-        :value="popup_content.stop_info.stop_id"
+        :value="o_se_group.popup_content.stop_info.stop_id"
         disabled
       />
       <label for="ol_in_stop_name">Stop name: </label>
@@ -43,12 +45,15 @@
         id="ol_in_stop_name"
         name="ol_in_stop_name"
         placeholder="Stop Name"
-        :value="popup_content.stop_info.stop_name"
+        :value="o_se_group.popup_content.stop_info.stop_name"
         disabled
       />
     </div>
 
-    <button @click="changeNodeInfoFromPopup(popup_content.id)" disabled>
+    <button
+      @click="changeNodeInfoFromPopup(o_se_group.popup_content.id)"
+      disabled
+    >
       save
     </button>
   </div>

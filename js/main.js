@@ -26,20 +26,6 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-//////////////// filters /////////////////////////
-function filterStopNode(node) {
-  // endpoints are stops too
-  return node.getType() == streetElementNode.type.STOP;
-}
-
-function filterForkNode(node) {
-  return node.getType() == streetElementNode.type.FORK;
-}
-
-function filterEndpointNode(node) {
-  return node.getType() == streetElementNode.type.ENDPOINT;
-}
-
 /////////////// components ///////////////////////
 
 //////////////////////////////////////////////////
@@ -63,20 +49,6 @@ var extent_area = [
 // adding only base layer, streetElementNodes will be next
 // base layer mainly has routes and buildings.
 
-///////////////////////////////////////////////////////////////////////
-// Aqui vamos haciendo la lista con puntos dependiendo de que clase sea
-// se crea una lista con los diferentes puntos a dibujar sobre el mapa
-const o_se_group = new streetElementGroup({
-  center: [-84.1027104, 9.865107],
-  lonLatExtent: extent_area,
-});
-
-// try to load a history from the static url
-if (typeof _streetElementGroupHistory !== "undefined") {
-  console.log("There is a history");
-  o_se_group.historyLoad(_streetElementGroupHistory);
-}
-
 //////////////////// Download as text/plain /////////////////////
 
 function downloadString(text, fileName) {
@@ -96,20 +68,20 @@ function downloadString(text, fileName) {
 
 function downloadShapesCSV() {
   console.log("downloadShapesCSV");
-  downloadString(o_se_group.shapesToGTFS(), "shapes.txt");
+  //downloadString(o_se_group.shapesToGTFS(), "shapes.txt");
 }
 
 function downloadStopsCSV() {
   console.log("downloadStopsCSV");
-  downloadString(o_se_group.stopsToGTFS(), "stops.txt");
+  //downloadString(o_se_group.stopsToGTFS(), "stops.txt");
 }
 
 function downloadHistoryArray() {
   console.log("downloadHistoryArray");
-  downloadString(
-    o_se_group.historyString(),
-    "street_element_group_history.txt"
-  );
+  //   downloadString(
+  //     o_se_group.historyString(),
+  //     "street_element_group_history.txt"
+  //   );
 }
 
 //////////////////// Vue experiments ////////////////////////////
@@ -118,6 +90,16 @@ const editor_gtfs_conf = {
   el: "#editor_gtfs",
   data() {
     return {
+      o_se_group: new streetElementGroup({
+        center: [-84.1027104, 9.865107],
+        lonLatExtent: extent_area,
+        onChange: this.test, // FIXME // test function
+        // onStopsChange:
+        // onWaypointsChange:
+        // onEndpointsChange:
+        // onForksChange:
+      }),
+
       /////////////////// SIDEBAR
       map_hidden: false,
       map_action: "select",
@@ -130,29 +112,16 @@ const editor_gtfs_conf = {
 
       dict: en_US,
 
-      // Popup content structures
-      popup_content: o_se_group.popup_content, // Gobal object
-
-      nodes: o_se_group.nodes, // contains stops too FIXME
-      stops: o_se_group.nodes
-        .filter((node) => node.isValid())
-        .filter(filterStopNode), // contains stops too FIXME
-      agencies: o_se_group.agencies,
-      routes: o_se_group.routes,
-      services: o_se_group.services,
-      trips: o_se_group.trips,
-      stopTimes: o_se_group.stopTimes,
-
       pointer: [0, 0],
-      shapes: o_se_group.shapes,
 
       // Stops section
-      page_indicator_stops: Number.parseInt(
-        o_se_group.nodes.filter((node) => node.isValid()).filter(filterStopNode)
-          .length /
-          10 +
-          1
-      ), // FIXME
+      page_indicator_stops: 1,
+      //   Number.parseInt(
+      //   this.o_se_group.getStops()
+      //     .length /
+      //     10 +
+      //     1
+      // ), // FIXME
       page_indicator_stops_selected: 0,
 
       // Stop times section
@@ -237,66 +206,70 @@ const editor_gtfs_conf = {
     };
   },
   mounted() {
-    setInterval(() => {
-      this.pointer = o_se_group.pointer.coordinate;
-    }, 120);
+    // try to load a history from the static url
+    if (typeof _streetElementGroupHistory !== "undefined") {
+      console.log("There is a history");
+      this.o_se_group.historyLoad(_streetElementGroupHistory);
+    }
+
+    // setInterval(() => {
+    //   this.pointer = o_se_group.pointer.coordinate;
+    // }, 120);
   },
   watch: {
-    nodes() {
-      this.stops = this.nodes
-        .filter((node) => node.isValid())
-        .filter(filterStopNode);
-    },
-    stops() {
-      this.page_indicator_stops = Number.parseInt(this.stops.length / 10 + 1);
-    },
+    // stops() {
+    //   this.page_indicator_stops = Number.parseInt(this.o_se_group.getStops().length / 10 + 1);
+    // },
     map_action(new_state, old_state) {
       // changes o_se_group operation mode
-      o_se_group.setMode(new_state);
+      this.o_se_group.setMode(new_state);
     },
     map_node_type(new_state, old_state) {
-      o_se_group.selected_node_type = new_state;
+      this.o_se_group.selected_node_type = new_state;
     },
     map_hidden(new_state, old_state) {
       document.getElementById("fullscreen-view").hidden = new_state;
-      o_se_group.map.updateSize();
+      this.o_se_group.getMap().updateSize();
     },
     map_view_nodes(new_state, old_state) {
       if (new_state) {
-        o_se_group.enableElementsByType(streetElementNode.type.WAYPOINT);
+        this.o_se_group.enableElementsByType(streetElementNode.type.WAYPOINT);
       } else {
-        o_se_group.disableElementsByType(streetElementNode.type.WAYPOINT);
+        this.o_se_group.disableElementsByType(streetElementNode.type.WAYPOINT);
       }
     },
     map_view_links(new_state, old_state) {
       if (new_state) {
-        o_se_group.enableElementsByType(streetElementLink.type.LINK);
+        this.o_se_group.enableElementsByType(streetElementLink.type.LINK);
       } else {
-        o_se_group.disableElementsByType(streetElementLink.type.LINK);
+        this.o_se_group.disableElementsByType(streetElementLink.type.LINK);
       }
     },
     map_view_stops(new_state, old_state) {
       if (new_state) {
-        o_se_group.enableElementsByType(streetElementNode.type.STOP);
+        this.o_se_group.enableElementsByType(streetElementNode.type.STOP);
       } else {
-        o_se_group.disableElementsByType(streetElementNode.type.STOP);
+        this.o_se_group.disableElementsByType(streetElementNode.type.STOP);
       }
     },
   },
   methods: {
+    test() {
+      console.log("Hello World - test method");
+    },
     selectShape(event, shape_id) {
       //event.target.scrollIntoView();
-      this.shapes.array.forEach((shape) => shape.setVisible(false));
+      this.o_se_group.shapes.array.forEach((shape) => shape.setVisible(false));
 
       var classes = new Array(0);
       event.target.classList.forEach((css_class) => classes.push(css_class));
       if (classes.some((name) => name === "collapsed")) {
       } else
-        this.shapes.array
+        this.o_se_group.shapes.array
           .filter((shape) => shape.getID() === shape_id)[0]
           .setVisible(true);
 
-      this.shape_valid_waypoints = this.shapes.array
+      this.shape_valid_waypoints = this.o_se_group.shapes.array
         .filter((shape) => shape.getID() === shape_id)[0]
         .getWaypoints();
     },
@@ -306,18 +279,19 @@ const editor_gtfs_conf = {
       this.shape_valid_waypoints = this.shape_valid_waypoints.filter(
         (i_node_id) => i_node_id != node_id
       );
-      this.shapes.selected_nodes = this.shapes.selected_nodes.filter(
-        (i_node_id) => i_node_id != node_id
-      ); // TODO remove
+      this.o_se_group.shapes.selected_nodes =
+        this.o_se_group.shapes.selected_nodes.filter(
+          (i_node_id) => i_node_id != node_id
+        ); // TODO remove
     },
     updateShapeByID(shape_id) {
       var valid_waypoints = this.shape_valid_waypoints.slice();
-      this.shapes.selected_nodes.forEach((node_id) => {
+      this.o_se_group.shapes.selected_nodes.forEach((node_id) => {
         if (valid_waypoints.some((previous_id) => node_id === previous_id)) {
         } else valid_waypoints.push(node_id); // add the node to the result
       });
 
-      o_se_group.updateShapeByID(shape_id, {
+      this.o_se_group.updateShapeByID(shape_id, {
         id: document.getElementById("shape_section_shape_id_" + shape_id).value,
         start: document.getElementById(
           "shape_section_start_node_id_" + shape_id
@@ -327,7 +301,7 @@ const editor_gtfs_conf = {
         waypoints: valid_waypoints,
       });
 
-      this.shape_valid_waypoints = this.shapes.array // TODO improve inside streetelement
+      this.shape_valid_waypoints = this.o_se_group.shapes.array // TODO improve inside streetelement
         .filter(
           (shape) =>
             shape.getID() ===
@@ -361,15 +335,12 @@ const editor_gtfs_conf = {
       }
     },
     changeNodeInfoFromPopup(node_id) {
-      o_se_group.changeNodeInfoByID(node_id, {
+      this.o_se_group.changeNodeInfoByID(node_id, {
         type: document.getElementById("ol_node_type").value,
         stop_id: document.getElementById("ol_in_stop_id").value,
         stop_name: document.getElementById("ol_in_stop_name").value,
       });
-      this.stops = this.nodes
-        .filter((node) => node.isValid())
-        .filter(filterStopNode); // TODO remove
-      alert("Success: edit data");
+      alert("Success: edit data"); // TODO replace
     },
     changeNodeInfoFromStopSection(node_id) {
       var new_stop_info = {};
@@ -379,18 +350,18 @@ const editor_gtfs_conf = {
           "stop_section_" + field + node_id
         ).value;
       });
-      o_se_group.changeNodeInfoByID(node_id, new_stop_info);
+      this.o_se_group.changeNodeInfoByID(node_id, new_stop_info);
       alert("Success: edit data");
     },
     focusNodeOnMapByID(node_id) {
-      o_se_group.selectNodeByID(node_id);
-      o_se_group.focusNodeOnMapByID(node_id);
+      this.o_se_group.selectNodeByID(node_id);
+      this.o_se_group.focusNodeOnMapByID(node_id);
     },
     saveAgency() {
       this.agencyFields.forEach((value) => {
         console.log(value);
       }); // FIXME remove
-      o_se_group.addAgency(
+      this.o_se_group.addAgency(
         // TODO, for, create a list, then use it as arg
         document.getElementById("agency_id").value,
         document.getElementById("agency_name").value,
@@ -406,10 +377,10 @@ const editor_gtfs_conf = {
     removeAgency(agency_id) {
       // TODO
       console.log("remove agency: " + agency_id);
-      o_se_group.removeAgency(agency_id);
+      this.o_se_group.removeAgency(agency_id);
     },
     saveRoute() {
-      o_se_group.addRoute(
+      this.o_se_group.addRoute(
         document.getElementById("r_route_id").value,
         document.getElementById("r_agency_id").value,
         document.getElementById("r_route_short_name").value,
@@ -421,7 +392,7 @@ const editor_gtfs_conf = {
     removeRoute(route_id) {
       // TODO
       console.log("remove route: " + route_id);
-      o_se_group.removeRoute(route_id);
+      this.o_se_group.removeRoute(route_id);
     },
     saveShape() {
       // TODO
@@ -444,7 +415,7 @@ const editor_gtfs_conf = {
       });
 
       // TODO verify data
-      o_se_group.addService(service_info);
+      this.o_se_group.addService(service_info);
 
       console.log(service_info);
       console.log("saveCalendar");
@@ -452,10 +423,10 @@ const editor_gtfs_conf = {
     removeCalendar(service_id) {
       // TODO
       console.log("remove service: " + service_id);
-      o_se_group.removeService(service_id);
+      this.o_se_group.removeService(service_id);
     },
     saveTrip() {
-      o_se_group.addTrip({
+      this.o_se_group.addTrip({
         route_id: document.getElementById("t_route_id").value, // TODO, try to get the value without getElementById, using vue
         trip_id: document.getElementById("t_trip_id").value,
         direction_id: document.getElementById("t_direction_id").value,
@@ -466,10 +437,10 @@ const editor_gtfs_conf = {
     removeTrip(trip_id) {
       // TODO
       console.log("remove trip: " + trip_id);
-      o_se_group.removeTrip(trip_id);
+      this.o_se_group.removeTrip(trip_id);
     },
     saveStopTime() {
-      o_se_group.addStopTime(
+      this.o_se_group.addStopTime(
         document.getElementById("st_trip_id").value, // TODO, get value without getElementById
         document.getElementById("st_arrival_time").value,
         document.getElementById("st_departure_time").value,
@@ -480,17 +451,17 @@ const editor_gtfs_conf = {
     removeStopTime(trip_id, stop_id) {
       // TODO
       console.log("remove stoptime: " + trip_id + " " + stop_id);
-      o_se_group.removeStopTime(trip_id, stop_id);
+      this.o_se_group.removeStopTime(trip_id, stop_id);
     },
     changeScheme(event, service_id, trip_id) {
       if (event.target.checked) {
-        o_se_group.addScheme(service_id, trip_id);
+        this.o_se_group.addScheme(service_id, trip_id);
       } else {
-        o_se_group.removeScheme(service_id, trip_id);
+        this.o_se_group.removeScheme(service_id, trip_id);
       }
     },
     isActiveTrip(service_id, trip_id) {
-      return this.services.array
+      return this.o_se_group.services.array
         .filter((service) => service.getID() == service_id)[0]
         .isActiveTrip(trip_id);
     },
@@ -498,7 +469,7 @@ const editor_gtfs_conf = {
   computed: {
     shape_valid_waypoints_list() {
       var result = this.shape_valid_waypoints.slice();
-      this.shapes.selected_nodes.forEach((node_id) => {
+      this.o_se_group.shapes.selected_nodes.forEach((node_id) => {
         if (result.some((previous_id) => node_id === previous_id)) {
         } else result.push(node_id); // add the node to the result
       });
@@ -506,8 +477,8 @@ const editor_gtfs_conf = {
     },
     popup_node_type_is_stop() {
       return (
-        (this.popup_content.type == streetElementNode.type.STOP) |
-        (this.popup_content.type == streetElementNode.type.ENDPOINT)
+        (this.o_se_group.popup_content.type == streetElementNode.type.STOP) |
+        (this.o_se_group.popup_content.type == streetElementNode.type.ENDPOINT)
       );
     },
     stopsWhenTrip() {
@@ -518,20 +489,16 @@ const editor_gtfs_conf = {
       // get stops from nodes
       // return stops
 
-      var result = this.nodes.slice().reverse();
-      result = result.filter((node) => node.isValid());
-      result = result.filter(filterStopNode);
+      var result = this.o_se_group.getStops().reverse();
       return result;
     },
     rev_endpoints() {
       // return end valid endpoints
-      var result = this.nodes.slice().reverse();
-      result = result.filter((node) => node.isValid());
-      result = result.filter(filterEndpointNode);
+      var result = this.o_se_group.getEndpoints().reverse();
       return result;
     },
     rev_shapes() {
-      return this.shapes.array.slice().reverse();
+      return this.o_se_group.shapes.array.slice().reverse();
       // .reduce(
       //     (rows, key, index) =>
       //     (index % 10 == 0
@@ -542,8 +509,8 @@ const editor_gtfs_conf = {
     },
     rev_stops() {
       // TODO
-      return this.stops
-        .slice()
+      return this.o_se_group
+        .getStops()
         .reverse()
         .reduce(
           (rows, key, index) =>
@@ -554,20 +521,20 @@ const editor_gtfs_conf = {
         );
     },
     rev_agencies() {
-      return this.agencies.array.slice().reverse();
+      return this.o_se_group.agencies.array.slice().reverse();
     },
     rev_routes() {
-      return this.routes.array.slice().reverse();
+      return this.o_se_group.routes.array.slice().reverse();
     },
     rev_services() {
-      return this.services.array.slice().reverse();
+      return this.o_se_group.services.array.slice().reverse();
     },
     rev_trips() {
-      return this.trips.array.slice().reverse();
+      return this.o_se_group.trips.array.slice().reverse();
     },
     rev_stoptimes() {
       // TODO
-      return this.stopTimes.array.slice().reverse();
+      return this.o_se_group.stopTimes.array.slice().reverse();
     },
   },
   filters: {
@@ -581,14 +548,14 @@ const editor_gtfs_conf = {
 const app = new vue(editor_gtfs_conf);
 
 /////////////////// set map target ////////////
-o_se_group.map.setTarget(document.getElementById("map_container"));
+app.o_se_group.getMap().setTarget(document.getElementById("map_container"));
 
 /////////////////// add overlay ///////////////
 
 //// Popups/overlay
 var content = document.getElementById("popup-content");
 var closer = document.getElementById("popup-closer");
-o_se_group.map.addOverlay(
+app.o_se_group.getMap().addOverlay(
   new Overlay({
     id: "popup_node_info",
     element: document.getElementById("popup_node_info"),
@@ -600,16 +567,21 @@ o_se_group.map.addOverlay(
 );
 
 closer.onclick = function () {
-  o_se_group.map.getOverlayById("popup_node_info").setPosition(undefined);
+  app.o_se_group
+    .getMap()
+    .getOverlayById("popup_node_info")
+    .setPosition(undefined);
   closer.blur();
   return false;
 };
 
 /// Controls
-o_se_group.addMapControl(document.getElementById("custom_control_interaction"));
+app.o_se_group.addMapControl(
+  document.getElementById("custom_control_interaction")
+);
 
 ////////// delete the loading screen div //////
-o_se_group.map.once("postrender", async function (event) {
+app.o_se_group.getMap().once("postrender", async function (event) {
   await sleep(1000); // wait for two seconds
   document.getElementById("nav-agency-tab").click(); // set agency section default
   document.getElementById("loading_screen").remove();
@@ -630,7 +602,7 @@ document.getElementById("file_gtfs_stops_input").onchange = (change) => {
       params["stop_description"] = params.stop_desc;
       params["coordinate"] = [params.stop_lon, params.stop_lat];
       params["type"] = "stop";
-      o_se_group.addNode(params);
+      app.o_se_group.addNode(params);
     });
   });
 };
@@ -639,7 +611,6 @@ document.getElementById("file_gtfs_stops_input").onchange = (change) => {
 // these method and data is accesible from outside the bundle
 export {
   app,
-  o_se_group, // FIXME temporal
   downloadHistoryArray,
   downloadShapesCSV,
   downloadStopsCSV,
