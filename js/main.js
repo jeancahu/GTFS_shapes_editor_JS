@@ -68,20 +68,20 @@ function downloadString(text, fileName) {
 
 function downloadShapesCSV() {
   console.log("downloadShapesCSV");
-  //downloadString(o_se_group.shapesToGTFS(), "shapes.txt");
+  downloadString(app.o_se_group.shapesToGTFS(), "shapes.txt");
 }
 
 function downloadStopsCSV() {
   console.log("downloadStopsCSV");
-  //downloadString(o_se_group.stopsToGTFS(), "stops.txt");
+  downloadString(app.o_se_group.stopsToGTFS(), "stops.txt");
 }
 
 function downloadHistoryArray() {
   console.log("downloadHistoryArray");
-  //   downloadString(
-  //     o_se_group.historyString(),
-  //     "street_element_group_history.txt"
-  //   );
+  downloadString(
+    app.o_se_group.historyString(),
+    "street_element_group_history.txt"
+  );
 }
 
 //////////////////// Vue experiments ////////////////////////////
