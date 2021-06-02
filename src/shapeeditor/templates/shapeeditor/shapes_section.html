@@ -50,7 +50,7 @@
     </div>
   </div>
 
-  <div class="accordion" id="accordion_shape_section">
+  <div class="accordion se-accordion-top-sp" id="accordion_shape_section">
     <div v-for="shape in rev_shapes">
       <div class="accordion-item">
         <h2 class="accordion-header" :id="'heading'+shape.getID()">
@@ -75,7 +75,7 @@
           <div class="accordion-body">
             <div class="container">
               <div class="row">
-                <div class="col">
+                <div class="col se-col-min-width">
                   <ul class="list-group">
                     <li class="list-group-item">
                       <button
@@ -122,7 +122,7 @@
                     </li>
                   </ul>
                 </div>
-                <div class="col">
+                <div class="col se-col-min-width">
                   <ul class="list-group">
                     <li
                       v-for="waypoint,index in shape_valid_waypoints_list"
@@ -130,17 +130,23 @@
                     >
                       <label class="form-label">Waypoint {{index + 1}}</label>
                       <td>
-                        <input
-                          class="form-control"
-                          type="number"
-                          :value="waypoint"
-                        />
-                        <button
-                          class="btn btn-danger"
-                          @click="deleteShapeWaypoint(waypoint)"
-                        >
-                          remove
-                        </button>
+                          <div class="d-flex flex-row">
+                              <div class="p-2">
+                                  <input
+                                      class="form-control"
+                                      type="number"
+                                      :value="waypoint"
+                                  />
+                              </div>
+                              <div class="p-2">
+                                  <button
+                                      class="btn btn-danger"
+                                      @click="deleteShapeWaypoint(waypoint)"
+                                  >
+                                      remove
+                                  </button>
+                              </div>
+                          </div>
                       </td>
                     </li>
                     <li class="list-group-item">

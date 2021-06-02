@@ -124,6 +124,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = [BASE_DIR / 'media']
 
+LOGIN_URL='/admin/login/'
 SHAPEEDITOR_MAP_EXTENT_AREA = '[1,2,3,4]'
 SHAPEEDITOR_ROUTING_MACHINE_URL = 'example.com'
 ## SETTINGS END ##

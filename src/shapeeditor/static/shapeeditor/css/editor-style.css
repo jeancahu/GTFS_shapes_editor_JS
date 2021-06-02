@@ -19,10 +19,10 @@ body {
 }
 
 .map_container {
-    width: 100%;
     background: #e2efef;
-
-    width: 100%;
+    margin-top: 2ch;
+    margin-left: 2ch;
+    margin-right: 2ch;
     height: 100%;
 }
 
@@ -151,4 +151,23 @@ body {
 
 .pointer-coor {
 	  min-width: 20ch;
+}
+
+.se-horizontal-menu {
+    margin-top: 2ch;
+}
+
+.se-sections-content{
+    margin-top: 1.1cm;
+    margin-left: 4ch;
+    margin-right: 4ch;
+    margin-bottom: 2cm;
+}
+
+.se-accordion-top-sp{
+    margin-top: 0.6cm;
+}
+
+.se-col-min-width{
+    min-width: 25ch;
 }
