@@ -4,11 +4,12 @@ import {
   streetElementLink,
 } from "streetelement";
 
-const { en_US, es_CR } = require("./lang.js");
+import Overlay from "ol/Overlay"; // TODO remove
 
-const vue = require("vue");
+import Vue from "vue";
+import Swal from "sweetalert2";
 
-import Overlay from "ol/Overlay";
+const { en_US, es_CR } = require("./lang.js"); // TODO ES6
 
 ///////////// utils functions ///////////////////
 
@@ -27,27 +28,6 @@ function sleep(ms) {
 }
 
 /////////////// components ///////////////////////
-
-//////////////////////////////////////////////////
-var extent_area = [
-  // TEMP // just a example // TODO // remove
-  //       +++++++++
-  //       +       +
-  //       +  Map  +
-  //       +       +
-  // --->  @++++++++
-  [-84.43669241118701, 9.726525930153954],
-  // ++++++++@ <---
-  // +       +
-  // +  Map  +
-  // +       +
-  // +++++++++
-  [-83.72894500499169, 9.99625455768836],
-];
-//// Constrained map in the work area
-// Map need a layers group, we're
-// adding only base layer, streetElementNodes will be next
-// base layer mainly has routes and buildings.
 
 //////////////////// Download as text/plain /////////////////////
 
@@ -258,37 +238,65 @@ const editor_gtfs_conf = {
       console.log("Hello World - test method");
     },
     pushShapesToDB() {
-      fetch("push_shapes", {
-        method: "POST",
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        redirect: "follow",
-        referrerPolicy: "no-referrer",
-        body: JSON.stringify({
-          head: "shapes",
-          body: this.o_se_group.shapes.array.map((shape) => shape.getInfo()),
-        }),
+      Swal.fire({
+        title: "Do you want to save the changes?",
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: `Save`,
+        denyButtonText: `Don't save`,
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          fetch("push_shapes", {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+            body: JSON.stringify({
+              head: "shapes",
+              body: this.o_se_group.shapes.array.map((shape) =>
+                shape.getInfo()
+              ),
+            }),
+          }).then(Swal.fire("Saved!", "", "success")); // TODO add catch
+        } else if (result.isDenied) {
+          Swal.fire("Changes are not saved", "", "info");
+        }
       });
     },
     pushStopsToDB() {
-      fetch("push_stops", {
-        method: "POST",
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        redirect: "follow",
-        referrerPolicy: "no-referrer",
-        body: JSON.stringify({
-          head: "stops",
-          body: this.o_se_group.getStops(),
-        }),
+      Swal.fire({
+        title: "Do you want to save the changes?",
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: `Save`,
+        denyButtonText: `Don't save`,
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          fetch("push_stops", {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+            body: JSON.stringify({
+              head: "stops",
+              body: this.o_se_group.getStops(),
+            }),
+          }).then(Swal.fire("Saved!", "", "success")); // TODO add catch
+        } else if (result.isDenied) {
+          Swal.fire("Changes are not saved", "", "info");
+        }
       });
     },
     selectShape(event, shape_id) {
@@ -579,7 +587,7 @@ const editor_gtfs_conf = {
 };
 
 // VUE 2
-const app = new vue(editor_gtfs_conf);
+const app = new Vue(editor_gtfs_conf);
 
 /////////////////// set map target ////////////
 app.o_se_group.getMap().setTarget(document.getElementById("map_container"));
@@ -645,6 +653,7 @@ document.getElementById("file_gtfs_stops_input").onchange = (change) => {
 // these method and data is accesible from outside the bundle
 export {
   app,
+  Swal,
   downloadHistoryArray,
   downloadShapesCSV,
   downloadStopsCSV,
