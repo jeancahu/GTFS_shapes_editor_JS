@@ -33,6 +33,19 @@
           Save
         </button>
       </div>
+      <div class="col">
+          <label class="form-label" for="file_gtfs_shapes_output"
+          >Push stops to database</label
+                                  ><br />
+          <button
+              class="btn btn-primary form-control"
+              id="push_shapes_to_db"
+              name="push_shapes_to_db"
+              @click="pushStopsToDB()"
+          >
+              Save
+          </button>
+      </div>
     </div>
   </div>
   <div class="accordion" id="accordion_stops_section">

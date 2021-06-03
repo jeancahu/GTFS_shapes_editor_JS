@@ -47,6 +47,19 @@
           Save
         </button>
       </div>
+      <div class="col">
+          <label class="form-label" for="file_gtfs_shapes_output"
+          >Push shapes to database</label
+                                   ><br />
+          <button
+              class="btn btn-primary form-control"
+              id="push_shapes_to_db"
+              name="push_shapes_to_db"
+              @click="pushShapesToDB()"
+          >
+              Save
+          </button>
+      </div>
     </div>
   </div>
 
@@ -147,7 +160,7 @@
                                   </button>
                               </div>
                           </div>
-                      </td>
+                    </li>td>
                     </li>
                     <li class="list-group-item">
                       <button

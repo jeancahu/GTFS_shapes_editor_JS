@@ -257,6 +257,40 @@ const editor_gtfs_conf = {
     test() {
       console.log("Hello World - test method");
     },
+    pushShapesToDB() {
+      fetch("push_shapes", {
+        method: "POST",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        redirect: "follow",
+        referrerPolicy: "no-referrer",
+        body: JSON.stringify({
+          head: "shapes",
+          body: this.o_se_group.shapes.array.map((shape) => shape.getInfo()),
+        }),
+      });
+    },
+    pushStopsToDB() {
+      fetch("push_stops", {
+        method: "POST",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        redirect: "follow",
+        referrerPolicy: "no-referrer",
+        body: JSON.stringify({
+          head: "stops",
+          body: this.o_se_group.getStops(),
+        }),
+      });
+    },
     selectShape(event, shape_id) {
       //event.target.scrollIntoView();
       this.o_se_group.shapes.array.forEach((shape) => shape.setVisible(false));
