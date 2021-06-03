@@ -40,9 +40,10 @@
           >Download shapes.txt file</label
         ><br />
         <button
-          class="btn btn-primary form-control disabled"
+          class="btn btn-primary form-control"
           id="file_gtfs_shapes_output"
           name="file_gtfs_shapes_output"
+          @click="downloadShapesLocally()"
         >
           Save
         </button>

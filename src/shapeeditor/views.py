@@ -13,10 +13,17 @@ from django.views.decorators.csrf import csrf_exempt
 def shapeeditor(request):
     routing_machine_url=''
     extent=''
+    center=''
+
     try:
         routing_machine_url = settings.SHAPEEDITOR_ROUTING_MACHINE_URL
     except:
-        routing_machine_url = "TODO OSRM"
+        routing_machine_url = "null"
+
+    try:
+        center = settings.SHAPEEDITOR_MAP_CENTER
+    except:
+        center = "null"
 
     try:
         extent = settings.SHAPEEDITOR_MAP_EXTENT_AREA
@@ -25,7 +32,8 @@ def shapeeditor(request):
 
     context = { # TODO
         "routing_machine_url": routing_machine_url, # TODO
-        "extent": extent
+        "extent": extent,
+        "center": center
     }
 
     return render(request, 'shapeeditor/index.html', context)

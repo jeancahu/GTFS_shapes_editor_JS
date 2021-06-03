@@ -46,11 +46,6 @@ function downloadString(text, fileName) {
   }, 1500);
 }
 
-function downloadShapesCSV() {
-  console.log("downloadShapesCSV");
-  downloadString(app.o_se_group.shapesToGTFS(), "shapes.txt");
-}
-
 function downloadStopsCSV() {
   console.log("downloadStopsCSV");
   downloadString(app.o_se_group.stopsToGTFS(), "stops.txt");
@@ -66,19 +61,22 @@ function downloadHistoryArray() {
 
 //////////////////// Vue experiments ////////////////////////////
 
+const seg_config = {
+  // onChange: this.test, // FIXME // test function
+  // onStopsChange:
+  // onWaypointsChange:
+  // onEndpointsChange:
+  // onForksChange:
+};
+
+if (center) seg_config["center"] = center;
+if (extent_area) seg_config["lonLatExtent"] = extent_area;
+
 const editor_gtfs_conf = {
   el: "#editor_gtfs",
   data() {
     return {
-      o_se_group: new streetElementGroup({
-        center: [-84.1027104, 9.865107],
-        lonLatExtent: extent_area,
-        onChange: this.test, // FIXME // test function
-        // onStopsChange:
-        // onWaypointsChange:
-        // onEndpointsChange:
-        // onForksChange:
-      }),
+      o_se_group: new streetElementGroup(seg_config),
 
       /////////////////// SIDEBAR
       map_hidden: false,
@@ -314,6 +312,10 @@ const editor_gtfs_conf = {
       this.shape_valid_waypoints = this.o_se_group.shapes.array
         .filter((shape) => shape.getID() === shape_id)[0]
         .getWaypoints();
+    },
+    downloadShapesLocally() {
+      console.log("downloadShapesCSV");
+      downloadString(this.o_se_group.shapesToGTFS(), "shapes.txt");
     },
     deleteShapeWaypoint(node_id) {
       // TODO improve in streetelement package
@@ -651,11 +653,4 @@ document.getElementById("file_gtfs_stops_input").onchange = (change) => {
 
 ///////////////// exports (bundle.something in console) ////////////
 // these method and data is accesible from outside the bundle
-export {
-  app,
-  Swal,
-  downloadHistoryArray,
-  downloadShapesCSV,
-  downloadStopsCSV,
-  downloadString,
-};
+export { app, Swal, downloadHistoryArray, downloadStopsCSV, downloadString };
