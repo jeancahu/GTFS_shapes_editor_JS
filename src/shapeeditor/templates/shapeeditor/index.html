@@ -27,3 +27,29 @@
   </div>
 </div>
 {% endblock %}
+
+{% block custom_js %}
+<script>
+ //////////////////////////////////////////////////
+ const extent_area = [
+     // TEMP // just a example // TODO // remove
+     //       +++++++++
+     //       +       +
+     //       +  Map  +
+     //       +       +
+     // --->  @++++++++
+     [-84.43669241118701, 9.726525930153954],
+     // ++++++++@ <---
+     // +       +
+     // +  Map  +
+     // +       +
+     // +++++++++
+     [-83.72894500499169, 9.99625455768836],
+ ];
+ //// Constrained map in the work area
+ // Map need a layers group, we're
+ // adding only base layer, streetElementNodes will be next
+ // base layer mainly has routes and buildings.
+
+</script>
+{% endblock %}

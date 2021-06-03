@@ -40,10 +40,11 @@
       <!-- FIXME -->
     </div>
 
-{% block content %}{% endblock %}
+    {% block content %}{% endblock %}
 
   </body>
   <footer>
+    {% block custom_js %}{% endblock %}
     <!-- editor history / file loaded FIXME remove-->
     <script src="{% static '/shapeeditor/js//street_element_group_history.js' %}"></script>
 

@@ -100,19 +100,16 @@
                     </li>
                     <li class="list-group-item">
                       <label class="form-label">Shape ID</label>
-                      <td>
                         <input
                           class="form-control"
                           type="text"
                           :id="'shape_section_shape_id_'+shape.getID()"
                           :value="shape.getID()"
                         />
-                      </td>
                     </li>
 
                     <li class="list-group-item">
                       <label class="form-label">Start Node ID</label>
-                      <td>
                         <input
                           class="form-control"
                           type="number"
@@ -120,18 +117,15 @@
                           :id="'shape_section_start_node_id_'+shape.getID()"
                           :value="shape.getStart()"
                         />
-                      </td>
                     </li>
                     <li class="list-group-item">
                       <label class="form-label">End Node ID</label>
-                      <td>
                         <input
                           class="form-control"
                           type="number"
                           :id="'shape_section_end_node_id_'+shape.getID()"
                           :value="shape.getEnd()"
                         />
-                      </td>
                     </li>
                   </ul>
                 </div>
@@ -142,7 +136,6 @@
                       class="list-group-item"
                     >
                       <label class="form-label">Waypoint {{index + 1}}</label>
-                      <td>
                           <div class="d-flex flex-row">
                               <div class="p-2">
                                   <input
@@ -160,7 +153,6 @@
                                   </button>
                               </div>
                           </div>
-                    </li>td>
                     </li>
                     <li class="list-group-item">
                       <button

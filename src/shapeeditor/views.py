@@ -11,9 +11,21 @@ from django.views.decorators.csrf import csrf_exempt
 @login_required # TODO login
 @require_GET
 def shapeeditor(request):
+    routing_machine_url=''
+    extent=''
+    try:
+        routing_machine_url = settings.SHAPEEDITOR_ROUTING_MACHINE_URL
+    except:
+        routing_machine_url = "TODO OSRM"
+
+    try:
+        extent = settings.SHAPEEDITOR_MAP_EXTENT_AREA
+    except:
+        extent = "null"
+
     context = { # TODO
-        "router_machine_url": settings.SHAPEEDITOR_ROUTING_MACHINE_URL,
-        "extent": settings.SHAPEEDITOR_MAP_EXTENT_AREA
+        "routing_machine_url": routing_machine_url, # TODO
+        "extent": extent
     }
 
     return render(request, 'shapeeditor/index.html', context)
@@ -30,7 +42,8 @@ def push_shapes(request):
             return JsonResponse(status=400, data={"message": "Invalid data format"})
 
         payload = {'head': data['head'], 'body': data['body']}
-        print(json.dumps(payload, indent=4, sort_keys=True))
+        #print(json.dumps(payload['body'], indent=4, sort_keys=True))
+        print(payload['body'][0]["distances"])
 
         return JsonResponse(status=200, data={"message": "Web push successful"})
     except TypeError:
