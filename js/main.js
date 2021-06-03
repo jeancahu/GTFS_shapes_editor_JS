@@ -62,6 +62,7 @@ function downloadHistoryArray() {
 //////////////////// Vue experiments ////////////////////////////
 
 const seg_config = {
+  routing_machine_url: routing_machine_url, // TODO
   // onChange: this.test, // FIXME // test function
   // onStopsChange:
   // onWaypointsChange:

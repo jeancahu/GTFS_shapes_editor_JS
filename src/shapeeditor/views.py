@@ -18,7 +18,7 @@ def shapeeditor(request):
     try:
         routing_machine_url = settings.SHAPEEDITOR_ROUTING_MACHINE_URL
     except:
-        routing_machine_url = "null"
+        routing_machine_url = "http://router.project-osrm.org/route/v1/driving/"
 
     try:
         center = settings.SHAPEEDITOR_MAP_CENTER
