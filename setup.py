@@ -8,7 +8,7 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-VERSION = '0.1.0'
+VERSION = '0.1.2'
 
 REQUIRED = [
 ]
@@ -92,6 +92,7 @@ class BuildCommand(Command):
     def run(self):
         try:
             self.status('Removing previous builds…')
+            rmtree(path.join(here, 'build'))
             rmtree(path.join(here, 'dist'))
         except OSError:
             pass
