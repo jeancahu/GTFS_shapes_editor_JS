@@ -6,7 +6,122 @@
   role="tabpanel"
   aria-labelledby="nav-agency-tab"
 >
-  <table
+
+      <div class="container agencies-section-menu">
+    <div class="row">
+      <div class="col">
+        <label class="form-label" for="file_gtfs_agencies_input"
+          >Upload agency.txt file</label
+        ><br />
+        <input
+          type="file"
+          class="form-control disabled"
+          accept="plain/text,.txt"
+          id="file_gtfs_agencies_input"
+          name="file_gtfs_agencies_input"
+          disabled
+        />
+      </div>
+      <div class="col">
+        <label class="form-label" for="file_gtfs_agencies_output"
+          >Download agency.txt file</label
+        ><br />
+        <button
+          class="btn btn-primary form-control disabled"
+          id="file_gtfs_agencies_output"
+          name="file_gtfs_agencies_output"
+        >
+          Save
+        </button>
+      </div>
+      <div class="col">
+          <label class="form-label" for="file_gtfs_agencies_output"
+          >Push agencies to database</label
+                                   ><br />
+          <button
+              class="btn btn-primary form-control disabled"
+              id="push_agencies_to_db"
+              name="push_agencies_to_db"
+          >
+              Save
+          </button>
+      </div>
+    </div>
+      </div>
+
+<!--  END buttons  -->
+
+        <div class="accordion se-accordion-top-sp" id="accordion_agency_section">
+    <div v-for="agency in rev_agencies">
+      <div class="accordion-item">
+        <h2 class="accordion-header" :id="'heading'+agency.getID()">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            :data-bs-target="'#collapse'+agency.getID()"
+            aria-expanded="false"
+            :aria-controls="'collapseTwo'+agency.getID()"
+          >
+            <strong>Agency ID>> </strong> {{ agency.getID() }}
+          </button>
+        </h2>
+        <div
+          :id="'collapse'+agency.getID()"
+          class="accordion-collapse collapse"
+          :aria-labelledby="'heading'+agency.getID()"
+          data-bs-parent="#accordion_agency_section"
+        >
+          <div class="accordion-body">
+            <div class="container">
+              <div class="row">
+                <div class="col se-col-min-width">
+                  <ul class="list-group">
+                    <li class="list-group-item">
+                      <button
+                        class="btn btn-success"
+                      >
+                        save
+                      </button>
+                    </li>
+                    <li class="list-group-item">
+                      <label class="form-label">Agency ID</label>
+                        <input
+                          class="form-control"
+                          type="text"
+                          :id="'agency_section_agency_id_'+agency.getID()"
+                          :value="agency.getID()"
+                        />
+                    </li>
+                  </ul>
+                </div>
+                <div class="col se-col-min-width">
+                  <ul class="list-group">
+                    <li class="list-group-item">
+                        <button
+                            class="btn btn-success"
+                        >
+                            save
+                        </button>
+                    </li>
+                  </ul>
+                  <!-- list-group -->
+                </div>
+                <!-- class col -->
+              </div>
+              <!-- class row -->
+            </div>
+            <!-- container -->
+          </div>
+          <!-- accordion body  -->
+        </div>
+      </div>
+    </div>
+        </div>
+
+
+      <!-- end accordion -->
+      <table
     class="table"
     style="table-layout: fixed; width: 100%; word-wrap: break-word"
   >
@@ -58,7 +173,11 @@
         </td>
       </tr>
     </tbody>
-  </table>
+    </table>
+
+
+
+
 </div>
 <!-- END AGENCY -->
 <!-- {% endverbatim %} -->

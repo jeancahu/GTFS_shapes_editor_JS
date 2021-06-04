@@ -8,7 +8,7 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-VERSION = '0.1.2'
+VERSION = '0.1.3'
 
 REQUIRED = [
 ]
@@ -96,6 +96,8 @@ class BuildCommand(Command):
             rmtree(path.join(here, 'dist'))
         except OSError:
             pass
+
+        print("Run npm run dist first for production version")
 
         self.status('Building Source and Wheel (universal) distribution…')
         bash('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))

@@ -94,6 +94,7 @@ const editor_gtfs_conf = {
       pointer: [0, 0],
 
       // Stops section
+      stops_list: [],
       page_indicator_stops: 1,
       //   Number.parseInt(
       //   this.o_se_group.getStops()
@@ -108,6 +109,20 @@ const editor_gtfs_conf = {
 
       // Shapes section:
       shape_valid_waypoints: [],
+
+      activeSections: [
+        // active section for horizontal_tabs_menu.html
+        "agency",
+        "shapes",
+        "stops",
+        "routes",
+        "trips",
+        "stop_times",
+        "calendar",
+        "scheme",
+      ],
+
+      currentActiveSection: "shapes", // activate post-render
 
       agencyFields: [
         // TODO These are constants, import as a constant array
@@ -191,9 +206,13 @@ const editor_gtfs_conf = {
       this.o_se_group.historyLoad(_streetElementGroupHistory);
     }
 
-    // setInterval(() => {
-    //   this.pointer = o_se_group.pointer.coordinate;
-    // }, 120);
+    this.o_se_group.onAddNode(this.updateStops);
+    this.o_se_group.onDeleteNode(this.updateStops);
+
+    //setInterval(() => { // FIXME
+    //this.pointer = o_se_group.pointer.coordinate;
+    //this.stops_list = this.o_se_group.getStops();
+    //}, 500);
   },
   watch: {
     // stops() {
@@ -237,6 +256,8 @@ const editor_gtfs_conf = {
       console.log("Hello World - test method");
     },
     pushShapesToDB() {
+      console.log(this.o_se_group.shapes.array.map((shape) => shape.getInfo()));
+
       Swal.fire({
         title: "Do you want to save the changes?",
         showDenyButton: true,
@@ -290,7 +311,10 @@ const editor_gtfs_conf = {
             referrerPolicy: "no-referrer",
             body: JSON.stringify({
               head: "stops",
-              body: this.o_se_group.getStops(),
+              body: this.o_se_group.getStops().map((stop_info) => {
+                // TODO move to streetelement
+                return stop_info.stop_info; // TODO remove extra info
+              }),
             }),
           }).then(Swal.fire("Saved!", "", "success")); // TODO add catch
         } else if (result.isDenied) {
@@ -359,7 +383,22 @@ const editor_gtfs_conf = {
       //event.target.scrollIntoView();
       this.focusNodeOnMapByID(stop_node_id);
     },
+    updateStops() {
+      this.stops_list = this.o_se_group
+        .getStops()
+        .reverse()
+        .reduce(
+          (rows, key, index) =>
+            (index % 10 == 0
+              ? rows.push([key])
+              : rows[rows.length - 1].push(key)) && rows,
+          []
+        );
 
+      this.page_indicator_stops = Number.parseInt(
+        this.o_se_group.getStops().length / 10 + 1
+      ); // FIXME
+    },
     increaseStopPageSelector() {
       if (this.page_indicator_stops_selected < this.page_indicator_stops - 1) {
         this.page_indicator_stops_selected += 1;
@@ -553,17 +592,7 @@ const editor_gtfs_conf = {
       // );
     },
     rev_stops() {
-      // TODO
-      return this.o_se_group
-        .getStops()
-        .reverse()
-        .reduce(
-          (rows, key, index) =>
-            (index % 10 == 0
-              ? rows.push([key])
-              : rows[rows.length - 1].push(key)) && rows,
-          []
-        );
+      return this.stops_list;
     },
     rev_agencies() {
       return this.o_se_group.agencies.array.slice().reverse();
@@ -628,7 +657,6 @@ app.o_se_group.addMapControl(
 ////////// delete the loading screen div //////
 app.o_se_group.getMap().once("postrender", async function (event) {
   await sleep(1000); // wait for two seconds
-  document.getElementById("nav-agency-tab").click(); // set agency section default
   document.getElementById("loading_screen").remove();
 });
 

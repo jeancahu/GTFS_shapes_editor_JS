@@ -152,28 +152,29 @@
     </div>
   </div>
   <!-- accordion  -->
+  <div v-show="stops_list.length" class="h_menu">
+      <nav aria-label="Page navigation example">
+          <!-- TODO -->
+          <ul class="pagination justify-content-center">
+              <li class="page-item">
+                  <a class="page-link" @click="decreaseStopPageSelector()">Previous</a>
+              </li>
 
-  <nav aria-label="Page navigation example">
-    <!-- TODO -->
-    <ul class="pagination justify-content-center">
-      <li class="page-item">
-        <a class="page-link" @click="decreaseStopPageSelector()">Previous</a>
-      </li>
+              <li
+                  v-for="number in page_indicator_stops"
+                  :class="['page-item', {'active': (number - 1) == page_indicator_stops_selected }]"
+              >
+                  <a class="page-link" @click="page_indicator_stops_selected = number -1"
+                  >{{number}}</a
+                             >
+              </li>
 
-      <li
-        v-for="number in page_indicator_stops"
-        :class="['page-item', {'active': (number - 1) == page_indicator_stops_selected }]"
-      >
-        <a class="page-link" @click="page_indicator_stops_selected = number -1"
-          >{{number}}</a
-        >
-      </li>
-
-      <li class="page-item">
-        <a class="page-link" @click="increaseStopPageSelector()">Next</a>
-      </li>
-    </ul>
-  </nav>
+              <li class="page-item">
+                  <a class="page-link" @click="increaseStopPageSelector()">Next</a>
+              </li>
+          </ul>
+      </nav>
+  </div>
 </div>
 <!-- END STOPS -->
 <!-- {% endverbatim %} -->

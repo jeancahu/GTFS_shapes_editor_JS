@@ -9,10 +9,14 @@
 <!-- {% verbatim %} -->
 <!-- SHAPES -->
 <div
-  class="tab-pane fade"
-  id="nav-shapes"
-  role="tabpanel"
-  aria-labelledby="nav-shapes-tab"
+    :class="['tab-pane',
+            'fade',
+            currentActiveSection === 'shapes' ? 'active' : '',
+            currentActiveSection === 'shapes' ? 'show' : ''
+            ]"
+    id="nav-shapes"
+    role="tabpanel"
+    aria-labelledby="nav-shapes-tab"
 >
   <!-- TODO endpoints list -->
   <!-- <datalist id="endpoints_list">
