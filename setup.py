@@ -8,7 +8,7 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-VERSION = '0.1.3'
+VERSION = '0.1.4'
 
 REQUIRED = [
 ]
@@ -107,7 +107,7 @@ class BuildCommand(Command):
 setup(
     name='shapeeditor',
     version=about['__version__'],
-    description='GTFS Editor app for Django [Alpha]',
+    description='GTFS Editor frontend app for Django',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Jeancarlo Hidalgo',

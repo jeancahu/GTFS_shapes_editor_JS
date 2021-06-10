@@ -17,6 +17,10 @@ venv_server
 street_element_group*
 __pycache__
 src/shapeeditor/static/shapeeditor/vendor/
-_temp
 
 *.egg-info
+
+src/shapeeditor/static/shapeeditor/fonts/*
+src/shapeeditor/static/shapeeditor/js/*
+
+_*
