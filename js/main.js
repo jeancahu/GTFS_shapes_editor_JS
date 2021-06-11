@@ -87,31 +87,31 @@ const editor_gtfs_conf = {
 
       // Stops section
       stops_list: [],
+      endpoints_id_list: [],
       page_indicator_stops: 1,
-      //   Number.parseInt(
-      //   this.o_se_group.getStops()
-      //     .length /
-      //     10 +
-      //     1
-      // ), // FIXME
       page_indicator_stops_selected: 0,
 
       // Stop times section
       in_st_stop_id: 0,
 
       // Shapes section:
+      end_node_on_newshape: "null",
+      begin_node_on_newshape: "null",
+      shape_id_on_newshape: null,
       shape_valid_waypoints: [],
+
+      // End shapes section
 
       activeSections: [
         // active section for horizontal_tabs_menu.html
-        "agency",
+        //"agency", // TODO
         "shapes",
         "stops",
-        "routes",
-        "trips",
-        "stop_times",
-        "calendar",
-        "scheme",
+        //"routes", // TODO
+        //"trips", // TODO
+        //"stop_times", // TODO
+        //"calendar", // TODO
+        //"scheme", // TODO
       ],
 
       currentActiveSection: "shapes", // activate post-render
@@ -192,14 +192,18 @@ const editor_gtfs_conf = {
     };
   },
   mounted() {
-    // try to load a history from the static url
-    if (typeof _streetElementGroupHistory !== "undefined") {
+    // try to load a history from the database
+    if (typeof streetElementGroupHistory !== "undefined") {
       console.log("There is a history");
-      this.o_se_group.historyLoad(_streetElementGroupHistory);
+      this.o_se_group.historyLoad(streetElementGroupHistory);
     }
 
+    // decorators
     this.o_se_group.onAddNode(this.updateStops);
     this.o_se_group.onDeleteNode(this.updateStops);
+
+    // first update
+    this.updateStops();
 
     //setInterval(() => { // FIXME
     //this.pointer = o_se_group.pointer.coordinate;
@@ -250,6 +254,9 @@ const editor_gtfs_conf = {
     saveHistory() {
       Swal.fire({
         title: "Do you want to save the history changes?",
+        input: "text",
+        inputLabel: "History identifier",
+        inputValue: "new history",
         showDenyButton: true,
         showCancelButton: true,
         confirmButtonText: `Save`,
@@ -257,6 +264,11 @@ const editor_gtfs_conf = {
       }).then((result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
+          var history_name = "new history with no name";
+          if (result.value) {
+            history_name = result.value;
+          }
+
           fetch("push_history", {
             method: "POST",
             mode: "cors",
@@ -268,7 +280,7 @@ const editor_gtfs_conf = {
             redirect: "follow",
             referrerPolicy: "no-referrer",
             body: JSON.stringify({
-              head: "history",
+              head: history_name,
               body: this.o_se_group.historyArray(),
             }),
           }).then(Swal.fire("Saved!", "", "success")); // TODO add catch
@@ -344,6 +356,40 @@ const editor_gtfs_conf = {
         }
       });
     },
+    addNewShape() {
+      if (
+        this.shape_id_on_newshape &&
+        this.begin_node_on_newshape != "null" &&
+        this.end_node_on_newshape != "null"
+      ) {
+        // add a new shape
+        if (
+          this.o_se_group.addShape({
+            id: this.shape_id_on_newshape,
+            start: this.begin_node_on_newshape,
+            end: this.end_node_on_newshape,
+          })
+        ) {
+        } else
+          Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: false,
+          }).fire({
+            icon: "success",
+            title: "Shape " + this.shape_id_on_newshape + " added",
+          });
+      } else {
+        console.error("some param on newshape is wrong");
+        Swal.fire({
+          icon: "error",
+          // title: 'Oops...',
+          text: "Some param is not selected or invalid Shape ID",
+        });
+      }
+    },
     selectShape(event, shape_id) {
       //event.target.scrollIntoView();
       this.o_se_group.shapes.array.forEach((shape) => shape.setVisible(false));
@@ -406,6 +452,9 @@ const editor_gtfs_conf = {
       this.focusNodeOnMapByID(stop_node_id);
     },
     updateStops() {
+      this.endpoints_id_list = this.o_se_group
+        .getEndpoints()
+        .map((node) => node.getID());
       this.stops_list = this.o_se_group
         .getStops()
         .reverse()

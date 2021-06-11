@@ -44,9 +44,10 @@
 
   </body>
   <footer>
-    {% block customjs %}{% endblock %}
     <!-- editor history / file loaded FIXME remove-->
     <script src="{% static '/shapeeditor/js//street_element_group_history.js' %}"></script>
+
+    {% block customjs %}{% endblock %}
 
     <!-- Map GTFS elements -->
     <script src="{% static '/shapeeditor/js/main.bundle.js' %}"></script>

@@ -72,6 +72,10 @@ There is not a manual yet, but essentially the map allows the user to draw a sha
 
 Most of the features are already implemented in JS but there is not a GUI equivalent to call for methods yet.
 
+Shapes are made with nodes, nodes have a type, it could be _endpoint_ for start or end of shapes, _stops_, these can be part of the shape too, _fork_ are the nodes where are more than two links, _waypoint_ are the common nodes. To create a Shape first draw paths clicking on map with the interaction _add\_node_, when you already have a connection between two _endpoints_ through multiple nodes and links add a Shape in the section below, once added the shape pick the waypoints with _select\_node_ + Shift, when you pick a _waypoint_ and it is in a shape segment, the whole segment is selected, pick only _waypoints_ their segments are in the shape.
+
+Pick waypoints from the start node to the final node, keep the waypoints in order to avoid backward motion, when you pick a waypoint the section>accordion for the shape we are adding the waypoints will show the waypoints list, when the the waypoints are enough click on **save** button to write the shape, then push it to database.
+
 ## Uninstall
 
 ```bash

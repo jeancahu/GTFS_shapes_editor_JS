@@ -33,10 +33,16 @@ def shapeeditor(request):
     except:
         extent = "null"
 
+    try:
+        history = json.dumps(History.objects.last().history_json)
+    except:
+        history = 'undefined'
+
     context = { # TODO
         "routing_machine_url": routing_machine_url, # TODO
         "extent": extent,
-        "center": center
+        "center": center,
+        "history": history
     }
 
     return render(request, 'shapeeditor/index.html', context)

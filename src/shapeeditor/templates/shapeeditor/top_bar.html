@@ -1,5 +1,5 @@
 <!-- {% verbatim %} Add DJANGO:APP support -->
-<div class="toolbar container-fluid">
+<div class="toolbar container-fluid se-top-bar">
   <div class="row">
     <div class="col">
       <button
@@ -9,11 +9,11 @@
         Save
       </button>
       <button class="btn btn-primary" @click="map_hidden=!map_hidden">
-        Map
+        {{ map_hidden ? 'Show' : 'Hide' }} Map
       </button>
-      <button class="btn btn-primary" @click="toggleDict()">
-        {{ dict.lang == 'es_CR' ? 'en_US' : 'es_CR' }}
-      </button>
+      <!-- <button class="btn btn-primary" @click="toggleDict()">
+           {{ dict.lang == 'es_CR' ? 'en_US' : 'es_CR' }}
+           </button> --> <!-- TODO -->
     </div>
     <div class="col d-flex justify-content-end">
       <div class="d-inline-flex p-2">

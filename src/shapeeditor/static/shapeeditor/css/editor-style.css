@@ -171,3 +171,24 @@ body {
 .se-col-min-width{
     min-width: 25ch;
 }
+
+.se-add-new-item-menu{
+    margin-top: 0.6cm;
+    margin-bottom: 0.6cm;
+    padding-top: 0.6cm;
+}
+
+.se-input-margin{
+    margin-top: 0.75ch;
+}
+
+.se-top-bar{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.se-top-bar .btn{
+    height: 3.2ch;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
