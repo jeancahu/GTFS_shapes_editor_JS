@@ -70,7 +70,9 @@ Just to be sure database is ok run the next commands.
 
 There is not a manual yet, but essentially the map allows the user to draw a shape, cut links and delete links and nodes, to create a shape you need to define two _endpoints_ then put _waypoints_ between the begin and end, more waypoints means better aproximation.
 
-## Unistall
+Most of the features are already implemented in JS but there is not a GUI equivalent to call for methods yet.
+
+## Uninstall
 
 ```bash
 pip uninstall shapeeditor

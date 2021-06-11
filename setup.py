@@ -100,7 +100,7 @@ class BuildCommand(Command):
         print("Run npm run dist first for production version")
 
         self.status('Building Source and Wheel (universal) distribution…')
-        bash('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
+        bash('npm run dist && {0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
 
         sys.exit()
 

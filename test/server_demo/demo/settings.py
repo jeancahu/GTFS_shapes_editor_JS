@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'shapeeditor',
+    # 'multigtfs', # Django 2 gtfs models and commands
+    # 'django.contrib.gis', # needed by multigtfs
 ]
 
 MIDDLEWARE = [
@@ -76,7 +78,8 @@ WSGI_APPLICATION = 'demo.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        # 'ENGINE': 'django.contrib.gis.db.backends.spatialite', # spatial database
+        'ENGINE': 'django.db.backends.sqlite3', # sqlite3 has no db_type()
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
@@ -137,9 +140,10 @@ LOGIN_URL='/admin/login/'
 #// +  Map  +
 #// +       +
 #// +++++++++
-#SHAPEEDITOR_MAP_EXTENT_AREA = [[-84.43669241118701, 9.726525930153954],[-83.72894500499169, 9.99625455768836]]
 
-#SHAPEEDITOR_MAP_CENTER = [-84.1027104, 9.865107]
-#SHAPEEDITOR_ROUTING_MACHINE_URL = "http://router.project-osrm.org/route/v1/driving/" # internal default (demo)
+SHAPEEDITOR_MAP_EXTENT_AREA = [[-84.43669241118701, 9.726525930153954],[-83.72894500499169, 9.99625455768836]]
+SHAPEEDITOR_MAP_CENTER = [-84.1027104, 9.865107]
+#SHAPEEDITOR_ROUTING_MACHINE_URL = "http://router.project-osrm.org/route/v1/driving/" # internal default ( a demo service )
 SHAPEEDITOR_ROUTING_MACHINE_URL = "http://161.35.54.122:5000/route/v1/driving/" # costa rica
-## SETTINGS END ##
+
+## SHAPEEDITOR SETTINGS END ##

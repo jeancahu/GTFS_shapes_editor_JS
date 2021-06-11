@@ -51,14 +51,6 @@ function downloadStopsCSV() {
   downloadString(app.o_se_group.stopsToGTFS(), "stops.txt");
 }
 
-function downloadHistoryArray() {
-  console.log("downloadHistoryArray");
-  downloadString(
-    app.o_se_group.historyString(),
-    "street_element_group_history.txt"
-  );
-}
-
 //////////////////// Vue experiments ////////////////////////////
 
 const seg_config = {
@@ -254,6 +246,36 @@ const editor_gtfs_conf = {
   methods: {
     test() {
       console.log("Hello World - test method");
+    },
+    saveHistory() {
+      Swal.fire({
+        title: "Do you want to save the history changes?",
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: `Save`,
+        denyButtonText: `Don't save`,
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          fetch("push_history", {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+            body: JSON.stringify({
+              head: "history",
+              body: this.o_se_group.historyArray(),
+            }),
+          }).then(Swal.fire("Saved!", "", "success")); // TODO add catch
+        } else if (result.isDenied) {
+          Swal.fire("Changes are not saved", "", "info");
+        }
+      });
     },
     pushShapesToDB() {
       console.log(this.o_se_group.shapes.array.map((shape) => shape.getInfo()));
@@ -682,4 +704,4 @@ document.getElementById("file_gtfs_stops_input").onchange = (change) => {
 
 ///////////////// exports (bundle.something in console) ////////////
 // these method and data is accesible from outside the bundle
-export { app, Swal, downloadHistoryArray, downloadStopsCSV, downloadString };
+export { app, Swal, downloadStopsCSV, downloadString };

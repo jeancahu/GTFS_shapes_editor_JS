@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_GET, require_POST
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import Shape, Stop
+from .models import History, Shape, Stop
 
 # @login_required(login_url='/admin/login/') # TODO login
 @login_required # TODO login
@@ -87,6 +87,27 @@ def push_stops(request):
         Stop.objects.all().delete()
         Stop.objects.bulk_create(stops)
 
+
+        return JsonResponse(status=200, data={"message": "Web push successful"})
+    except TypeError:
+        return JsonResponse(status=500, data={"message": "An error occurred"})
+
+@login_required # TODO admin only
+@require_POST
+@csrf_exempt # TODO remove
+def push_history(request):
+    try:
+        body = request.body
+        data = json.loads(body)
+
+        if 'head' not in data or 'body' not in data:
+            return JsonResponse(status=400, data={"message": "Invalid data format"})
+
+        history = History(
+            history_id=data['head'],
+            history_json=data['body']
+        )
+        history.save()
 
         return JsonResponse(status=200, data={"message": "Web push successful"})
     except TypeError:
