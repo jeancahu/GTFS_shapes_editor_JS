@@ -68,13 +68,25 @@ Just to be sure database is ok run the next commands.
 
 ## Usage
 
-There is not a manual yet, but essentially the map allows the user to draw a shape, cut links and delete links and nodes, to create a shape you need to define two _endpoints_ then put _waypoints_ between the begin and end, more waypoints means better aproximation.
+Map interface allows the user to draw a shape, cut links and delete links and nodes, to create a shape you need to define two _endpoints_ then put _waypoints_ between the begin and end, more waypoints means better aproximation.
 
 Most of the features are already implemented in JS but there is not a GUI equivalent to call for methods yet.
 
 Shapes are made with nodes, nodes have a type, it could be _endpoint_ for start or end of shapes, _stops_, these can be part of the shape too, _fork_ are the nodes where are more than two links, _waypoint_ are the common nodes. To create a Shape first draw paths clicking on map with the interaction _add\_node_, when you already have a connection between two _endpoints_ through multiple nodes and links add a Shape in the section below, once added the shape pick the waypoints with _select\_node_ + Shift, when you pick a _waypoint_ and it is in a shape segment, the whole segment is selected, pick only _waypoints_ their segments are in the shape.
 
 Pick waypoints from the start node to the final node, keep the waypoints in order to avoid backward motion, when you pick a waypoint the section>accordion for the shape we are adding the waypoints will show the waypoints list, when the the waypoints are enough click on **save** button to write the shape, then push it to database.
+
+### Hide and show elements on map
+
+https://user-images.githubusercontent.com/18200186/135690366-f2075476-8246-4764-a464-fca59e1b1a7d.mp4
+
+### Add and delete nodes
+
+https://user-images.githubusercontent.com/18200186/135690845-87f48d78-453e-4da0-bfb4-e5fdbf25e1f2.mp4
+
+### Remove and split links
+
+https://user-images.githubusercontent.com/18200186/135691010-26e44323-4f7c-47ae-8822-450c01d793de.mp4
 
 ## Uninstall
 
@@ -89,5 +101,7 @@ Then delete it from settings.py mentions.
 You could fork and PR,
 suggestions are welcome.
 
-Here some screenshots:
-<img src="http://161.35.54.122:10066/gtfs_editor_2.png" >
+Here some screenshots: </br>
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/18200186/135689334-b3d4d58a-6f20-409e-8985-9118480342c5.png">
+</p>
