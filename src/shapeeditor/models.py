@@ -27,7 +27,7 @@ class History (models.Model):
         blank = False
     )
 
-    history_json = models.JSONField(
+    history_json = models.JSONField( # TODO: add default
         blank = False,
         editable = False
     )
@@ -37,8 +37,10 @@ class History (models.Model):
         verbose_name_plural = "Histories"
 
     def __str__(self):
-        return self.history_id+' '+str(self.history_date)
-
+        return '{} - {} ({})'.format(
+            self.pk,
+            self.history_id,
+            self.history_date.strftime("%Y-%m-%d"))
 
 class Stop (models.Model):
     """

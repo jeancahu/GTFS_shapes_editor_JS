@@ -13,7 +13,10 @@ from .models import History, Shape, Stop
 # @login_required(login_url='/admin/login/') # TODO login
 @login_required # TODO login
 @require_GET
-def shapeeditor(request):
+def shapeeditor(request, history_id='no_history'):
+
+    print(history_id)
+
     routing_machine_url=''
     extent=''
     center=''
@@ -33,10 +36,18 @@ def shapeeditor(request):
     except:
         extent = "null"
 
-    try:
-        history = json.dumps(History.objects.last().history_json)
-    except:
+    if history_id == 'no_history':
         history = 'undefined'
+    elif history_id == 0:
+        try:
+            history = json.dumps(History.objects.last().history_json)
+        except:
+            history = 'undefined'
+    else: # History from data base:
+        try:
+            history = json.dumps(History.objects.get(pk=history_id).history_json)
+        except:
+            history = 'undefined'
 
     context = { # TODO
         "routing_machine_url": routing_machine_url, # TODO

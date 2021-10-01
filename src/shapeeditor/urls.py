@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.shapeeditor, name='shapeeditor'),
+    path('<int:history_id>', views.shapeeditor, name='shapeeditor'),
     path('push_history', views.push_history, name='shapeeditor_push_history'),
     path('push_shapes', views.push_shapes, name='shapeeditor_push_shapes'),
     path('push_stops', views.push_stops, name='shapeeditor_push_stops'),
