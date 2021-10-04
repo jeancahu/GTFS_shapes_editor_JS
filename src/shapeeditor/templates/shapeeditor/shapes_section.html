@@ -67,9 +67,6 @@
   <div class="se-add-new-item-menu container">
       <div class="row">
           <div class="col">
-              <!-- TODO -->
-          </div>
-          <div class="col">
               <div class="row">
                   <!-- Shape ID for the new shape -->
                   <label for="new_shape_name se-input-margin">Add a new shape</label>
@@ -99,6 +96,28 @@
                   <button
                       class="btn btn-success se-input-margin"
                       @click="addNewShape()">Add new Shape</button>
+              </div>
+          </div>
+          <div class="col">
+              <div class="row">
+                  <!-- TODO -->
+              </div>
+          </div>
+          <div class="col">
+              <div class="row">
+                  <!-- Shape ID for the shape to delete -->
+                  <label for="to_delete_shape_name se-input-margin">Delete a shape</label>
+                  <select name="to_delete_shape_name"
+                          class="form-select se-input-margin"
+                          aria-label="Default select example"
+                          disabled>
+                      <option value="null" selected>Select a Shape ID</option>
+                      <option v-for="shape in rev_shapes"
+                              :value="shape.getID()">Shape ID: {{ shape.getID() }} </option>
+                  </select>
+                  <button
+                      class="btn btn-danger se-input-margin" disabled
+                      >Delete Shape</button>
               </div>
           </div>
       </div>
