@@ -14,9 +14,6 @@ from .models import History, Shape, Stop
 @login_required # TODO login
 @require_GET
 def shapeeditor(request, history_id='no_history'):
-
-    print(history_id)
-
     routing_machine_url=''
     extent=''
     center=''
