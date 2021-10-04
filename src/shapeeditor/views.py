@@ -29,7 +29,16 @@ def shapeeditor(request, history_id='no_history'):
         center = "null"
 
     try:
-        extent = settings.SHAPEEDITOR_MAP_EXTENT_AREA
+        temp = settings.SHAPEEDITOR_MAP_EXTENT_AREA
+        extent = [
+            # Resolve the order for points,
+            # first point is the lesser in both coordinates
+            # second point is the greater in both coordinates
+            [temp[0][0] if temp[0][0] < temp[1][0] else temp[1][0],
+             temp[0][1] if temp[0][1] < temp[1][1] else temp[1][1]],
+            [temp[0][0] if temp[0][0] > temp[1][0] else temp[1][0],
+             temp[0][1] if temp[0][1] > temp[1][1] else temp[1][1]],
+        ]
     except:
         extent = "null"
 
