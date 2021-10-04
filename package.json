@@ -4,17 +4,17 @@
   "description": "Edit GTFS Shapes on Webapp",
   "private": true,
   "dependencies": {
-    "bootstrap": "^5.0.1",
+    "bootstrap": "^5.1.1",
     "streetelement": "^0.5.3",
-    "sweetalert2": "^11.0.16",
-    "vue": "^2.6.12"
+    "sweetalert2": "^11.1.7",
+    "vue": "^2.6.14"
   },
   "devDependencies": {
     "html-minifier": "^4.0.0",
-    "prettier": "2.3.0",
+    "prettier": "^2.4.1",
     "source-map-loader": "^3.0.0",
-    "webpack": "^5.37.1",
-    "webpack-cli": "^4.7.0"
+    "webpack": "^5.56.0",
+    "webpack-cli": "^4.8.0"
   },
   "browser": {
     "vue": "vue/dist/vue.common.js"
