@@ -558,18 +558,16 @@ const editor_gtfs_conf = {
       if (shape_id != "null") {
         Swal.fire({
           title: "Do you want to remove the shape " + shape_id + "?",
+          showConfirmButton: false,
           showDenyButton: true,
           showCancelButton: true,
-          confirmButtonText: `Cancel`,
           denyButtonText: `Delete`,
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
-          if (result.isConfirmed) {
+          if (result.isDenied) {
             console.log("remove shape: " + shape_id);
             this.o_se_group.removeShape(shape_id);
             Swal.fire("Shape deleted!", "", "success"); // TODO add catch
-          } else if (result.isDenied) {
-            Swal.fire("No changes to save", "", "info");
           }
         });
       } else {
