@@ -144,6 +144,6 @@ LOGIN_URL='/admin/login/'
 #SHAPEEDITOR_MAP_EXTENT_AREA = [[-84.43669241118701, 9.726525930153954],[-83.72894500499169, 9.99625455768836]]
 #SHAPEEDITOR_MAP_CENTER = [-84.1027104, 9.865107]
 #SHAPEEDITOR_ROUTING_MACHINE_URL = "http://router.project-osrm.org/route/v1/driving/" # internal default ( a demo service )
-SHAPEEDITOR_ROUTING_MACHINE_URL = "http://161.35.54.122:5000/route/v1/driving/" # costa rica
-
+#SHAPEEDITOR_ROUTING_MACHINE_URL = "http://161.35.54.122:5000/route/v1/driving/" # costa rica (no longer available)
+SHAPEEDITOR_ROUTING_MACHINE_URL = "http://localhost:5000/route/v1/driving/" # fake server
 ## SHAPEEDITOR SETTINGS END ##

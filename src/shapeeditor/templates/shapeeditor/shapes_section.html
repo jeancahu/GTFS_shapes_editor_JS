@@ -63,7 +63,7 @@
   </div>
 
   <!-- Add new Shape -->
-
+  <hr/>
   <div class="se-add-new-item-menu container">
       <div class="row">
           <div class="col">
@@ -110,14 +110,14 @@
                   <select name="to_delete_shape_name"
                           class="form-select se-input-margin"
                           aria-label="Default select example"
-                          disabled>
+                          >
                       <option value="null" selected>Select a Shape ID</option>
                       <option v-for="shape in rev_shapes"
                               :value="shape.getID()">Shape ID: {{ shape.getID() }} </option>
                   </select>
                   <button
-                      class="btn btn-danger se-input-margin" disabled
-                      >Delete Shape</button>
+                      class="btn btn-danger se-input-margin"
+                      @click="removeShape()">Delete Shape</button>
               </div>
           </div>
       </div>

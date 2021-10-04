@@ -549,11 +549,32 @@ const editor_gtfs_conf = {
       console.log("remove route: " + route_id);
       this.o_se_group.removeRoute(route_id);
     },
-    saveShape() {
-      // TODO
-    },
-    removeShape(shape_id) {
-      // TODO
+    //saveShape() { // already implemented in "addNewShape"
+    //},
+    removeShape() {
+      // Removes a shape from the o_se_group
+      let shape_id = document.getElementsByName("to_delete_shape_name")[0]
+        .value;
+      if (shape_id != "null") {
+        Swal.fire({
+          title: "Do you want to remove the shape " + shape_id + "?",
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: `Cancel`,
+          denyButtonText: `Delete`,
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            console.log("remove shape: " + shape_id);
+            this.o_se_group.removeShape(shape_id);
+            Swal.fire("Shape deleted!", "", "success"); // TODO add catch
+          } else if (result.isDenied) {
+            Swal.fire("No changes to save", "", "info");
+          }
+        });
+      } else {
+        Swal.fire("Select a Shape to delete first", "", "info");
+      }
     },
     saveCalendar() {
       var service_info = {};
