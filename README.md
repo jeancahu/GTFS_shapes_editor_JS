@@ -18,7 +18,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-Shapeeditor needs authentication to edit the data, define the LOGIN\_URL variable to know where redirect if visitor is not logged.
+Shapeeditor needs authentication to push data in database, define the LOGIN\_URL variable to know where redirect visitor when they are not logged.
 
 ```python
 LOGIN_URL='/admin/login/'
@@ -97,3 +97,11 @@ Here some screenshots: </br>
 <p align="center">
     <img src="https://user-images.githubusercontent.com/18200186/135689334-b3d4d58a-6f20-409e-8985-9118480342c5.png">
 </p>
+
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/18200186/136308569-6f0329df-f9ea-42c7-bd57-a6b505621209.png">
+</p>
+
+## Sponsor
+bc1qaw6urpy8t38fq3psp3p0xst4chq0yu4gamtu3v </br>
+![image](https://user-images.githubusercontent.com/18200186/136236417-b008e176-0922-474f-91a0-6b501308660f.png)
