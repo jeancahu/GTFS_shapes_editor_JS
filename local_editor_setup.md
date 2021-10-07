@@ -7,7 +7,6 @@
 cd GTFS_shapes_editor_JS/
 npm install .
 npm run debug
-bash bash/fonts-download.sh
 ```
 
 - Install Python dependencies inside virtualenv
