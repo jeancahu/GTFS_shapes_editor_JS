@@ -5,7 +5,6 @@ dist
 build
 *.db
 db.sqlite3
-migrations
 
 *.png
 *.zip

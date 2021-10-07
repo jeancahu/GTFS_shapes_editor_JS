@@ -1,26 +1,35 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     //mode: 'production',
     //mode: 'development',
     target: 'web',
+    devtool: 'source-map',
+    plugins: [new MiniCssExtractPlugin()],
     entry: {
-        main: {
-            import: './js/main.js',
+        'js/main': {
+            import: './js/main_vueapp.js',
+        },
+        'vendor/style': {
+            import: './js/index.js',
         },
     },
     output: {
-        library: 'global_se',
+        library: 'global_se[name]',
         filename: '[name].bundle.js',
-        path: path.resolve(__dirname, 'src/shapeeditor/static/shapeeditor/js'),
+        path: path.resolve(__dirname, 'src/shapeeditor/static/shapeeditor/'),
     },
-    devtool: 'eval',
     module: {
         rules: [
             {
                 test: /\.js$/,
                 enforce: "pre",
                 use: ["source-map-loader"],
+            },
+            {
+                test: /\.s?css/i,
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
             },
         ],
     },
