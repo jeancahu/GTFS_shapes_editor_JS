@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^5.1.1",
-    "streetelement": "^0.5.3",
+    "streetelement": "^0.5.4",
     "sweetalert2": "^11.1.7",
     "vue": "^2.6.14"
   },
