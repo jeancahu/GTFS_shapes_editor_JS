@@ -10,20 +10,10 @@
 
     <!-- CSS Bootstrap and OpenLayers style lib -->
     <link
-      href="{% static '/shapeeditor/vendor/style.css' %}"
+      href="{% static '/shapeeditor/css/main_style.css' %}"
       rel="stylesheet"
     />
 
-    <link
-      rel="stylesheet"
-      href="{% static '/shapeeditor/css/editor-style.css' %}"
-    />
-
-    <link
-      rel="stylesheet"
-      href="{% static '/shapeeditor/css/ol_popup.css' %}"
-      type="text/css"
-    />
   </head>
   <body>
     <div id="loading_screen" class="loading_screen">
@@ -44,6 +34,6 @@
     <script src="{% static '/shapeeditor/js/main.bundle.js' %}"></script>
 
     <!-- JavaScript Bundle for vendor deps [Bootstrap,] -->
-    <script src="{% static '/shapeeditor/vendor/style.bundle.js' %}"></script>
+    <script src="{% static '/shapeeditor/js/main_style.bundle.js' %}"></script>
   </footer>
 </html>

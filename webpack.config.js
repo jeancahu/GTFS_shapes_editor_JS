@@ -6,12 +6,14 @@ module.exports = {
     //mode: 'development',
     target: 'web',
     devtool: 'source-map',
-    plugins: [new MiniCssExtractPlugin()],
+    plugins: [new MiniCssExtractPlugin({
+        filename: 'css/main_style.css',
+    })],
     entry: {
         'js/main': {
             import: './js/main_vueapp.js',
         },
-        'vendor/style': {
+        'js/main_style': {
             import: './js/index.js',
         },
     },
