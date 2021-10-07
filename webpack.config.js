@@ -16,7 +16,7 @@ module.exports = {
         },
     },
     output: {
-        library: 'global_se[name]',
+        // library: 'global_se',
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'src/shapeeditor/static/shapeeditor/'),
     },
