@@ -7,7 +7,6 @@
 cd GTFS_shapes_editor_JS/
 npm install .
 npm run debug
-bash bash/vendor-dep.sh
 bash bash/fonts-download.sh
 ```
 
