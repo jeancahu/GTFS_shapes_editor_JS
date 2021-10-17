@@ -72,7 +72,6 @@ const editor_gtfs_conf = {
       o_se_group: new streetElementGroup(seg_config),
 
       /////////////////// SIDEBAR
-      map_hidden: false,
       map_action: "select",
       map_node_type: streetElementNode.type.WAYPOINT,
 
@@ -220,10 +219,6 @@ const editor_gtfs_conf = {
     },
     map_node_type(new_state, old_state) {
       this.o_se_group.selected_node_type = new_state;
-    },
-    map_hidden(new_state, old_state) {
-      document.getElementById("fullscreen-view").hidden = new_state;
-      this.o_se_group.getMap().updateSize();
     },
     map_view_nodes(new_state, old_state) {
       if (new_state) {
