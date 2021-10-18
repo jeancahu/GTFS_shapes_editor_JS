@@ -44,11 +44,6 @@ function downloadString(text, fileName) {
   }, 1500);
 }
 
-function downloadStopsCSV() {
-  console.log("downloadStopsCSV");
-  downloadString(app.o_se_group.stopsToGTFS(), "stops.txt");
-}
-
 //////////////////// Vue experiments ////////////////////////////
 
 const seg_config = {
@@ -185,6 +180,12 @@ const editor_gtfs_conf = {
       console.log("There is a history");
       this.o_se_group.historyLoad(streetElementGroupHistory);
     }
+
+    ////////// delete the loading screen div //////
+    this.o_se_group.getMap().once("postrender", async function (event) {
+      await sleep(200); // wait for 200 m seconds
+      document.getElementById("loading_screen").remove();
+    });
 
     // decorators
     this.o_se_group.onAddNode(this.updateStops);
@@ -355,8 +356,10 @@ const editor_gtfs_conf = {
         .getWaypoints();
     },
     downloadShapesLocally() {
-      console.log("downloadShapesCSV");
       downloadString(this.o_se_group.shapesToGTFS(), "shapes.txt");
+    },
+    downloadStopsLocally() {
+      downloadString(this.o_se_group.stopsToGTFS(), "stops.txt");
     },
     deleteShapeWaypoint(node_id) {
       // TODO improve in streetelement package
@@ -662,14 +665,6 @@ const app = new Vue(editor_gtfs_conf);
 /////////////////// set StreetElementGroup target ////////////
 app.o_se_group.setTarget(document.getElementById("map_container"));
 
-/////////////////// add overlay ///////////////
-
-////////// delete the loading screen div //////
-app.o_se_group.getMap().once("postrender", async function (event) {
-  await sleep(600); // wait for 600 m seconds
-  document.getElementById("loading_screen").remove();
-});
-
 /////////////////////////// File gtfs stops input
 var file_content = {};
 document.getElementById("file_gtfs_stops_input").onchange = (change) => {
@@ -692,4 +687,4 @@ document.getElementById("file_gtfs_stops_input").onchange = (change) => {
 
 ///////////////// exports (bundle.something in console) ////////////
 // these method and data is accesible from outside the bundle
-export { app, downloadStopsCSV, downloadString };
+// export { app, downloadStopsCSV, downloadString };
