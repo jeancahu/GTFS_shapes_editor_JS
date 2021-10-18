@@ -1,13 +1,9 @@
-import {
-  streetElementGroup,
-  streetElementNode,
-  streetElementLink,
-} from "streetelement";
-
 import Vue from "vue";
+import data_config from "./vue_data.js";
+
 import Swal from "sweetalert2";
 
-const { en_US, es_CR } = require("./lang.js"); // TODO ES6
+import downloadString from "./download_string.js";
 
 ///////////// utils functions ///////////////////
 
@@ -27,152 +23,12 @@ function sleep(ms) {
 
 /////////////// components ///////////////////////
 
-//////////////////// Download as text/plain /////////////////////
-
-function downloadString(text, fileName) {
-  var blob = new Blob([text], { type: "text/plain" });
-  var a = document.createElement("a");
-  a.download = fileName;
-  a.href = URL.createObjectURL(blob);
-  a.dataset.downloadurl = ["text/plain", a.download, a.href].join(":");
-  a.style.display = "none";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(function () {
-    URL.revokeObjectURL(a.href);
-  }, 1500);
-}
-
 //////////////////// Vue experiments ////////////////////////////
-
-const seg_config = {
-  routing_machine_url: routing_machine_url, // TODO
-  // onChange: this.test, // FIXME // test function
-  // onStopsChange:
-  // onWaypointsChange:
-  // onEndpointsChange:
-  // onForksChange:
-};
-
-if (center) seg_config["center"] = center;
-if (extent_area) seg_config["lonLatExtent"] = extent_area;
 
 const editor_gtfs_conf = {
   el: "#editor_gtfs",
   data() {
-    return {
-      o_se_group: new streetElementGroup(seg_config),
-
-      dict: en_US,
-
-      pointer: [0, 0],
-
-      // Stops section
-      stops_list: [],
-      endpoints_id_list: [],
-      page_indicator_stops: 1,
-      page_indicator_stops_selected: 0,
-
-      // Stop times section
-      in_st_stop_id: 0,
-
-      // Shapes section:
-      end_node_on_newshape: "null",
-      begin_node_on_newshape: "null",
-      shape_id_on_newshape: null,
-      shape_valid_waypoints: [],
-
-      // End shapes section
-
-      activeSections: [
-        // active section for horizontal_tabs_menu.html
-        //"agency", // TODO
-        "shapes",
-        "stops",
-        //"routes", // TODO
-        //"trips", // TODO
-        //"stop_times", // TODO
-        //"calendar", // TODO
-        //"scheme", // TODO
-      ],
-
-      currentActiveSection: "shapes", // activate post-render
-
-      agencyFields: [
-        // TODO These are constants, import as a constant array
-        "agency_id",
-        "agency_name",
-        "agency_url",
-        "agency_timezone",
-        "agency_lang",
-        "agency_phone",
-        "agency_email",
-      ],
-      shapeFields: [
-        "shape_id",
-        "shape_pt_lat",
-        "shape_pt_lon",
-        "shape_pt_sequence",
-        "shape_dist_traveled",
-      ],
-      stopFields: [
-        "stop_id",
-        "stop_code",
-        "stop_name",
-        "stop_desc",
-        "stop_lat",
-        "stop_lon",
-        "zone_id",
-        "stop_url", // page with a photo and info about TODO
-        "location_type",
-        "parent_station",
-        "stop_timezone",
-        "wheelchair_boarding",
-      ],
-      stopTimeFields: [
-        "st_trip_id",
-        "st_stop_id",
-        "st_arrival_time",
-        "st_departure_time",
-      ],
-      tripFields: ["t_route_id", "t_trip_id", "t_direction_id", "t_shape_id"],
-      routeFields: [
-        "r_route_id",
-        "r_agency_id",
-        "r_route_short_name",
-        "r_route_long_name",
-        "r_route_type", // TODO, autobus by default
-      ],
-
-      calendarFields: [
-        "c_service_id",
-        "c_monday",
-        "c_tuesday",
-        "c_wednesday",
-        "c_thursday",
-        "c_friday",
-        "c_saturday",
-        "c_sunday",
-        "c_start_day",
-        "c_end_day",
-      ],
-      calendarCheckboxFields: [
-        "c_monday",
-        "c_tuesday",
-        "c_wednesday",
-        "c_thursday",
-        "c_friday",
-        "c_saturday",
-        "c_sunday",
-      ],
-
-      r_routeType: [
-        { value: 3, name: "autobus" },
-        { value: 2, name: "train" },
-        { value: 1, name: "metro" },
-      ],
-    };
+    return data_config;
   },
   mounted() {
     // try to load a history from the database
@@ -207,7 +63,7 @@ const editor_gtfs_conf = {
         inputLabel: "History identifier",
         inputValue: "new history",
         showDenyButton: true,
-        showCancelButton: true,
+        showCancelButton: false,
         confirmButtonText: `Save`,
         denyButtonText: `Don't save`,
       }).then((result) => {
@@ -440,14 +296,6 @@ const editor_gtfs_conf = {
         this.dict = es_CR;
       }
     },
-    changeNodeInfoFromPopup(node_id) {
-      this.o_se_group.changeNodeInfoByID(node_id, {
-        type: document.getElementById("ol_node_type").value,
-        stop_id: document.getElementById("ol_in_stop_id").value,
-        stop_name: document.getElementById("ol_in_stop_name").value,
-      });
-      alert("Success: edit data"); // TODO replace
-    },
     changeNodeInfoFromStopSection(node_id) {
       var new_stop_info = {};
 
@@ -600,12 +448,6 @@ const editor_gtfs_conf = {
       });
       return result;
     },
-    popup_node_type_is_stop() {
-      return (
-        (this.o_se_group.popup_content.type == streetElementNode.type.STOP) |
-        (this.o_se_group.popup_content.type == streetElementNode.type.ENDPOINT)
-      );
-    },
     stopsWhenTrip() {
       // TODO
       // document.getElementById("st_trip_id")
@@ -676,7 +518,7 @@ document.getElementById("file_gtfs_stops_input").onchange = (change) => {
       line.split(/,(?=(?:(?:[^"]*"){2})*[^\"]*$)/).forEach((line, index) => {
         params[headers[index]] = line;
       });
-      params["nolink"] = true; // doesn't link with another node
+      params["nolink"] = true; // doesn't link with a previous selected node
       params["stop_description"] = params.stop_desc;
       params["coordinate"] = [params.stop_lon, params.stop_lat];
       params["type"] = "stop";
@@ -684,7 +526,3 @@ document.getElementById("file_gtfs_stops_input").onchange = (change) => {
     });
   });
 };
-
-///////////////// exports (bundle.something in console) ////////////
-// these method and data is accesible from outside the bundle
-// export { app, downloadStopsCSV, downloadString };

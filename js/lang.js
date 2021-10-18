@@ -134,7 +134,7 @@ const es_CR = new Proxy(
       }
 );
 
-module.exports ={
+export {
     es_CR,
     en_US
-};
+}
