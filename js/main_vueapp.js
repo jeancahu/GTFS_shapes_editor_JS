@@ -666,7 +666,7 @@ app.o_se_group.setTarget(document.getElementById("map_container"));
 
 ////////// delete the loading screen div //////
 app.o_se_group.getMap().once("postrender", async function (event) {
-  await sleep(1000); // wait for two seconds
+  await sleep(600); // wait for 600 m seconds
   document.getElementById("loading_screen").remove();
 });
 
