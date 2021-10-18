@@ -69,15 +69,6 @@ const editor_gtfs_conf = {
     return {
       o_se_group: new streetElementGroup(seg_config),
 
-      /////////////////// SIDEBAR
-      map_action: "select",
-      map_node_type: streetElementNode.type.WAYPOINT,
-
-      map_view_nodes: true,
-      map_view_links: true,
-      map_view_stops: true,
-      ////////////////// END SIDEBAR
-
       dict: en_US,
 
       pointer: [0, 0],
@@ -207,43 +198,7 @@ const editor_gtfs_conf = {
     //this.stops_list = this.o_se_group.getStops();
     //}, 500);
   },
-  watch: {
-    // stops() {
-    //   this.page_indicator_stops = Number.parseInt(this.o_se_group.getStops().length / 10 + 1);
-    // },
-    map_action(new_state, old_state) {
-      // changes o_se_group operation mode
-      this.o_se_group.setMode(new_state);
-    },
-    map_node_type(new_state, old_state) {
-      this.o_se_group.selected_node_type = new_state;
-    },
-    map_view_nodes(new_state, old_state) {
-      if (new_state) {
-        this.o_se_group.enableElementsByType(streetElementNode.type.WAYPOINT);
-      } else {
-        this.o_se_group.disableElementsByType(streetElementNode.type.WAYPOINT);
-      }
-    },
-    map_view_links(new_state, old_state) {
-      if (new_state) {
-        this.o_se_group.enableElementsByType(streetElementLink.type.LINK);
-      } else {
-        this.o_se_group.disableElementsByType(streetElementLink.type.LINK);
-      }
-    },
-    map_view_stops(new_state, old_state) {
-      if (new_state) {
-        this.o_se_group.enableElementsByType(streetElementNode.type.STOP);
-      } else {
-        this.o_se_group.disableElementsByType(streetElementNode.type.STOP);
-      }
-    },
-  },
   methods: {
-    test() {
-      console.log("Hello World - test method");
-    },
     saveHistory() {
       Swal.fire({
         title: "Do you want to save the history changes?",
