@@ -8,7 +8,7 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-VERSION = '0.1.7'
+VERSION = '0.1.8'
 
 REQUIRED = [
 ]
