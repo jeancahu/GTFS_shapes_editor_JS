@@ -4,8 +4,6 @@ import {
   streetElementLink,
 } from "streetelement";
 
-import Overlay from "ol/Overlay"; // TODO remove
-
 import Vue from "vue";
 import Swal from "sweetalert2";
 
@@ -706,38 +704,10 @@ const editor_gtfs_conf = {
 // VUE 2
 const app = new Vue(editor_gtfs_conf);
 
-/////////////////// set map target ////////////
-app.o_se_group.getMap().setTarget(document.getElementById("map_container"));
+/////////////////// set StreetElementGroup target ////////////
+app.o_se_group.setTarget(document.getElementById("map_container"));
 
 /////////////////// add overlay ///////////////
-
-//// Popups/overlay
-var content = document.getElementById("popup-content");
-var closer = document.getElementById("popup-closer");
-app.o_se_group.getMap().addOverlay(
-  new Overlay({
-    id: "popup_node_info",
-    element: document.getElementById("popup_node_info"),
-    autoPan: true,
-    autoPanAnimation: {
-      duration: 250,
-    },
-  })
-);
-
-closer.onclick = function () {
-  app.o_se_group
-    .getMap()
-    .getOverlayById("popup_node_info")
-    .setPosition(undefined);
-  closer.blur();
-  return false;
-};
-
-/// Controls
-app.o_se_group.addMapControl(
-  document.getElementById("custom_control_interaction")
-);
 
 ////////// delete the loading screen div //////
 app.o_se_group.getMap().once("postrender", async function (event) {
@@ -767,4 +737,4 @@ document.getElementById("file_gtfs_stops_input").onchange = (change) => {
 
 ///////////////// exports (bundle.something in console) ////////////
 // these method and data is accesible from outside the bundle
-export { app, Swal, downloadStopsCSV, downloadString };
+export { app, downloadStopsCSV, downloadString };
