@@ -3,25 +3,23 @@
 
 {% block content %}
 <div id="editor_gtfs"> <!-- Into the Vue app -->
-  <div class="body-container">
   {% include './top_bar.html' %}
   {% include './map_section.html' %}
 
-    <div class="table-wrapper se-horizontal-menu">
-    {% include './horizontal_tabs_menu.html' %}
+  <div class="table-wrapper se-horizontal-menu">
+  {% include './horizontal_tabs_menu.html' %}
 
-      <div class="tab-content se-sections-content" id="tab_content">
+    <div class="tab-content se-sections-content" id="tab_content">
 
-        {% include './agency_section.html' %}
-        {% include './shapes_section.html' %}
-        {% include './stops_section.html' %}
-        {% include './routes_section.html' %}
-        {% include './trips_section.html' %}
-        {% include './stop_times_section.html' %}
-        {% include './calendar_section.html' %}
-        {% include './scheme_section.html' %}
+      {% include './agency_section.html' %}
+      {% include './shapes_section.html' %}
+      {% include './stops_section.html' %}
+      {% include './routes_section.html' %}
+      {% include './trips_section.html' %}
+      {% include './stop_times_section.html' %}
+      {% include './calendar_section.html' %}
+      {% include './scheme_section.html' %}
 
-      </div>
     </div>
   </div>
 </div>

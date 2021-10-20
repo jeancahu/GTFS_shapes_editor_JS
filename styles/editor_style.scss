@@ -9,32 +9,32 @@
 }
 */
 body {
-    min-height: 100vh;
-    width: 100%;
     overflow-x: hidden;
-}
-
-.body-container {
-    height: calc(100% - 50px);
-    width: 100%;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    align-items: center;
+    justify-content: center;
 }
 
 .map_container {
     background: #e2efef;
-    margin-top: 1.5ch;
     margin-left: 1ch;
     margin-right: 1ch;
     height: 100%;
 }
 
 .toolbar {
-    height: 7ch; /* Full-height: remove this if you want "auto" height */
     position: sticky; /* sticky Sidebar (stay in place on scroll) */
     z-index: 10; /* Stay on top */
-    top: 0; /* Stay at the top */
+    top: 10px; /* Stay at the top */
     background-color: #417690;
+    opacity: 0.85;
     color: black;
     padding: 6px 14px;
+    border-radius: 15px;
+    margin: 10px 10px;
+    max-width: calc(100% - 20px);
 }
 
 .stops-section-menu {
@@ -55,7 +55,7 @@ body {
 }
 
 .fullscreen {
-    margin-bottom: 50px;
+    /*margin-bottom: 50px;*/
     width: 100%;
     height: 70vh;
 }
@@ -75,66 +75,15 @@ body {
     width: 10%;
 }
 
-.custom_control_interaction {
-    position: absolute;
-    width: max-content;
-    left: 60px;
-    top: 18px;
-}
-
-.map-tool-item {
-    position: relative;
-    margin-left: 10px;
-}
-
-.map-tool-item-group-btn {
-	  min-width: 140px;
-}
-
-/* Colors for Shapes section */
-.orange_text{
-    color: orange;
-}
-.green_text {
-    color: green;
-}
-.blue_text {
-    color: blue;
-}
-.red_text {
-    color: red;
-}
-.black_text {
-    color: black;
-}
-
 .h_menu {
     margin-top: 12px;
 }
 
-.toolbar > .btn {
-    padding-top: 1px;
-    padding-bottom: 1px;
-    padding-left: 6px;
-    padding-right: 6px;
-    margin-top: 5px;
-}
-
-.notification_banner {
-    position: fixed;
-    top: 60px;
-    height: 210px;
-    width: 100%;
-    z-index: 15;
-    background-color:rgba(0, 0, 0, 0);
-}
-
-.notification_banner > .alert {
-    margin-top: 10px;
-}
-
 .pointer-coor {
+    background-color: white;
 	  min-width: 20ch;
+    padding: 3px 3px;
+    border-radius: 4px;
 }
 
 .se-horizontal-menu {
@@ -164,15 +113,4 @@ body {
 
 .se-input-margin{
     margin-top: 0.75ch;
-}
-
-.se-top-bar{
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-.se-top-bar .btn{
-    height: 3.2ch;
-    margin-top: 2px;
-    margin-bottom: 2px;
 }
