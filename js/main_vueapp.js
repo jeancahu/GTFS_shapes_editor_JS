@@ -21,6 +21,21 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function getCookie(name) {
+  if (!document.cookie) {
+    return null;
+  }
+
+  const xsrfCookies = document.cookie
+    .split(";")
+    .map((c) => c.trim())
+    .filter((c) => c.startsWith(name + "="));
+
+  if (xsrfCookies.length === 0) {
+    return null;
+  }
+  return decodeURIComponent(xsrfCookies[0].split("=")[1]);
+}
 /////////////// components ///////////////////////
 
 //////////////////// Vue experiments ////////////////////////////
@@ -80,7 +95,9 @@ const editor_gtfs_conf = {
             cache: "no-cache",
             credentials: "same-origin",
             headers: {
+              Accept: "application/json",
               "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken"),
             },
             redirect: "follow",
             referrerPolicy: "no-referrer",
@@ -112,7 +129,9 @@ const editor_gtfs_conf = {
             cache: "no-cache",
             credentials: "same-origin",
             headers: {
+              Accept: "application/json",
               "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken"),
             },
             redirect: "follow",
             referrerPolicy: "no-referrer",
@@ -144,7 +163,9 @@ const editor_gtfs_conf = {
             cache: "no-cache",
             credentials: "same-origin",
             headers: {
+              Accept: "application/json",
               "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken"),
             },
             redirect: "follow",
             referrerPolicy: "no-referrer",

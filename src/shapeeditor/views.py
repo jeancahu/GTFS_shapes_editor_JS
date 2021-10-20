@@ -6,7 +6,6 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_GET, require_POST
-from django.views.decorators.csrf import csrf_exempt
 
 from .models import History, Shape, Stop
 
@@ -66,7 +65,6 @@ def shapeeditor(request, history_id='no_history'):
 
 @login_required # TODO admin only
 @require_POST
-@csrf_exempt # TODO remove
 def push_shapes(request):
     try:
         body = request.body
@@ -91,7 +89,6 @@ def push_shapes(request):
 
 @login_required # TODO admin only
 @require_POST
-@csrf_exempt # TODO remove
 def push_stops(request):
     try:
         body = request.body
@@ -117,7 +114,6 @@ def push_stops(request):
 
 @login_required # TODO admin only
 @require_POST
-@csrf_exempt # TODO remove
 def push_history(request):
     try:
         body = request.body
