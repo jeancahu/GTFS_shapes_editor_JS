@@ -94,8 +94,9 @@ pip uninstall shapeeditor
 PR are welcome.
 
 Here some screenshots: </br>
+
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/18200186/135689334-b3d4d58a-6f20-409e-8985-9118480342c5.png">
+    <img src="https://user-images.githubusercontent.com/18200186/138057069-27739017-28a9-4f6a-aeaa-42448dbbfd2b.png">
 </p>
 
 <p align="center">
