@@ -1,0 +1,47 @@
+/* loading screen animation */
+
+.loading_screen {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(230,230,230,1);
+    z-index: 100;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: grid;
+}
+
+@keyframes loading_animation {
+    0%   {
+        height: 60px;
+        width: 30px;;
+    }
+    100% {
+        height: 20px;
+        width: 38px;
+    }
+}
+
+.loading_animation_section {
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.loading_box {
+    display: inline-block;
+    background-color: rgba(0,34,33,1);
+    width: 30px;
+    height: 60px;
+    margin: 15px;
+    animation-name: loading_animation;
+    animation-duration: 1s;
+    animation-iteration-count: 4;
+    animation-direction: alternate;
+    animation-timing-function: easi-out;
+}

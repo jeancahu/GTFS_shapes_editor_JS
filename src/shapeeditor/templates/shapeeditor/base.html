@@ -17,11 +17,12 @@
   </head>
   <body>
     <div id="loading_screen" class="loading_screen">
-      <img
-        alt="loading_gif"
-        src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/ab79a231234507.564a1d23814ef.gif"
-      />
-      <!-- FIXME -->
+        <div class="loading_animation_section">
+            <div class="loading_box" style="animation-delay: -0.75s;"></div>
+            <div class="loading_box" style="animation-delay: -0.50s;"></div>
+            <div class="loading_box" style="animation-delay: -0.25s;"></div>
+            <div class="loading_box" style="animation-delay: 0s;"></div>
+        </div>
     </div>
 
     {% block content %}{% endblock %}

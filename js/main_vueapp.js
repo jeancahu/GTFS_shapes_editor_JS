@@ -39,7 +39,7 @@ const editor_gtfs_conf = {
 
     ////////// delete the loading screen div //////
     this.o_se_group.getMap().once("postrender", async function (event) {
-      await sleep(200); // wait for 200 m seconds
+      await sleep(2000); // wait for 2000 m seconds
       document.getElementById("loading_screen").remove();
     });
 

@@ -15,7 +15,6 @@ cd test/server_demo
 Change the package version \_\_version\_\_.py and into setup.py
 
 ```bash
-bash bash/vendor-dep.sh  # copy vendor files
 ./setup.py dist          # create the package (virtualenv needed)
 ```
 

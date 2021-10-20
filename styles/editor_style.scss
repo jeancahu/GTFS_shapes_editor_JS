@@ -8,7 +8,6 @@
     font-family: 'Poppins', sans-serif;
 }
 */
-
 body {
     min-height: 100vh;
     width: 100%;
@@ -41,23 +40,6 @@ body {
 .stops-section-menu {
     padding-top: 10px;
     padding-bottom: 10px;
-}
-
-.loading_screen {
-    z-index: 20;
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    background-color: white;
-    text-align: center;
-}
-.loading_screen img {
-    /* center vertically */
-    top: 60%;
-    -ms-transform: translateY(60%);
-    transform: translateY(60%);
-    /* center horizontally */
-    text-align: center;
 }
 
 .fullscreen:-webkit-full-screen {
