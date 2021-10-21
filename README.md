@@ -96,11 +96,11 @@ PR are welcome.
 Here some screenshots: </br>
 
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/18200186/138057069-27739017-28a9-4f6a-aeaa-42448dbbfd2b.png">
+    <img src="https://user-images.githubusercontent.com/18200186/138203710-4146d687-c57c-402b-8b66-c592d9260c8c.png">
 </p>
 
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/18200186/136308569-6f0329df-f9ea-42c7-bd57-a6b505621209.png">
+    <img src="https://user-images.githubusercontent.com/18200186/138203882-a5767d75-bce4-468b-b1f7-66ab788b5c5c.png">
 </p>
 
 ## Sponsor
