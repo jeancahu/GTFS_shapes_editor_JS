@@ -21,7 +21,7 @@ export default {
 
   dict: en_US,
 
-  pointer: [0, 0], // TODO
+  pointer: { coordinate: [0, 0] }, // TODO
 
   // Stops section
   stops_list: [],

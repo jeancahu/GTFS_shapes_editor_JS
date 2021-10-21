@@ -65,8 +65,9 @@ const editor_gtfs_conf = {
     // first update
     this.updateStops();
 
+    this.pointer = this.o_se_group.pointer;
+
     //setInterval(() => { // FIXME
-    //this.pointer = o_se_group.pointer.coordinate;
     //this.stops_list = this.o_se_group.getStops();
     //}, 500);
   },
@@ -460,7 +461,21 @@ const editor_gtfs_conf = {
         .isActiveTrip(trip_id);
     },
     pointerCoorCopy() {
-      console.log("Copy pointer coordinates"); // TODO
+      navigator.clipboard
+        .writeText(
+          "longitude=" +
+            this.pointer.coordinate[0] +
+            ";latitude=" +
+            this.pointer.coordinate[1]
+        )
+        .then(
+          function () {
+            console.log("Coordinates copied successful");
+          },
+          function (err) {
+            console.error("Error at copy coordinates", err);
+          }
+        );
       return true;
     },
   },
