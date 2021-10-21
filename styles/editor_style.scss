@@ -11,9 +11,9 @@
 body {
     overflow-x: hidden;
     text-align: center;
-    //margin: 20px 20px;
     padding-left: 40px;
     padding-right: 40px;
+    overflow-y: scroll;
     align-items: center;
     justify-content: center;
 }
@@ -32,10 +32,15 @@ body {
     background-color: #417690;
     opacity: 0.85;
     color: black;
-    padding: 6px 14px;
+    padding: 8px 14px;
     border-radius: 15px;
     margin: 10px 10px;
     max-width: calc(100% - 20px);
+
+    /* flex */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .stops-section-menu {
@@ -80,13 +85,45 @@ body {
     margin-top: 12px;
 }
 
-.pointer-coor {
+.pointer-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.pointer-long, .pointer-lat {
     background-color: white;
 	  min-width: 20ch;
+    height: 4ch;
     padding: 3px 3px;
+    border-radius: 4px;
+    margin-right: 1.7ch;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* First element at the begin, last at the end*/
+}
+
+.pointer-copy-icon {
+    background-color: white;
+    padding: 3px 8px;
+    height: 4ch;
     border-radius: 4px;
     display: flex;
     align-items: center;
+    cursor: pointer;
+}
+
+.pointer-copy-icon:hover {
+    background-color: rgba(230,230,230,1);
+}
+
+.pointer-long::before {
+    content: 'Longitude:';
+}
+
+.pointer-lat::before {
+    content: 'Latitude:';
 }
 
 .se-horizontal-menu {

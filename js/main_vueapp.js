@@ -459,6 +459,10 @@ const editor_gtfs_conf = {
         .filter((service) => service.getID() == service_id)[0]
         .isActiveTrip(trip_id);
     },
+    pointerCoorCopy() {
+      console.log("Copy pointer coordinates"); // TODO
+      return true;
+    },
   },
   computed: {
     shape_valid_waypoints_list() {
