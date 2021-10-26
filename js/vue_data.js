@@ -33,6 +33,8 @@ export default {
   in_st_stop_id: 0,
 
   // Shapes section:
+  selected_shape: "",
+
   end_node_on_newshape: "null",
   begin_node_on_newshape: "null",
   shape_id_on_newshape: null,
@@ -52,6 +54,7 @@ export default {
     //"scheme", // TODO
   ],
 
+  mapSidebar: "", // Show hide map sidebar CSS class
   currentActiveSection: "shapes", // activate post-render
 
   agencyFields: [

@@ -61,6 +61,7 @@ const editor_gtfs_conf = {
     // decorators
     this.o_se_group.onAddNode(this.updateStops);
     this.o_se_group.onDeleteNode(this.updateStops);
+    // this.o_se_group.onEndpointsChange(this.updateStops);
 
     // first update
     this.updateStops();
@@ -118,7 +119,7 @@ const editor_gtfs_conf = {
       Swal.fire({
         title: "Do you want to save the changes?",
         showDenyButton: true,
-        showCancelButton: true,
+        showCancelButton: false,
         confirmButtonText: `Save`,
         denyButtonText: `Don't save`,
       }).then((result) => {
@@ -152,7 +153,7 @@ const editor_gtfs_conf = {
       Swal.fire({
         title: "Do you want to save the changes?",
         showDenyButton: true,
-        showCancelButton: true,
+        showCancelButton: false,
         confirmButtonText: `Save`,
         denyButtonText: `Don't save`,
       }).then((result) => {
@@ -222,12 +223,22 @@ const editor_gtfs_conf = {
       this.o_se_group.shapes.array.forEach((shape) => shape.setVisible(false));
 
       var classes = new Array(0);
-      event.target.classList.forEach((css_class) => classes.push(css_class));
+      event.target.classList.forEach((css_class) => classes.push(css_class)); // FIXME use ClassList to find specClass
       if (classes.some((name) => name === "collapsed")) {
-      } else
+        // Hide the map sidebar
+        this.selected_shape = "";
+        this.mapSidebar = "";
+      } else {
+        // Show the map sidebar to push or delete waypoints
+
+        this.selected_shape = shape_id; // TODO use this data var
+        this.mapSidebar = "map_sidebar_show";
+
+        // Set the shape visible
         this.o_se_group.shapes.array
           .filter((shape) => shape.getID() === shape_id)[0]
           .setVisible(true);
+      }
 
       this.shape_valid_waypoints = this.o_se_group.shapes.array
         .filter((shape) => shape.getID() === shape_id)[0]
@@ -257,15 +268,23 @@ const editor_gtfs_conf = {
         } else valid_waypoints.push(node_id); // add the node to the result
       });
 
+      let new_start_node_id = document.getElementById(
+        "shape_section_start_node_id_" + shape_id
+      );
+      let new_end_node_id = document.getElementById(
+        "shape_section_end_node_id_" + shape_id
+      );
+
       this.o_se_group.updateShapeByID(shape_id, {
         id: document.getElementById("shape_section_shape_id_" + shape_id).value,
-        start: document.getElementById(
-          "shape_section_start_node_id_" + shape_id
-        ).value,
-        end: document.getElementById("shape_section_end_node_id_" + shape_id)
-          .value,
+        start: new_start_node_id.value,
+        end: new_end_node_id.value,
         waypoints: valid_waypoints,
       });
+
+      // First option is the original value in shape
+      new_start_node_id.firstChild.selected = true;
+      new_end_node_id.firstChild.selected = true;
 
       this.shape_valid_waypoints = this.o_se_group.shapes.array // TODO improve inside streetelement
         .filter(
