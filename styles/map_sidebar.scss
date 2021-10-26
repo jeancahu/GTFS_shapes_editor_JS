@@ -1,0 +1,29 @@
+.map_sidebar {
+    width: 0px;
+    margin-right: 1ch;
+    background: #ccc;
+    border-radius: 8px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    transition-duration: 0.3s;
+}
+
+.map_sidebar_show {
+    width: 400px !important;
+}
+
+.map_sidebar_body {
+    padding: 20px 20px;
+    min-width: 296px;
+
+}
+
+.map_sidebar_body button {
+    padding: 20px 20px;
+    min-height: 62px;
+    width: 100%;
+}
+
+.map_sidebar_selected_waypoints {
+    margin-top: 2ch;
+}
