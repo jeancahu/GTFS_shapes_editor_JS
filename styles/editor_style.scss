@@ -21,6 +21,7 @@ body {
     background: #e2efef;
     margin-left: 1ch;
     margin-right: 1ch;
+    width: 100%;
     height: 100%;
 }
 
@@ -61,6 +62,8 @@ body {
 
 .fullscreen {
     /*margin-bottom: 50px;*/
+    display: flex;
+    flex-direction: row;
     width: 100%;
     height: 70vh;
 }

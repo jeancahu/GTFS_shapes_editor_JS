@@ -6,6 +6,7 @@
 @import "./editor_style.scss";
 @import "./loading_screen.scss";
 @import "./text_formats.scss";
+@import "./map_sidebar.scss";
 
 /*
  * Content: @import "~bootstrap/scss/bootstrap.scss";
@@ -37,7 +38,7 @@
 //@import "~bootstrap/scss/breadcrumb";
 @import "~bootstrap/scss/pagination";
 //@import "~bootstrap/scss/badge";
-//@import "~bootstrap/scss/alert";
+@import "~bootstrap/scss/alert";
 //@import "~bootstrap/scss/progress";
 @import "~bootstrap/scss/list-group";
 //@import "~bootstrap/scss/close";
