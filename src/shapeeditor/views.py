@@ -4,6 +4,8 @@ from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 import json
 
+from django.contrib.gis.geos import LineString # Point (for stops)
+
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_GET, require_POST
 
@@ -16,6 +18,10 @@ def shapeeditor(request, history_id='no_history'):
     routing_machine_url=''
     extent=''
     center=''
+
+    shapes = Shape.objects.all()
+    if shapes:
+        result=Shape.objects.getDistances(shape_id=shapes[0].shape_id)
 
     try:
         routing_machine_url = settings.SHAPEEDITOR_ROUTING_MACHINE_URL
@@ -78,7 +84,8 @@ def push_shapes(request):
         for item in data["body"]: # for each shape
             shapes.append(Shape(
                 shape_id = item['id'],
-                lines = item
+                lines = item, # TODO remove redundancy
+                linestring = LineString(item['points'])
             ))
         Shape.objects.all().delete()
         Shape.objects.bulk_create(shapes)

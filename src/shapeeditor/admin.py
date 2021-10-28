@@ -1,4 +1,6 @@
-from django.contrib import admin
+# from django.contrib import admin
+from django.contrib.gis import admin
+
 from .models import History, Shape, Stop
 from django.urls import reverse
 
@@ -22,9 +24,11 @@ class SEHistory(admin.ModelAdmin):
         url = reverse('shapeeditor', kwargs={'history_id': obj.pk})
         return url
 
-@admin.register(Shape)
+# @admin.register(Shape)
 class SEShape(admin.ModelAdmin):
     pass
+
+admin.site.register(Shape, admin.OSMGeoAdmin)
 
 @admin.register(Stop)
 class SEStop(admin.ModelAdmin):

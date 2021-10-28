@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'shapeeditor',
     # 'multigtfs', # Django 2 gtfs models and commands
-    # 'django.contrib.gis', # multigtfs dependency
+    'django.contrib.gis', # multigtfs dependency
 ]
 
 MIDDLEWARE = [
@@ -78,8 +78,8 @@ WSGI_APPLICATION = 'demo.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.contrib.gis.db.backends.spatialite', # spatial database
-        'ENGINE': 'django.db.backends.sqlite3', # sqlite3 has no db_type()
+        'ENGINE': 'django.contrib.gis.db.backends.spatialite', # spatial database
+        # 'ENGINE': 'django.db.backends.sqlite3', # sqlite3 has no db_type()
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
