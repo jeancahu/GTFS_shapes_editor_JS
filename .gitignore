@@ -25,3 +25,5 @@ src/shapeeditor/static/shapeeditor/js/*
 _*
 
 styles/fonts
+
+*.bkp
