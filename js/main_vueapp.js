@@ -567,10 +567,9 @@ const app = new Vue(editor_gtfs_conf);
 app.o_se_group.setTarget(document.getElementById("map_container"));
 
 /////////////////////////// File gtfs stops input
-var file_content = {};
 document.getElementById("file_gtfs_stops_input").onchange = (change) => {
   change.target.files[change.target.files.length - 1].text().then((file) => {
-    var content = file.replace(/\r/gm, "").split("\n");
+    var content = file.replace(/\r/gm, "").replace(/[\t]/gm, ",").split("\n");
     var headers = content[0].split(",");
     content.slice(1).forEach((line) => {
       var params = {};
@@ -585,3 +584,66 @@ document.getElementById("file_gtfs_stops_input").onchange = (change) => {
     });
   });
 };
+
+/////////////////////////// File gtfs shapes input
+document.getElementById("file_gtfs_shapes_input").onchange = (change) => {
+  if (app.o_se_group.getWaypoints().length) {
+    // If the editor already has shapes can't load a new shape set
+    Swal.fire({
+      icon: "error",
+      title: "Can't overwrite!",
+      text: "Open a empty feed to load the new shapes set.",
+    });
+    return;
+  }
+  change.target.files[change.target.files.length - 1].text().then((file) => {
+    let content = file.replace(/\r/gm, "").replace(/[\t]/gm, ",").split("\n");
+    let headers = content[0].split(",");
+
+    let points_params = content.slice(1).map((line) => {
+      // For line in file, create array of params
+      var params = {};
+      line.split(/,(?=(?:(?:[^"]*"){2})*[^\"]*$)/).forEach((line, index) => {
+        params[headers[index]] = line;
+      });
+      params["shape_id"] = params.shape_id;
+      params["coordinate"] = [params.shape_pt_lon, params.shape_pt_lat];
+      params["type"] = "waypoint";
+      params["shape_pt_sequence"] = params.shape_pt_sequence;
+      params["shape_dist_traveled"] = params.shape_dist_traveled;
+
+      return params;
+    });
+
+    // for each shape add points to map
+    Array.from(new Set(points_params.map((params) => params.shape_id))).forEach(
+      (shape_id) => {
+        if (!shape_id) return;
+
+        let l_points = points_params.filter(
+          (params) => params.shape_id == shape_id
+        );
+
+        l_points[0]["type"] = "endpoint";
+        l_points[0]["nolink"] = true;
+
+        l_points[l_points.length - 1]["type"] = "endpoint";
+        //l_points[l_points.length -1]["nolink"] = true;
+
+        // TODO l_nodes = l_points.map
+        let l_nodes_ids = l_points.map((params) =>
+          app.o_se_group.addNodeIfNotExists(params)
+        );
+
+        app.o_se_group.addShape({
+          id: shape_id,
+          start: l_nodes_ids[0],
+          end: l_nodes_ids[l_nodes_ids.length - 1],
+          waypoints: l_nodes_ids,
+        });
+      }
+    );
+  });
+};
+
+window.o_se_group = app.o_se_group;
