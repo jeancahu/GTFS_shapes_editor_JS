@@ -8,9 +8,8 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-VERSION = '0.1.14'
-
 REQUIRED = [
+    "Django"
 ]
 
 EXTRAS = {
@@ -28,13 +27,8 @@ except FileNotFoundError:
 
 # Load the package's __version__.py module as a dictionary.
 about = {}
-if not VERSION:
-    project_slug = NAME.lower().replace("-", "_").replace(" ", "_")
-    with open(path.join(here, project_slug, '__version__.py')) as f:
-        exec(f.read(), about)
-else:
-    about['__version__'] = VERSION
-
+with open(path.join(here, "src/shapeeditor", '__version__.py')) as f:
+    exec(f.read(), about)
 
 class UploadCommand(Command):
     """Support setup.py upload."""

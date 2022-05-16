@@ -12,7 +12,7 @@ cd test/server_demo
 
 ## Build
 
-Change the package version \_\_version\_\_.py and into setup.py
+Change the package version src\\shapeeditor\\\_\_version\_\_.py
 
 ```bash
 ./setup.py dist          # create the package (virtualenv needed)
