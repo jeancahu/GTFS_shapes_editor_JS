@@ -44,10 +44,10 @@ export default {
 
   activeSections: [
     // active section for horizontal_tabs_menu.html
-    //"agency", // TODO
+    // "agency", // TODO
     "shapes",
     "stops",
-    //"routes", // TODO
+    // "routes", // TODO
     //"trips", // TODO
     //"stop_times", // TODO
     //"calendar", // TODO

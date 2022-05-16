@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'shapeeditor',
+    "corsheaders", # Needed for CORS routermachine not in the same domine
     # 'multigtfs', # Django 2 gtfs models and commands
     # 'django.contrib.gis', # multigtfs dependency
 ]
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -144,6 +146,15 @@ LOGIN_URL='/admin/login/'
 #SHAPEEDITOR_MAP_EXTENT_AREA = [[-84.43669241118701, 9.726525930153954],[-83.72894500499169, 9.99625455768836]]
 SHAPEEDITOR_MAP_CENTER = [-84.1027104, 9.865107]
 
-#SHAPEEDITOR_ROUTING_MACHINE_URL = "http://router.project-osrm.org/route/v1/driving/" # internal default ( a demo service )
-#SHAPEEDITOR_ROUTING_MACHINE_URL = "http://161.35.54.122:5000/route/v1/driving/" # costa rica (no longer available)
-#SHAPEEDITOR_ROUTING_MACHINE_URL = "http://localhost:5000/route/v1/driving/" # fake server
+#SHAPEEDITOR_ROUTING_MACHINE_URL = "https://router.project-osrm.org/route/v1/driving/" # internal default (but http) ( a demo service )
+SHAPEEDITOR_ROUTING_MACHINE_URL = "https://transportessangabriel.com/route/v1/driving/" # costa rica
+
+## CORS config:
+CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ORIGIN_WHITELIST = []
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+]

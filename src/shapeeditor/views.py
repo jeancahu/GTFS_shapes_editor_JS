@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_GET, require_POST
 
 from .models import History, Shape, Stop
+from .__version__ import __version__ as se_version
 
 # @login_required(login_url='/admin/login/') # TODO login
 @login_required # TODO login
@@ -58,7 +59,8 @@ def shapeeditor(request, history_id='no_history'):
         "routing_machine_url": routing_machine_url, # TODO
         "extent": extent,
         "center": center,
-        "history": history
+        "history": history,
+        "se_version": se_version
     }
 
     return render(request, 'shapeeditor/index.html', context)
