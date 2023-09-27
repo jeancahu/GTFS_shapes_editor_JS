@@ -45,7 +45,7 @@ SHAPEEDITOR_MAP_EXTENT_AREA = [
 SHAPEEDITOR_MAP_CENTER = [-84.1027104, 9.865107]
 
 # Router service for shape generation request (This one is a free demo)
-SHAPEEDITOR_ROUTING_MACHINE_URL = "http://router.project-osrm.org/route/v1/driving/" 
+SHAPEEDITOR_ROUTING_MACHINE_URL = "http://router.project-osrm.org/route/v1/driving/"
 ```
 
 Include Shapeeditor urls in urls.py, then we can open the editor from the site, draw the shape and download as a shapes.txt or import it to the database.
@@ -102,7 +102,3 @@ Here some screenshots: </br>
 <p align="center">
     <img src="https://user-images.githubusercontent.com/18200186/138203882-a5767d75-bce4-468b-b1f7-66ab788b5c5c.png">
 </p>
-
-## Sponsor
-bc1qaw6urpy8t38fq3psp3p0xst4chq0yu4gamtu3v </br>
-![image](https://user-images.githubusercontent.com/18200186/136236417-b008e176-0922-474f-91a0-6b501308660f.png)
