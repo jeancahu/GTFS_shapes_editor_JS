@@ -18,7 +18,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-Shapeeditor needs authentication to push data in database, define the LOGIN\_URL variable to know where redirect visitor when they are not logged.
+Shapeeditor needs authentication to push data to database, define the LOGIN\_URL variable to know where redirect visitor when they are not logged.
 
 ```python
 LOGIN_URL='/admin/login/'
@@ -63,6 +63,14 @@ Just to be sure database is ok run the next commands.
 ```
 
 ## Usage
+
+```bash
+./manage.py runserver localhost:8080
+
+## Open the editor in your favorite browser
+firefox localhost:8080/shapeeditor
+```
+
 
 Map interface allows the user to draw a shape, cut links and delete links and nodes, to create a shape you need to define two _endpoints_ then put _waypoints_ between the begin and end, more waypoints means better aproximation.
 
